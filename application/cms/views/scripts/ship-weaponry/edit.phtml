@@ -1,0 +1,33 @@
+<?php
+$aShip = $this->weaponry->getShip()->toFormArray();
+?>
+
+<?php $this->printGoBackUrl($this->url(array('action'=>'index', 'id'=>null))); ?>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Ubah Persenjataan</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<p>Nama Kapal: <?php echo $aShip['ship_name']; ?></p>
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	// populate existing weapons
+	<?php foreach ($this->weaponry->getBombs() as $b) : ?>
+		add_row('bomb-count-row', <?php echo $b['bomb_id']; ?>, <?php echo $b['bomb_count']; ?>);
+	<?php endforeach; ?>
+	<?php foreach ($this->weaponry->getRadars() as $r) : ?>
+		add_row('radar-count-row', <?php echo $r['radar_id']; ?>, <?php echo $r['radar_count']; ?>);
+	<?php endforeach; ?>
+	<?php foreach ($this->weaponry->getSonars() as $s) : ?>
+		add_row('sonar-count-row', <?php echo $s['sonar_id']; ?>, <?php echo $s['sonar_count']; ?>);
+	<?php endforeach; ?>
+});
+</script>

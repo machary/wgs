@@ -1,0 +1,61 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Kategori Sonar</h2>
+    <p>
+        <a href="<?php echo $this->url(array('controller'=>'sonar','action'=>'add.category')); ?>" class="roundall_grey add_icon">
+            <span class="ml22">Kategori Sonar Baru</span>
+        </a>
+    </p>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+        <div class="block">
+            <table id="table_penyalur" class="display">
+                <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        var oTable = $('#table_penyalur').dataTable( {
+            "bJQueryUI": true,
+            "sScrollX": "",
+            "bSortClasses": false,
+            "aaSorting": [[0,'asc']],
+            "bAutoWidth": true,
+            "bInfo": true,
+            "aoColumns":[
+                null,
+                {bSortable:false}
+            ],
+            "sScrollY": "100%",
+            "sScrollX": "100%",
+            "bScrollCollapse": true,
+            "sPaginationType": "full_numbers",
+            "bProcessing" : true,
+            "bServerSide" : true,
+            "sAjaxSource" : baseUrl + '/cms/sonar/dataapicategory',
+            "fnServerData" : function(sSource, aoData, fnCallback)
+            {
+                jQuery.getJSON(sSource, aoData, function(json) {
+                    //if(aaData != 'undefined')
+                    //{
+                    fnCallback(json)
+                    //}
+                });
+
+                $('.custom-rows').parent().css('vertical-align','middle');
+            }
+        })
+    });
+</script>

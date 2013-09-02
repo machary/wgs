@@ -1,0 +1,27 @@
+<div class="flat_area grid_16">
+
+	<!-- box header label -->
+	<h2>Penilaian Paparan Naskah</h2>
+
+	<!-- container -->
+	<div class="block">
+        <table class="display simple-table">
+            <thead>
+            <tr>
+                <th>Team</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <?php foreach ($this->kogas as $idTeam => $team) : ?>
+                <td><?php echo $team; ?></td>
+                <td>
+                    <a href="<?php echo $this->url(array('action'=>'penilaian', 'team_id'=>$idTeam)); ?>">Nilai</a>
+                </td>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+	</div>
+
+</div>

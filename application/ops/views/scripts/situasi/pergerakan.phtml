@@ -1,0 +1,329 @@
+<?php
+    $this->inlineScript()->appendFile($this->jsUrl('script.js'));
+    $this->inlineScript()->appendFile( $this->jsUrl( 'view/intelijen-gis.js' ) );
+?>
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+        //    Openlayer start here
+        var proxyUrl = "<?php echo $this->baseUrl('peta/proxy/?url='); ?>";
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>
+
+
+<!-- preview map -->
+<div class="grid_8">
+    <div class="box round_all">
+        <h2 class="box_head grad_colour">Preview Map</h2>
+        <div id="map"></div>
+    </div>
+</div>
+
+<div class="grid_8">
+    <?php echo $this->form; ?>
+</div>
+
+<script type="text/javascript">
+var simbol_pergerakan, feature;
+var result = new Array();
+var sumFeature = 0;
+var x = 0;
+var sizeArr = {};
+var rotationArr = new Array();
+var simValArr = new Array();
+var active_slider = false; //jadi true ketika ada minimal 1 feature saja di map (untuk flag mencegah error)
+
+$(function() {
+    var htmlAmount = '<div id="slider" style="height: 6px; width: 577px;"></div>';
+
+    var htmlXY = '<label for="x-slider">X : </label>' +
+                 '<div id="x-slider" style="height: 6px; width: 577px;"></div>' +
+                 '<label for="y-slider">Y : </label>' +
+                 '<div id="y-slider" style="height: 6px; width: 577px;"></div>';
+    
+    $(htmlAmount).insertAfter('#rotation-value');
+    $(htmlXY).insertAfter('#size-simbol');
+
+    $('#rotation-value').keyup(function(){
+        thisElmVal = $(this).val();
+        if(thisElmVal > 180 || thisElmVal < -180){
+            alert('tidak boleh lebih dari 180 atau kurang dari -180');
+            $(this).val('');
+        }
+        else
+        {
+            $('#slider').slider('value', thisElmVal);
+        }
+    });
+
+
+    //slider untuk mengubah rotasi
+    $( "#slider" ).slider({
+        disabled : true, // default disable
+        value: 0,
+        min: -180,
+        max: 180,
+        step: 1,
+        slide: function( event, ui ) {
+
+            var simPer = simbol_pergerakan.features.length;
+            if(simPer == 1)
+            {
+                simbol_pergerakan.features[0].style.rotation = ui.value;
+                simbol_pergerakan.redraw();
+            }
+            else
+            {
+                for(var a = 0;a<=simPer-1;a++)
+                {
+                    if(sizeArr == simbol_pergerakan.features[a].id)
+                    {
+                        simbol_pergerakan.features[a].style.rotation = ui.value;
+                        simbol_pergerakan.redraw();
+                    }
+                }
+            }
+        },
+        stop:function(event,ui){
+            if(simbol_pergerakan.features.length == 1)
+            {
+                $("#rotation-value").val(ui.value);
+            }
+            else
+            {
+                var sliderArr = new Array();
+                for(var a = 0;a<=simbol_pergerakan.features.length-1;a++)
+                {
+                    if(sizeArr == simbol_pergerakan.features[a].id)
+                    {
+                        simbol_pergerakan.features[a].style.rotation = ui.value;
+                    }
+                    sliderArr.push(simbol_pergerakan.features[a].style.rotation);
+                }
+                $('#rotation-value').val(sliderArr.join('|'));
+            }
+        }
+    });
+
+    //slider x (untuk lebar)
+    $( "#x-slider" ).slider({
+        disabled : true, // default disable
+        value:25,
+        min: 25,
+        max: 100,
+        step: 1,
+        slide: function( event, ui ) {
+            var simPer = simbol_pergerakan.features.length;
+            if(simPer == 1)
+            {
+                var resize = new OpenLayers.Size(ui.value, simbol_pergerakan.features[0].style.graphicWidth);
+
+                simbol_pergerakan.features[0].style.graphicXOffset = -resize.w/2;
+                simbol_pergerakan.features[0].style.graphicWidth = resize.w;
+                simbol_pergerakan.redraw();
+            }
+            else
+            {
+                for(var a = 0;a<=simPer-1;a++)
+                {
+                    if(sizeArr == simbol_pergerakan.features[a].id)
+                    {
+                        var resize = new OpenLayers.Size(ui.value, simbol_pergerakan.features[a].style.graphicWidth);
+
+                        simbol_pergerakan.features[a].style.graphicXOffset = -resize.w/2;
+                        simbol_pergerakan.features[a].style.graphicWidth = resize.w;
+                        simbol_pergerakan.redraw();
+                    }
+                }
+            }
+            //$("#size-simbol").val(ui.value + ' : ' + simbol_pergerakan.features[0].style.graphicHeight);
+        },
+        stop:function(event, ui){
+            if(simbol_pergerakan.features.length == 1)
+            {
+                $("#size-simbol").val(ui.value + ' : ' + simbol_pergerakan.features[0].style.graphicHeight);
+            }
+            else
+            {
+                var sliderArr = new Array();
+                for(var a = 0;a<=simbol_pergerakan.features.length-1;a++)
+                {
+                    if(sizeArr == simbol_pergerakan.features[a].id)
+                    {
+                        var resize = new OpenLayers.Size(ui.value, simbol_pergerakan.features[a].style.graphicWidth);
+
+                        simbol_pergerakan.features[a].style.graphicXOffset = -resize.w/2;
+                        simbol_pergerakan.features[a].style.graphicWidth = resize.w;
+                    }
+                    sliderArr.push(simbol_pergerakan.features[a].style.graphicWidth + ' : ' + simbol_pergerakan.features[a].style.graphicHeight);
+                }
+                //console.log(sliderArr);
+                $('#size-simbol').val(sliderArr.join('|'));
+            }
+        }
+    });
+
+    //slider x (untuk tinggi)
+    $( "#y-slider" ).slider({
+        disabled : true, // default disable
+        value:29,
+        min: 29,
+        max: 100,
+        step: 1,
+        slide: function( event, ui ) {
+            var simPer = simbol_pergerakan.features.length;
+            if(simPer == 1)
+            {
+                var resize = new OpenLayers.Size(simbol_pergerakan.features[0].style.graphicHeight, ui.value);
+
+                simbol_pergerakan.features[0].style.graphicYOffset = -resize.h;
+                simbol_pergerakan.features[0].style.graphicHeight = resize.h;
+                simbol_pergerakan.redraw();
+            }
+            else
+            {
+                for(var a = 0;a<=simPer-1;a++)
+                {
+                    if(sizeArr == simbol_pergerakan.features[a].id)
+                    {
+                        var resize = new OpenLayers.Size(simbol_pergerakan.features[a].style.graphicHeight, ui.value);
+
+                        simbol_pergerakan.features[a].style.graphicYOffset = -resize.h;
+                        simbol_pergerakan.features[a].style.graphicHeight = resize.h;
+                        simbol_pergerakan.redraw();
+                    }
+                }
+            }
+        },
+        stop:function(event, ui){
+            if(simbol_pergerakan.features.length == 1)
+            {
+                $("#size-simbol").val(simbol_pergerakan.features[0].style.graphicWidth + ' : ' + ui.value);
+            }
+            else
+            {
+                var sliderArr = new Array();
+                for(var a = 0;a<=simbol_pergerakan.features.length-1;a++)
+                {
+                    if(sizeArr == simbol_pergerakan.features[a].id)
+                    {
+                        var resize = new OpenLayers.Size(simbol_pergerakan.features[a].style.graphicHeight, ui.value);
+
+                        simbol_pergerakan.features[a].style.graphicYOffset = -resize.h;
+                        simbol_pergerakan.features[a].style.graphicHeight = resize.h;
+                    }
+                    sliderArr.push(simbol_pergerakan.features[a].style.graphicWidth + ' : ' + simbol_pergerakan.features[a].style.graphicHeight);
+                }
+                //console.log(sliderArr);
+                $('#size-simbol').val(sliderArr.join('|'));
+            }
+        }
+    });
+});
+
+$('#simbol-pergerakan').live('change', function(){
+    var value = this.value;
+    if(value != '')
+    {
+        $.post(baseUrl + '/peta/intelijen/simbolpergerakan',
+        {
+            "id": $('#simbol-pergerakan').val()
+        },
+        function(data){
+            simbolPergerkanaMarker(data);
+
+            result.push("117.31972955691, -1.0729132077013");
+            document.getElementById('longitude').value = result.join('|');
+
+            simValArr.push(value);
+            $("#simbol_value").val(simValArr.join('|'));//input element hiden simbol_value
+
+
+            activing_sliders();
+        }, "json");
+    }
+});
+
+//fungsi untuk mengaktifkan semua slider
+//@param : boolean : active
+function activing_sliders(){
+    $( "#slider" ).slider({
+        disabled : false
+    });
+    $( "#x-slider" ).slider({
+        disabled : false
+    });
+    $( "#y-slider" ).slider({
+        disabled : false
+    });
+}
+
+function simbolPergerkanaMarker(url)
+{
+    if(simbol_pergerakan == '' || simbol_pergerakan == null)
+    {
+        simbol_pergerakan = new OpenLayers.Layer.Vector("Marker Drop Shadows");
+    }
+
+    var point = new OpenLayers.Geometry.Point(117.31972955691, -1.0729132077013);//default lonlat pada saat pertama simbol muncul
+    feature = new OpenLayers.Feature.Vector(point);
+
+    var size = new OpenLayers.Size(25,29);
+
+    feature.style ={
+        externalGraphic:baseUrl + url,
+        graphicXOffset:-size.w/2,
+        graphicYOffset:-size.h,
+        graphicWidth:size.w,
+        graphicHeight:size.h,
+        pointRadius:0,
+        rotation:0
+    }//default size icon
+
+    simbol_pergerakan.addFeatures(feature);
+    map.addLayer(simbol_pergerakan);
+    sumFeature++;
+
+    var drag = new OpenLayers.Control.DragFeature(simbol_pergerakan,{
+        'onComplete': onCompleteMove
+    });//set control dan event drag
+
+    map.addControl(drag);
+    drag.activate();
+
+    simbol_pergerakan.events.register('click', this, function(e){
+        sizeArr = e.target._featureId;
+        $("#slider").slider('value', e.target._style.rotation);
+        $("#x-slider").slider('value', e.target._style.graphicHeight);
+        $("#y-slider").slider('value', e.target._style.graphicWidth);
+    });
+}
+
+function onCompleteMove(feature)
+{
+    var value = {};
+    var data = {};
+
+    if(feature.layer.features.length != sumFeature)
+    {
+        value["lonlat"] = feature.geometry.x + ', ' + feature.geometry.y;
+        data[feature.id] = value;
+        result.push(data[feature.id]['lonlat']);
+
+        document.getElementById('longitude').value = result.join('|');
+    }
+    else
+    {
+        result = new Array();
+        var jumlah  = feature.layer.features.length - 1;
+
+        for(var z=0;z<=jumlah;z++)
+        {
+            result.push(feature.layer.features[z].geometry.x + ', ' + feature.layer.features[z].geometry.y);
+        }
+        document.getElementById('longitude').value = result.join('|');
+    }
+
+    x++;
+    sumFeature = feature.layer.features.length;
+}
+</script>

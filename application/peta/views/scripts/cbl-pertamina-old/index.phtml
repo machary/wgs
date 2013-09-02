@@ -1,0 +1,130 @@
+	<div class="box grid_8 grid_16 round_all contentmap " >
+		<h2 class="box_head grad_colour titlemap">
+            <span>Depo Pendukung</span>
+        </h2>
+		<div id="map2"></div>
+	</div>
+
+	<div class="box grid_8 round_all controlmap" >
+		<h2 class="box_head grad_colour">Detail Depo</h2>
+		<div id="view-data" ></div>
+	</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+
+// global map object
+var map, rs_pendukung;
+var Lppendukung;
+var ccc = 0;
+var willan = null;
+// layers dan geourl ada di script.js
+
+
+$(function(){
+
+	$('#map2').css('height', '500px');
+	map = standardMap('map2');
+	minmaxMap(map);
+
+    //klik map
+    clickMap();
+	
+	/* == Fitur Tampilan Pangkalan Pendukung */
+    var ll, popupContentHTML;
+   	var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+   		'autoSize': true
+   	});
+
+    // Pangkalan Pendukung
+	Lppendukung = new OpenLayers.Layer.Markers(
+		"Depo Pendukung",
+		{isBaseLayer: false, visibility: true}
+	);
+	map.addLayers([Lppendukung]);
+    map.redrawSwitcherTree(); //<--- untuk memasukan layer baru ke dlm switcher
+
+    // Marker Pangkalan Pendukung
+    <?php foreach($this->apendukung as $key) : ?>
+        ll = new OpenLayers.LonLat(<?php echo $key['x'];?>,<?php echo $key['y'];?>);
+        popupContentHTML = '<p><b><?php echo $key['nama_depo'];?></b></p><p><?php echo json_encode($key['lokasi']);?></p>';
+        addMarker(Lppendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true);
+    <?php endforeach; ?>
+	/* == End of Fitur Tampilan Pangkalan Pendukung */
+
+});
+
+function clickMap(){
+	/* == Fitur Klik Dapatkan Informasi */
+	map.events.register('click', map, function(e) {
+		var lonlat = map.getLonLatFromViewPortPx(e.xy);
+        var depoP = map.layers[21]; // lihat peta-dasar.js untuk nomor listnya
+//        var puslanTim = map.layers[19]; // lihat peta-dasar.js untuk nomor listnya
+
+		if (depoP.getVisibility()) {
+			$.blockUI({ css: {
+				border: 'none',
+				padding: '15px',
+				backgroundColor: '#000',
+				'-webkit-border-radius': '10px',
+				'-moz-border-radius': '10px',
+				opacity: .5,
+				color: '#fff'
+			}});
+
+			$('#tampung-data').html('<img src="<?php echo $this->imgUrl('loading1.gif'); ?>">');
+
+			$.get('<?php echo $this->siteUrl('cms/pangkalan/viewr/cbid/'.$this->cbid->getId()); ?>', {
+				lon: lonlat.lon,
+				lat: lonlat.lat
+			}, function(data, status, xhr) {
+				$('#view-data').html(data);
+				$('.controlmap').show('slow');
+				minMap(map);
+			}, 'html')
+				.error(function() {
+					$('#view-data').html('<div class="block" id="fasview"><h1>bukan Depo</h1></div>');
+					$('.controlmap').show('slow');
+					minMap(map);
+				})
+				.complete(function() { $.unblockUI(); });
+		}
+	});
+	/* == End of Fitur Klik Dapatkan Informasi */
+}
+
+function bersihkan(cek, ket, idmaster,dermaga, labuh_udara, dock, bengkel,rumah, mess,rumah_sakit, umum, listrik, kendaraan_bermotor, tanah, perbekalan)
+{
+    Lppendukung.clearMarkers();
+
+    var ll, laa, popupContentHTML;
+    var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+        'autoSize': true
+    });
+
+    $.getJSON('<?php echo $this->url(array('controller'=>'cbl.pangkalan','action'=>'simpanpp','cbid'=>$this->cbid->getId())); ?>',{
+        cek: cek,
+        idmaster: idmaster,
+        ket: ket,
+        dermaga: dermaga,
+        labuh_udara: labuh_udara,
+        dock: dock,
+        bengkel: bengkel,
+        rumah: rumah,
+        mess: mess,
+        rumah_sakit: rumah_sakit,
+        umum: umum,
+        listrik: listrik,
+        kendaraan_bermotor: kendaraan_bermotor,
+        tanah: tanah,
+        perbekalan: perbekalan
+    }, function(data){
+        data.pp.forEach(function(item){
+            ll = new OpenLayers.LonLat(item.x,item.y);
+            popupContentHTML = '<p><b>'+item.lanal+'</b></p><p>'+item.keterangan+'</p>';
+            addMarker(Lppendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true);
+        });
+    });
+}
+</script>
+

@@ -1,0 +1,41 @@
+<?php
+/**
+ * The label-name attribute is set on the form class for displaying the label purpose
+ * ONLYif the name wont fit the label (a.e the name has underscore)
+ * the view script will be automatically rendering the label name
+ * foreach element
+ */
+?>
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour"><?php echo $this->element->getLegend() ?></h2>
+	<a class="grabber" href="#">&nbsp;</a>
+	<a class="toggle" href="#">&nbsp;</a>
+	<div class="toggle_container">
+		<div class="block">
+			<form
+				<?php foreach($this->element->getAttribs() as $attribute => $value): ?>
+				<?php echo $attribute.'="'.$value.'"'; ?>
+				<?php endforeach; ?>
+				>
+				<?php $dumb;  ?>
+				<?php foreach($this->element->getElements() as $e): ?>
+				<label for="<?php echo $e->getName(); ?>">
+					<?php echo $e->getAttrib('label-name'); ?>
+					<?php if($e->isRequired()):?><strong style="color: #ff0000;">&#42;</strong><?php endif; ?>
+				</label>
+				<?php echo $e; ?>
+				<?php
+
+				if( $e->getAttrib('title') )
+				{
+					$dumb = $e->getAttrib('title');
+				}
+				?>
+				<?php endforeach;?>
+				<?php echo $this->currentModule; ?>
+			</form>
+		</div>
+	</div>
+</div>
+
+

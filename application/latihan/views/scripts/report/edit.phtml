@@ -1,0 +1,80 @@
+<script type="text/javascript">
+    var value = '<?php echo $this->data['nilai']; ?>';
+</script>
+<div class="flat_area grid_16">
+    <h2>Daftar Penilaian</h2>
+    <div class="block">
+        <form method="post" action="<?php echo $this->url(array('controller' => 'report','action'=>'update')); ?>">
+            <p>
+                <label>Skenario Latihan : </label><?php echo $this->data['nomor']; ?></br>
+                <label>Nama Team        : </label><?php echo $this->data['team_name']; ?>
+            </p>
+            <table class="display simple-table">
+                <thead>
+                <tr>
+                    <th>Daftar Produk Staf</th>
+                    <th>Detail</th>
+                    <th>Nilai</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?php echo $this->data['nama_product_staff']; ?></td>
+                        <td>
+                            <a href="<?php echo $this->url(array('controller' => 'penilaian', 'action'=>'show', 'id'=>$this->data['id_team'])); ?>" target="_blank">
+                                <span class="ml22">Detail</span>
+                            </a>
+                        </td>
+                        <td>
+                            <p>
+                                <label for="<?php echo $this->data['id_team'].'_'.$this->data['id_product_staff']; ?>">Nilai :</label>
+                                <input type="text" class="slider-input"
+                                       name="<?php echo $this->data['id_team'].'_'.$this->data['id_product_staff']; ?>"
+                                       id="<?php echo $this->data['id_team'].'_'.$this->data['id_product_staff']; ?>"
+                                       style="border:0; color:#f6931f; font-weight:bold;" value="<?php echo $this->data['nilai']; ?>" />
+                            </p>
+                            <div class="slider"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="hidden" name="id" value="<?php echo $this->data['id']; ?>">
+            <input type="hidden" name="id_team" value="<?php echo $this->data['id_team']; ?>">
+            <input type="hidden" name="id_ps" value="<?php echo $this->data['id_product_staff']; ?>">
+            <button class="button_colour round_all">
+                <span>Simpan</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function(){
+
+        $('.slider-input').keyup(function(){
+            thisElmVal = $(this).val();
+            if(thisElmVal > 100){
+                alert('asdfasdf')
+            }
+            else
+            {
+                $(this).parent().parent().find('.slider').slider('value', thisElmVal);
+            }
+        });
+
+        $( ".slider" ).slider({
+            range:"min",
+            value:value,
+            min: 0,
+            max: 100,
+            step: 1,
+            slide: function( event, ui ) {
+                $(this).parent('td').find(':input').val(ui.value);
+            }
+        });
+        //$( "#amount" ).val( $( ".slider" ).slider( "value" ) );
+
+    });
+
+</script>

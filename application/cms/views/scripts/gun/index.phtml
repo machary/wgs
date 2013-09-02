@@ -1,0 +1,105 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Data Senjata</h2>
+    <p>
+        <a href="<?php echo $this->url(array('controller'=>'gun','action'=>'add')); ?>" class="roundall_grey add_icon">
+            <span class="ml22">Senapan Baru</span>
+        </a>
+    </p>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+
+<!--            <div id="filter-container">-->
+<!--                <label for="feed-filter">Filter &#58;</label>-->
+<!--            </div>-->
+
+
+
+            <table id="table_penyalur" class="display">
+
+                <thead>
+
+                <tr>
+                    <th>Kode Senjata</th>
+                    <th>Nama Senjata</th>
+                    <th>Kaliber Senjata</th>
+                    <th>Negara</th>
+                    <th>Kategori Senjata</th>
+                    <th>Aksi</th>
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var htmlFilter = '<select id="feed-filter">'
+        +'<option value="" selected="selected">[Pilih]</option>'
+        +'<option value="0">Nama Senjata</option>'
+        +'<option value="1">Kaliber Senjata</option>'
+        +'<option value="2">Negara</option>'
+        +'<option value="3">kategori Senjata</option>'
+        +'</select>';
+
+    var oTable = $('#table_penyalur').dataTable( {
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "aoColumns":[
+            null,
+            null,
+            null,
+            null,
+            null,
+            {bSortable:false}
+        ],
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : baseUrl + '/cms/gun/dataapi',
+        "fnServerData" : function(sSource, aoData, fnCallback)
+        {
+            //filter category content
+            if(jQuery('#feed-filter').length)
+            {
+                filter = jQuery('#feed-filter').val()
+
+                aoData.push({
+                    "name": "filter",
+                    "value":  filter
+                });
+            }
+
+            jQuery.getJSON(sSource, aoData, function(json) {
+                //if(aaData != 'undefined')
+                //{
+                fnCallback(json)
+                //}
+            });
+
+            $('.custom-rows').parent().css('vertical-align','middle');
+        }
+    })//.makeEditable()
+
+    $('#table_penyalur_filter').css('width', '360px');
+    var elmntSearch = $("#table_penyalur_filter").find("input:text");
+    $(htmlFilter).insertBefore(elmntSearch);
+</script>

@@ -1,0 +1,35 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+	<label>Bomb Type</label>
+	<?php echo $f->bomb_type->renderViewHelper(); ?>
+	<?php echo $f->bomb_type->renderErrors(); ?>
+	
+	<label>Country</label>
+	<?php echo $f->country_id->renderViewHelper(); ?>
+	<?php echo $f->country_id->renderErrors(); ?>
+	
+	<label>Name</label>
+	<?php echo $f->bomb_name->renderViewHelper(); ?>
+	<?php echo $f->bomb_name->renderErrors(); ?>
+	
+	<label>Warhead Weight</label>
+	<?php echo $f->bomb_warhead_weight->renderViewHelper(); ?>
+	<?php echo $f->bomb_warhead_weight->renderErrors(); ?>
+	
+	<label>Max Range</label>
+	<?php echo $f->bomb_range_max->renderViewHelper(); ?>
+	<?php echo $f->bomb_range_max->renderErrors(); ?>
+	
+	<label>Probability of Hit</label>
+	<?php echo $f->bomb_prob_of_hit->renderViewHelper(); ?>
+	<?php echo $f->bomb_prob_of_hit->renderErrors(); ?>
+	
+	<label>Description</label>
+	<?php echo $f->description->renderViewHelper(); ?>
+	<?php echo $f->description->renderErrors(); ?>
+	
+	<button class="button_colour round_all">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+</form>

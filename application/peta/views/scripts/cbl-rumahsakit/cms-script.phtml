@@ -1,0 +1,52 @@
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script type="text/javascript">
+    /*
+    * cms-script
+    * berisi fungsi2 yg digunakan ketika membuat & mengedit rs-pendukung
+    * @author : tajhul.faijin@sangkuriang.co.id
+    * */
+    // global map object
+    var map;
+    var prevmarkers = new OpenLayers.Layer.Markers( "Preview Position" );
+    // layers dan geourl ada di script.js
+
+    //ready function
+    $(function(){
+        $('#id_rumahsakit').change(function(){
+            var id = $(this).val();
+            if(id != '') {
+                getData( id );
+            }
+        });
+        $('#map').css('height', '500px');
+        map = standardMap('map');
+        map.addLayer(prevmarkers);
+        /* == End of Fitur Tampilan Pangkalan Pendukung */
+    });
+    /*
+    * <previewMarker> : preview marker
+    * @param : lon lat
+    * */
+    function previewMarker(lon, lat){
+        prevmarkers.clearMarkers();
+        prevmarkers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(lon, lat)));
+        var lonLat = new OpenLayers.LonLat(lon, lat);
+        map.setCenter (lonLat);
+    }
+
+    //query data
+    function getData( id ){
+        $.post("<?php echo $this->url(array('controller'=>'cbl.rumahsakit','action'=>'rs.location')); ?>", {
+            "id": id
+        },
+        function(data){
+            if(data.lon !== null || data.lat !== null){
+                previewMarker(data.lon, data.lat);
+            } else {
+                alert('Koordinate tidak lengkap!');
+                prevmarkers.clearMarkers();
+                return false;
+            }
+        }, "json");
+    }
+</script>

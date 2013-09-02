@@ -1,0 +1,78 @@
+<?php
+$identity = Zend_Auth::getInstance()->getStorage()->read();
+?>
+<div class="flat_area grid_16">
+
+    <div id="slider-image" class="block" style="">
+        <div class="slider-wrapper theme-default">
+            <div class="ribbon"></div>
+
+            <div id="slider" class="nivoSlider">
+                <?php
+                    foreach( $this->slider as $slide ) {
+                        echo '<img class="thumslide" title="img-'. $slide['id'] .'" src="' . $this->UploadimageUrl($slide['file_name']) . '">';
+                    }
+                ?>
+            </div>
+            <div id="htmlcaption" class="nivo-html-caption">
+                <strong>This</strong> is an example of a <em>HTML</em> caption with <a href="#">a link</a>.
+            </div>
+        </div>
+    </div>
+    <?php if( isset($this->news) AND !empty($this->news) ):?>
+    <div id="news" class="block">
+        <?php foreach($this->news as $i => $data):?>
+        <div class="headline" style="<?php echo $i+1 != 3 ? 'margin-right: 25px;' : '';?>">
+            <p class="title">
+                <a onclick="window.location='<?php echo $this->siteUrl('home/detail/id/' . $data['id'] )?>'" class="title" href="javascript:void(0)">
+                    <?php echo $data['judul'];?>
+                </a>
+                <br />
+                <small style="font-style: italic;">
+                    <?php echo $this->date($data['tanggal'], '-', 'id');?>
+                </small>
+            </p>
+            <p class="shortdesc">
+                <?php
+                $clearContent = html_entity_decode($data['berita'], ENT_QUOTES);
+                echo $this->truncate( $clearContent , 400);
+                ?>
+            </p>
+            <a class="roundall_grey" style="float:right;" href='<?php echo $this->siteUrl('home/detail/id/' . $data['id'] )?>'>
+                <span> Selengkapnya >> </span>
+            </a>
+        </div><!-- end of .headline -->
+        <?php endforeach;?>
+    </div>
+    <?php endif;?>
+</div>
+<hr/>
+
+<div class="links">
+    <div style="margin: 2px 0 3px 0;"></div>
+    <?php if(isset( $this->links ) && !empty($this->links)):?>
+        <?php foreach($this->links as $link):?>
+        <a style="position:relative;" target="_blank" class="tipsytooltip link-com" id="example-<?php echo $i?>" href="<?php echo empty( $link['tautan'] ) ? 'javascript:void(0)' : $link['tautan'];?>" original-title="<?php echo $link['judul']?>">
+            <div class="grey-hover"></div>
+            <?php $file = empty( $link['file'] ) ? 'default.png' : $link['file'];?>
+            <img src="<?php echo $this->siteUrl( 'upload/images/link_logo/' . $file );?>" alt="">
+        </a>
+        <?php endforeach;?>
+    <?php endif;?>
+</div>
+
+<script type="text/javascript">
+$(window).load(function() {
+    $('.tipsytooltip').tipsy();
+    $('#slider').nivoSlider();
+    $('.link-com').hover(
+        function () {
+            $(this).find('.grey-hover').css('opacity','0');
+        },
+        function () {
+            $(this).find('.grey-hover').css('opacity','0.5');
+        }
+
+    )
+});
+</script>

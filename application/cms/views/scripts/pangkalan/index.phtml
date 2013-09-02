@@ -1,0 +1,54 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Pangkalan</h2>
+	<p>
+        <a href="<?php echo $this->url(array('action'=>'add')); ?>" class="roundall_grey add_icon">
+            <span class="ml22">Pangkalan Baru</span>
+        </a>
+    </p>
+	
+	<div class="block">
+		<table id="table-dtables" class="display">
+			<thead>
+				<tr>
+					<th>Pangkalan</th>
+					<th>Jenis</th>
+					<th>Di bawah</th>
+					<th></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+$(function(){
+    var oTable = $('#table-dtables').dataTable({
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "bFilter": true,
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : '<?php echo $this->url(array('action'=>'dataapi')); ?>',
+        "fnServerData" : function(sSource, aoData, fnCallback) {
+            // @optional filter category content
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        },
+		'aoColumns' : [
+			null,null,null,
+			{bSortable: false, bSearchable: false}]
+    });
+	
+	new Filterer(oTable);
+});
+</script>

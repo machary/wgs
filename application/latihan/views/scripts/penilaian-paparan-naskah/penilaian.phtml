@@ -1,0 +1,93 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Penilaian Paparan Naskah</h2>
+
+    <form action="<?php echo $this->url();?>" method="POST">
+        <div class="grid_16 box clearfix no_titlebar" style="opacity: 1;">
+            <div class="indented_button_bar clearfix">
+                <h3 style="margin-bottom: 0;margin-top: 13px; margin-left: 10px; float: left;"><?php echo $this->team;?></h3>
+                <a target="_blank" href="<?php echo $this->url(array('action' => 'print')); ?>" class="skin_colour green send_right on_dark text_only has_text" style="clear: none;float: right;  margin: 5px; margin-left: 0;">
+                    <span>Print</span>
+                </a>
+                <button class="light on_dark text_only has_text" style="clear: none; float: right; margin: 5px; margin-left: 0;">
+                    <span>Simpan</span>
+                </button>
+            </div>
+        </div>
+        <div class="box grid_16 no_titlebar">
+            <div class="block">
+                <input id="item_index" name="item_index" type="hidden" value="<?php echo count($this->kogas); ?>" />
+                <input id="item_aspek_index" name="item_aspek_index" type="hidden" value="<?php echo count($this->aspek); ?>" />
+                <table id="table-cb" class="display simple-table">
+                    <thead>
+                    <tr>
+                        <th rowspan="2" width="5%">No.</th>
+                        <th rowspan="2" width="40%">Aspek Yang Dinilai</th>
+                        <th colspan="2">Nilai</th>
+                        <th rowspan="2" width="20%">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <th>Nilai Mak</th>
+                        <th>Nilai</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <?php if(!empty($this->kogas)): ?>
+                            <?php $i = 1; ?>
+                            <?php foreach($this->kogas as $kogasID => $kogas): ?>
+                                <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                    <td rowspan="<?php echo count($this->aspek)+1; ?>" style="padding: 15px 8px; vertical-align: top; font-weight: bold;">
+                                        <?php echo $i.'.'; ?>
+                                        <input id="kogas<?php echo $i; ?>" name="kogas<?php echo $i; ?>" type="hidden" value="<?php echo $kogas; ?>" />
+                                    </td>
+                                    <td style="border-top: none;border-bottom: none;padding: 15px 8px; font-weight: bold;">
+                                        <?php echo strtoupper($kogas); ?>
+                                    </td>
+                                    <td style="border-top: none;border-bottom: none;"></td>
+                                    <td style="border-top: none;border-bottom: none;"></td>
+                                    <td style="border-top: none;border-bottom: none;"></td>
+                                </tr>
+
+                                <?php $j = 1; ?>
+                                <?php foreach($this->aspek as $index => $aspek): ?>
+                                    <?php if(intval($index) != (count($this->aspek)-1)): ?>
+                                        <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                            <td style="border-top: none;border-bottom: none;">
+                                                <?php echo '- '.$aspek['aspek_nilai']; ?>
+                                                <input id="aspekid<?php echo $i.$j; ?>" name="aspekid<?php echo $i.$j; ?>" type="hidden" value="<?php echo $aspek['id']; ?>" />
+                                            </td>
+                                            <td style="border-top: none;border-bottom: none; text-align: center;"><?php echo $aspek['nilai_maks']; ?></td>
+                                            <td style="border-top: none;border-bottom: none;text-align: center;">
+                                                <input style="margin: 0 auto;" size="3" class="nilai-input" value="<?php echo $this->model->getByAspekKogas( $aspek['id'], $kogasID, 'nilai');?>" id="nilai<?php echo $i.$j; ?>" name="nilai<?php echo $i.$j; ?>" type="text" />
+                                            </td>
+                                            <td style="border-top: none;border-bottom: none;text-align: center;">
+                                                <input style="margin: 0 auto;" size="40" value="<?php echo $this->model->getByAspekKogas( $aspek['id'], $kogasID, 'keterangan');?>" id="keterangan<?php echo $i.$j; ?>" name="keterangan<?php echo $i.$j; ?>" type="text" />
+                                                <input style="margin: 0 auto;" size="40" value="<?php echo $kogasID;?>" id="kogas<?php echo $i.$j; ?>" name="kogas<?php echo $i.$j; ?>" type="hidden" />
+                                            </td>
+                                        </tr>
+                                    <?php else: ?>
+                                        <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                            <td style="border-top: none;">
+                                                <?php echo '- '.$aspek['aspek_nilai']; ?>
+                                                <input id="aspekid<?php echo $i.$j; ?>" name="aspekid<?php echo $i.$j; ?>" type="hidden" value="<?php echo $aspek['id']; ?>" />
+                                            </td>
+                                            <td style="border-top: none; text-align: center;"><?php echo $aspek['nilai_maks']; ?></td>
+                                            <td style="border-top: none;text-align: center;">
+                                                <input style="margin: 0 auto;" size="3" class="nilai-input" value="<?php echo $this->model->getByAspekKogas( $aspek['id'], $kogasID, 'nilai');?>" id="nilai<?php echo $i.$j; ?>" name="nilai<?php echo $i.$j; ?>" type="text" />
+                                            </td>
+                                            <td style="border-top: none;text-align: center;">
+                                                <input style="margin: 0 auto;" size="40" value="<?php echo $this->model->getByAspekKogas( $aspek['id'], $kogasID, 'keterangan');?>" id="keterangan<?php echo $i.$j; ?>" name="keterangan<?php echo $i.$j; ?>" type="text" />
+                                                <input style="margin: 0 auto;" size="40" value="<?php echo $kogasID;?>" id="kogas<?php echo $i.$j; ?>" name="kogas<?php echo $i.$j; ?>" type="hidden" />
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
+                                <?php $j++; endforeach; ?>
+                            <?php $i++; endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>

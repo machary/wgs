@@ -1,0 +1,185 @@
+<?php
+// link[0] URL
+// link[1] Label
+// link[2] sublink
+
+$complete = array(
+//    array('#', 'Beranda'),
+
+	array('#', 'Database', array(
+		array('latihan/kekuatan.sendiri', 'Kekuatan Sendiri'),
+		array('latihan/kekuatan.musuh', 'Kekuatan Musuh'),
+		array('#', 'Kapal', array(
+			array('cms/ship.class', 'Daftar Kelas Kapal'),
+			array('cms/ship', 'Daftar Kapal'),
+			array('cms/ship.weaponry', 'Persenjataan'),
+		)),
+		array('#', 'SEWACO', array(
+			array('#', 'Bom', array(
+				array('cms/bomb/list.bomb', 'Daftar Bomb'),
+				array('cms/bomb/list.type', 'Tipe Bomb'),
+			)),
+			array('cms/missile', 'Peluru Kendali'),
+			array('#', 'Radar', array(
+				array('cms/radar/list.radar', 'Daftar Radar'),
+				array('cms/radar/list.type', 'Tipe Radar'),
+			)),
+			array('cms/gun', 'Senapan'),
+			array('#', 'Sonar', array(
+				array('cms/sonar/list.sonar', 'Daftar Sonar'),
+				array('cms/sonar/list.category', 'Kategori Sonar'),
+			)),
+			array('cms/torpedo', 'Torpedo'),
+		)),
+		array('#', 'Pangkalan AL', array(
+			array('cms/pangkalan', 'Daftar Pangkalan'),
+			array('#', 'Faslabuh', array(
+				array('cms/fasilitas.dermaga', 'Dermaga'),
+				array('cms/fasilitas.labuh.udara', 'Labuh Udara'),
+			)),
+			array('#', 'Fasharkan', array(
+				array('cms/fasilitas.dock', 'Dock'),
+				array('cms/fasilitas.bengkel', 'Bengkel'),
+			)),
+			array('#', 'Faswatpres', array(
+				array('cms/rumah', 'Rumah'),
+				array('cms/mess', 'Mess'),
+				array('cms/rumah.sakit', 'Rumah Sakit'),
+				array('cms/fasilitas.umum', 'Fasilitas Umum'),
+			)),
+			array('#', 'Fasbinlan', array(
+				array('cms/fasilitas.listrik', 'Listrik'),
+				array('cms/fasilitas.ranmor', 'Ranmor'),
+				array('cms/fasilitas.tanah', 'Tanah'),
+			)),
+			array('cms/fasbek', 'Fasbek'),
+		)),
+		array('#', 'Kesatuan', array(
+			array('cms/komando', 'Daftar Komando'),
+			array('cms/kesatuan', 'Daftar Kesatuan'),
+			array('cms/ranpur', 'Kendaraan Tempur'),
+			array('cms/kesatuan.ranpur', 'Daftar Ranpur Kesatuan'),
+		)),
+		array('#', 'Pesud', array(
+			array('cms/pesawat.jenis', 'Jenis Pesawat'),
+			array('cms/pesawat.al', 'Penerbal'),
+		)),
+	)),
+
+	array('#', 'Latihan', array(
+		array('latihan/skenario', 'Arsip Latihan'),
+	)),
+
+	array('cms/produk.staff', 'Produk Staff'),
+
+	array('#', 'GIS', array(
+		array('peta/operasional', 'Operasional'),
+		array('peta/cb-logistik', 'Logistik'),
+		array('peta/telegram', 'Telegram'),
+	)),
+
+	array('#', 'Komunikasi'),
+
+	array('cms/referensi', 'Referensi'),
+
+	array('#', 'Integrasi lain'),
+
+	array('#', 'User & Role', array(
+		array('management/role', 'Manajemen Role'),
+		array('management/privilege', 'Manajemen Privilege'),
+		array('management/role.privilege', 'Manajemen Role Privilege'),
+		array('management/login', 'Manajemen Login'),
+	)),
+);
+
+
+
+if (!function_exists('filterLinks')) {
+function filterLinks($arr) {
+	$result = array();
+	foreach ($arr as $toplink) {
+		if (isset($toplink[2])) {
+			$tempsub = array();
+			foreach ($toplink[2] as $sublink) {
+				if (isset($sublink[2])) {
+					$tempsubsub = array();
+					foreach ($sublink[2] as $subsublink) {
+						$urai = explode('/', $subsublink[0]);
+						$urai[2] = isset($urai[2]) ? $urai[2] : 'index';
+						if (App_Auth::isAllowed($urai[0], $urai[1], $urai[2])) {
+							$tempsubsub[] = $subsublink;
+						}
+					}
+					$sublink[2] = $tempsubsub;
+				}
+				$urai = explode('/', $sublink[0]);
+				$urai[2] = isset($urai[2]) ? $urai[2] : 'index';
+				if ($sublink[0] === '#' || App_Auth::isAllowed($urai[0], $urai[1], $urai[2])) { // hanya yg boleh dikunjungi
+					if (!isset($sublink[2]) || count($sublink[2])) { // kalau ada anak, pastikan tidak kosong
+						$tempsub[] = $sublink;
+					}
+				}
+			}
+			$toplink[2] = $tempsub;
+		}
+		$urai = explode('/', $toplink[0]);
+		$urai[2] = isset($urai[2]) ? $urai[2] : 'index';
+		if ($toplink[0] === '#' || App_Auth::isAllowed($urai[0], $urai[1], $urai[2])) { // hanya yg boleh dikunjungi
+			if (!isset($toplink[2]) || count($toplink[2])) { // kalau ada anak, pastikan tidak kosong
+				$result[] = $toplink;
+			}
+		}
+	}
+	return $result;
+}}
+
+$filtered = filterLinks($complete);
+
+// print_r($filtered);
+
+// output html dari array link
+$GLOBALS['imgUrl'] = $this->imgUrl();
+$GLOBALS['siteUrl'] = $this->siteUrl();
+if (!function_exists('printLinks')) {
+function printLinks($arr) {
+	$hasIdentity = Zend_Auth::getInstance()->hasIdentity();
+	global $imgUrl, $siteUrl;
+?>
+<li><a href="<?php echo $siteUrl . 'home' ?>">Beranda</a></li>
+
+	<?php foreach ($arr as $toplink) : ?>
+		<?php if (isset($toplink[2])) : ?>
+			<li><a href='#'><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $toplink[1]; ?></a>
+				<ul class='subnavigation dropdown'>
+					<?php foreach ($toplink[2] as $sublink) : ?>
+						<?php if (isset($sublink[2])) : ?>
+							<li><a class="has_slide" href="#"><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $sublink[1]?></a>
+								<ul class="slideout">
+									<?php foreach ($sublink[2] as $subsublink) : ?>
+										<li><a href='<?php echo $siteUrl.$subsublink[0];?>'><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $subsublink[1]; ?></a></li>
+									<?php endforeach; ?>
+								</ul>
+							</li>
+						<?php else : ?>
+							<li><a href='<?php echo $siteUrl.$sublink[0]; ?>'><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $sublink[1]; ?></a></li>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</ul>
+			</li>
+		<?php else : ?>
+			<li><a href='<?php echo $siteUrl.$toplink[0]; ?>'><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $toplink[1]; ?></a></li>
+		<?php endif; ?>
+	<?php endforeach; ?>
+	<?php if( !$hasIdentity ) :?>
+		<li><a href="<?php echo $siteUrl . 'index/login' ?>">Login</a></li>
+	<?php endif; ?>
+<?php
+}}
+?>
+
+<div id="nav_top" class="clearfix  round_top">
+	<ul id="navigation" class="clearfix">
+		<?php printLinks($filtered); ?>
+	</ul>
+</div>
+<!-- #nav_top -->

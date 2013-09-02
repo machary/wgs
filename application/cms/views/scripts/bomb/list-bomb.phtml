@@ -1,0 +1,59 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Bomb</h2>
+	<p>
+		<a class="roundall_grey add_icon" href="<?php echo $this->url(array('controller'=>'bomb','action'=>'add.bomb')); ?>">
+            <span class="ml22">Bom Baru</span>
+        </a>
+	</p>
+	
+	<div class="block">
+		<table id="table-bomb" class="display">
+			<thead>
+				<tr>
+					<th>Type</th>
+					<th>Country</th>
+					<th>Name</th>
+					<th>Warhead Weight</th>
+					<th>Range Max</th>
+					<th>Probability of Hit</th>
+					<th width="10%"></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+<?php $this->inlineScript()->appendFile($this->jsUrl( 'script.js')); ?>
+$(function(){
+    oTable = $('#table-bomb').dataTable({
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "bFilter": true,
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : baseUrl + '/cms/bomb/dataapi.bomb',
+        "fnServerData" : function(sSource, aoData, fnCallback) {
+            // @optional filter category content
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        },
+		'aoColumns' : [
+			null,null,null,
+			{bSearchable: false},{bSearchable: false},{bSearchable: false},
+			{bSortable: false, bSearchable: false}]
+    });//.makeEditable();
+	
+	new Filterer(oTable);
+});
+</script>

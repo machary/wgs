@@ -1,0 +1,125 @@
+<?php
+
+$this->headTitle( 'Olah Yudha | Seskoal' );
+
+$this->headLink()
+	->appendStylesheet( $this->cssUrl( 'all.css' ) )
+	->appendStylesheet( $this->cssUrl( 'custom-style.css'))
+	->appendStylesheet( $this->cssUrl( 'general.css'))
+	->appendStylesheet( $this->cssUrl( 'header_top.css' ) )
+	->appendStylesheet( $this->cssUrl( 'map-style.css' ) )
+	->appendStylesheet( $this->cssUrl( 'theme/theme_blue.css' ) )
+	->appendStylesheet( $this->cssUrl( 'theme/bg_wood.css' ) )
+	->appendStylesheet( $this->cssUrl( 'ie6.css' ), 'screen', 'IE6' )
+	->appendStylesheet( $this->cssUrl( 'ie.css' ), 'screen', 'IE' )
+	->appendStylesheet( $this->cssUrl( 'validationEngine.jquery.css' ) )
+	->appendStylesheet( $this->cssUrl( 'OpenLayers/theme/default/style.css' ) )
+	->appendStylesheet( $this->cssUrl( 'nivo/nivo-slider.css' ) )
+	->appendStylesheet( $this->cssUrl( 'nivo/style-nivo.css' ) )
+	->appendStylesheet( $this->cssUrl( 'jCrop/jquery.Jcrop.css' ) )
+
+;
+
+$this->headScript()
+//->appendFile( 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js' )
+//->appendFile( 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js' )
+	->prependFile( $this->jsUrl( 'jquery-1.6.2.js' ) )
+    ->appendFile( $this->jsUrl( 'jquery-ui-1.8.16.custom.min.js' ) )
+	->appendFile( $this->jsUrl( 'fancybox/jquery.fancybox-1.3.4.js' ) )
+	->appendFile( $this->jsUrl( 'quicksand/jquery.quicksand.js') )
+	->appendFile( $this->jsUrl( 'quicksand/custom_sorter.js' ) )
+	->appendFile( $this->jsUrl( 'quicksand/dash_sorter.js' ) )
+	->appendFile( $this->jsUrl( 'quicksand/jquery-css-transform.js' ) )
+	->appendFile( $this->jsUrl( 'quicksand/jquery-animate-css-rotate-scale.js' ) )
+	->appendFile( $this->jsUrl( 'tinyeditor/tinyeditor.js' ) )
+	->appendFile( $this->jsUrl( 'DataTables/jquery.dataTables.js' ) )
+	->appendFile( $this->jsUrl( 'jqueryFileTree/jqueryFileTree.js' ) )
+	->appendFile( $this->jsUrl( 'slidernav/slidernav.js' ) )
+	->appendFile( $this->jsUrl( 'list/list.js' ) )
+	->appendFile( $this->jsUrl( 'uniform/jquery.uniform.js' ) )
+	->appendFile( $this->jsUrl( 'livevalidation/livevalidation_standalone.js' ) )
+	->appendFile( $this->jsUrl( 'tipsy/jquery.tipsy.js' ) )
+	->appendFile( $this->jsUrl( 'iPhone/jquery.iphoneui.js' ) )
+	->appendFile( $this->jsUrl( 'uitotop/js/jquery.ui.totop.js' ) )
+	->appendFile( $this->jsUrl( 'jquery.blockUI.js' ) )
+	->appendFile( $this->jsUrl( 'jqueryvalidate/jquery.validate.js' ) )
+//->appendFile( $this->jsUrl( 'Jeditable.js' ) )
+	->appendFile( $this->jsUrl( 'OpenLayers.js' ) )
+	->appendFile( $this->jsUrl( 'timepicker.js' ) )
+	->appendFile( $this->jsUrl( 'view/global.js' ) )
+	->appendFile( $this->jsUrl( 'custom.js' ) )
+	->appendFile( $this->jsUrl( 'nivo/jquery.nivo.slider.js' ) )
+	->appendFile( $this->jsUrl( 'jCrop/jquery.Jcrop.js' ) )
+	->appendFile( $this->jsUrl( 'jquery.tipsy.js' ) )
+//->appendFile( $this->jsUrl( 'plugins.js' ) );
+	->appendFile( $this->jsUrl( 'peta-dasar.js' ) ) // default map settings
+	->appendFile( $this->jsUrl( 'script.js' ) ) // Fungsi-Fungsi Js yang sering dipakai
+;
+
+
+$this->inlineScript()->appendFile( $this->jsUrl( 'adminica/adminica_ui-less.js' ) );
+
+?>
+<!DOCTYPE html>
+<html dir="ltr">
+<head>
+	<meta charset="utf-8">
+
+	<!-- iPhone, iPad and Android specific settings -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+	<!-- Create an icon and splash screen for iPhone and iPad -->
+	<!-- todo:icon + splash screen buat iphone dan ipad -->
+	<link rel="apple-touch-icon" href="<?php echo $this->imgUrl( 'iOS_icon.png' ); ?>"/>
+	<link rel="apple-touch-startup-image" href="<?php echo $this->imgUrl( 'iOS_startup.png' ); ?>"/>
+
+	<link rel="shortcut icon" href="<?php echo $this->imgUrl( 'favicon.ico' ) ?>" type="image/gif" />
+	<link rel="icon" href="<?php echo $this->imgUrl( 'favicon.ico' ) ?>" type="image/gif" />
+
+	<link rel="resource" type="application/l10n" href="locale.properties"/>
+
+	<?php echo $this->headTitle() ?>
+	<?php echo $this->headLink() ?>
+	<?php echo $this->headStyle() ?>
+
+	<script type="text/javascript">
+		var jsUrl = "<?php echo $this->siteUrl(); ?>";
+		var imgUrl = "<?php echo $this->imgUrl(); ?>";
+		var baseUrl = '<?php echo $this->baseUrl(); ?>';
+		var serverUrl = "http://192.168.1.28:8080/geoserver/wms";
+	</script>
+
+	<?php echo $this->headScript() ?>
+
+</head>
+
+<body>
+
+<?php echo $this->layout()->render( 'topbar' ) ?>
+<?php //echo $this->layout()->render( 'sidebar' ) ?>
+
+<div id="main_container" class="main_container container_16 clearfix">
+
+	<?php echo $this->layout()->render( 'navigation' ) ?>
+
+    <?php if (isset($this->successAlert)) : ?>
+        <div class="message success">
+            <h3><?php echo $this->successAlert; ?></h3>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($this->errorAlert)) : ?>
+        <div class="message error">
+            <h3><?php echo $this->errorAlert; ?></h3>
+        </div>
+    <?php endif; ?>
+
+	<?php echo $this->layout()->content ?>
+	<?php echo $this->inlineScript() ?>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+	<label>Name</label>
+	<?php echo $f->sonar_name->renderViewHelper(); ?>
+	<?php echo $f->sonar_name->renderErrors(); ?>
+	
+	<label>Sonar Category</label>
+	<?php echo $f->sonar_category->renderViewHelper(); ?>
+	<?php echo $f->sonar_category->renderErrors(); ?>
+	
+	<label>Max Detection Range</label>
+	<?php echo $f->sonar_max_detect_range->renderViewHelper(); ?>
+	<?php echo $f->sonar_max_detect_range->renderErrors(); ?>
+	
+	<label>Max Depth</label>
+	<?php echo $f->sonar_max_depth->renderViewHelper(); ?>
+	<?php echo $f->sonar_max_depth->renderErrors(); ?>
+	
+	<label>Max Speed</label>
+	<?php echo $f->sonar_max_speed->renderViewHelper(); ?>
+	<?php echo $f->sonar_max_speed->renderErrors(); ?>
+	
+	<label>Description</label>
+	<?php echo $f->description->renderViewHelper(); ?>
+	<?php echo $f->description->renderErrors(); ?>
+	
+	<button class="button_colour round_all">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+</form>

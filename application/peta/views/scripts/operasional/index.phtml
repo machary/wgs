@@ -1,0 +1,88 @@
+<?php
+$this->inlineScript()->appendFile( $this->jsUrl( 'view/operasional-gis.js' ) );
+//$this->inlineScript()->appendFile( $this->jsUrl( 'view/map-autocomplete.js' ) );
+?>
+
+<script type="text/javascript">
+	<?php $this->inlineScript()->captureStart(); ?>
+	//    Openlayer start here
+	var proxyUrl = "<?php echo $this->baseUrl('peta/proxy/?url='); ?>";
+	<?php $this->inlineScript()->captureEnd(); ?>
+</script>
+
+<div class="flat_area grid_16">
+
+	<!-- box header label -->
+	<h2>Perkiraan Operasi</h2>
+
+	<div class="map-top-nav">
+		<a href="<?php echo $this->url(array('action'=>'cblist')); ?>" class="roundall_grey add_icon mr3">
+			<span class="ml22">Kogasgabla</span>
+		</a>
+		<!--
+		<a href="#" class="roundall_grey add_icon mr3">
+			<span class="ml22">Kogasud</span>
+		</a>
+		<a href="#" class="roundall_grey add_icon mr3">
+			<span class="ml22">Pasrat</span>
+		</a>
+		<a href="#" class="roundall_grey add_icon mr3">
+			<span class="ml22">Kogasgablinud</span>
+		</a>
+		<a href="#" class="roundall_grey add_icon mr3">
+			<span class="ml22">Kogasgabrat</span>
+		</a>
+		<a href="#" class="roundall_grey add_icon mr3">
+			<span class="ml22">Kogasud</span>
+		</a>
+		-->
+	</div>
+
+	<!-- container -->
+	<div class="toggle_container" style="display: block; ">
+
+		<div id="map-wrapper" class="block">
+			<div class="map-data">
+				<div class="box no-margin">
+					<h2 class="box_head grad_colour">Data Daerah Peta Yang Di Klik</h2>
+					<a href="#" class="grabber">&nbsp;</a>
+					<a href="#" class="toggle">&nbsp;</a>
+					<div id="tampung-data" class="toggle_container">
+
+					</div>
+				</div>
+			</div>
+			<div id="map"></div>
+			<div id="wrapper">
+				<div id="location" style="float:right"></div>
+				<div id="scale" style="float:left"></div>
+				<div id="coordclick" style="width:400px;margin:auto">Clicked Coordinate : <input size="40"></div>
+			</div>
+		</div>
+
+
+
+
+	</div>
+
+</div>
+<style type="text/css">
+	.olControlOverviewMap {
+		left: 0px;
+		right: auto;
+		bottom: 0px;
+	}
+
+	.olControlNavToolbar {
+		left: 0px;
+		right: auto;
+		top: 60px;
+	}
+
+	.olControlZoomPanel{
+		left: 5px;
+		right: auto;
+		top: 5px;
+	}
+
+</style>

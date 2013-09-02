@@ -1,0 +1,113 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Data Torpedo</h2>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+
+            <p>
+                <a href="<?php echo $this->url(array('controller'=>'torpedo','action'=>'add')); ?>" class="roundall_grey add_icon">
+                    <span class="ml22">Torpedo Baru</span>
+                </a>
+            </p>
+
+<!--            <div id="filter-container">-->
+<!--                <label for="feed-filter">Filter &#58;</label>-->
+<!---->
+<!--            </div>-->
+
+            <table id="table_penyalur" class="display">
+
+                <thead>
+
+                <tr>
+                    <th>Nama Torpedo</th>
+                    <th>Asal Negara</th>
+                    <th>Tipe Nama Deteksi</th>
+                    <th>Nama Pelontar</th>
+                    <th>Berat Torpedo</th>
+                    <th>Diameter TOrpedo</th>
+                    <th>Kecepatan Maksimal Torpedo</th>
+                    <th>Jarak Maksimal Torpedo</th>
+                    <th>Daya Hancur Torpedo</th>
+                    <th>Aksi</th>
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var htmlFilter = '<select id="feed-filter">'
+        +'<option value="" selected="selected">[Pilih]</option>'
+        +'<option value="0">Nama Torpedo</option>'
+        +'<option value="1">Asal Negara</option>'
+        +'<option value="2">Tipe Nama Deteksi</option>'
+        +'<option value="3">Nama Pelontar</option>'
+        +'<option value="4">Berat Torpedo</option>'
+        +'<option value="5">Diameter TOrpedo</option>'
+        +'<option value="6">Kecepatan Maksimal Torpedo</option>'
+        +'<option value="7">Jarak Maksimal Torpedo</option>'
+        +'<option value="8">Daya Hancur Torpedo</option>'
+        +'</select>';
+
+    var oTable = $('#table_penyalur').dataTable( {
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "aoColumns":[
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            {bSortable:false}
+        ],
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : baseUrl + '/cms/torpedo/dataapi',
+        "fnServerData" : function(sSource, aoData, fnCallback)
+        {
+            //filter category content
+            if(jQuery('#feed-filter').length)
+            {
+                filter = jQuery('#feed-filter').val()
+
+                aoData.push({
+                    "name": "filter",
+                    "value":  filter
+                });
+            }
+
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        }
+    })//.makeEditable()
+
+    $('#table_penyalur_filter').css('width', '360px');
+    var elmntSearch = $("#table_penyalur_filter").find("input:text");
+    $(htmlFilter).insertBefore(elmntSearch);
+</script>

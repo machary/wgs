@@ -1,0 +1,350 @@
+<div class="flat_area grid_16">
+	<h2>Komposisi Kekuatan Musuh - <?php echo $this->skenario->get('nomor'); ?></h2>
+	<div class="map-top-nav">
+        <a href="javascript:void(0)" id="kdarat_lawan" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Darat</span>
+        </a>
+
+        <a href="javascript:void(0)" id="klaut_lawan" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Laut</span>
+        </a>
+
+        <a href="javascript:void(0)" id="kudara_lawan" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Udara</span>
+        </a>
+
+		<a href="<?php echo $this->url(array('controller'=>'kekuatan.musuh','action'=>'pergerakan.add')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Pergerakan</span>
+		</a>
+
+		<a href="<?php echo $this->siteUrl('latihan/skenario');?>" class="roundall_grey back_icon float-right">
+			<span class="ml22">Kembali</span>
+		</a>
+	</div>
+</div>
+
+
+<div class="box grid_8 grid_16 round_all contentmap" >
+	<h2 class="box_head grad_colour titlemap">Peta Kekuatan Musuh</h2>
+	<div id="map2"></div>
+</div>
+
+<div class="box grid_8 round_all controlmap" >
+	<h2 class="box_head grad_colour">Kontrol Kekuatan Musuh</h2>
+	<div id="view-data"></div>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+
+	// return HTML content for popup
+	function buildPopupContent(judul, kekuatan) {
+		// kekuatan is an array
+		var html = '<table class="popup musuh">'+
+			'<tr>'+
+			'<th colspan="2">'+judul+'</th>'+
+			'</tr>';
+		if (kekuatan) for (var i=0; i<kekuatan.length; i++) {
+			html += '<tr>'+
+				'<td>'+kekuatan[i].replace(/\|/, '</td><td>')+'</td>'+
+				'</tr>';
+		}
+		html += '</table>';
+
+		return html;
+	}
+
+
+	function getasformlaut()
+	{
+		$.get('<?php echo $this->siteUrl('latihan/kekuatan.lawan/laut.edit/skenario_id/'.$this->skenario->getId()); ?>',
+			{
+			}, function(data, status, xhr) {
+
+				$('#form-musuh').html(data);
+
+			}, 'html')
+			.error(function() {
+			})
+			.complete(function() {
+			});
+	}
+
+	function getasformdarat()
+	{
+		$.get('<?php echo $this->siteUrl('latihan/kekuatan.lawan/darat.edit/skenario_id/'.$this->skenario->getId()); ?>',
+			{
+			}, function(data, status, xhr) {
+
+				$('#form-musuh').html(data);
+
+			}, 'html')
+			.error(function() {
+			})
+			.complete(function() {
+			});
+	}
+
+	function getasformudara()
+	{
+		$.get('<?php echo $this->siteUrl('latihan/kekuatan.lawan/udara.edit/skenario_id/'.$this->skenario->getId()); ?>',
+			{
+			}, function(data, status, xhr) {
+
+				$('#form-musuh').html(data);
+
+			}, 'html')
+			.error(function() {
+			})
+			.complete(function() {
+			});
+	}
+
+
+	// global object
+	var map; //map
+	var	layerKekuatanDarat,layerKekuatanLaut,layerKekuatanUdara, simbolPergerakan ; //layer
+	var helperMarker, helperLayer, helperIcon = new OpenLayers.Icon(baseUrl+'/js/img/marker.png', {w: 21, h: 25}, {x: -10, y:-25}); //layer add
+    var matraIcon = null;
+
+	$(function(){
+
+		//generate peta-dasar
+		$('#map2').css('height', '500px');
+		var map = standardMap('map2');
+		minmaxMap(map);
+
+		/* == Fitur Tampilan Kekuatan Musuh */
+		layerKekuatanDarat = new OpenLayers.Layer.Markers(
+			"Kekuatan Darat",
+			{isBaseLayer: false, visibility: false}
+		);
+		layerKekuatanLaut = new OpenLayers.Layer.Markers(
+			"Kekuatan Laut",
+			{isBaseLayer: false, visibility: false}
+		);
+		layerKekuatanUdara = new OpenLayers.Layer.Markers(
+			"Kekuatan Udara",
+			{isBaseLayer: false, visibility: false}
+		);
+
+		simbolPergerakan = new OpenLayers.Layer.Vector(
+			"Simbol Pergerakan",
+			{isBaseLayer: false, visibility: false}
+		);
+
+		map.addLayers([layerKekuatanDarat,layerKekuatanLaut,layerKekuatanUdara,simbolPergerakan]);
+		map.redrawSwitcherTree();
+
+		var ll, popupContentHTML;
+
+		var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+			'autoSize': true
+		});
+        var size = new OpenLayers.Size(23,24); // size icon
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h); //offset icon
+
+		//darat
+		<?php foreach ($this->modelDarat->allWithKekuatan() as $r) : ?>
+			ll = new OpenLayers.LonLat(<?php echo $r['longitude'].', '.$r['latitude']; ?>);
+			popupContentHTML = buildPopupContent('Kuat Darat - '+'<?php echo $r['nama']; ?>', <?php echo json_encode($r['kekuatan']); ?>);
+
+            //-- icon --
+            var icon = new OpenLayers.Icon(baseUrl + '/images/icons/red-intel-AD.png', size, offset); //object icon
+			addMarker(layerKekuatanDarat, ll, AutoSizeFramedCloud, popupContentHTML, false, true, icon);
+		<?php endforeach; ?>
+
+		//laut
+		<?php foreach ($this->modelLaut->allWithKekuatan() as $r) : ?>
+			ll = new OpenLayers.LonLat(<?php echo $r['longitude'].', '.$r['latitude']; ?>);
+			popupContentHTML = buildPopupContent('Kuat Laut - '+'<?php echo $r['nama']; ?>', <?php echo json_encode($r['kekuatan']); ?>);
+
+            //-- icon --
+            var icon = new OpenLayers.Icon(baseUrl + '/images/icons/red-intel-AL.png', size, offset); //object icon
+			addMarker(layerKekuatanLaut, ll, AutoSizeFramedCloud, popupContentHTML, false, true, icon);
+		<?php endforeach; ?>
+
+		//udara
+		<?php foreach ($this->modelUdara->allWithKekuatan() as $r) : ?>
+			ll = new OpenLayers.LonLat(<?php echo $r['longitude'].', '.$r['latitude']; ?>);
+			popupContentHTML = buildPopupContent('Kuat Udara - '+'<?php echo $r['nama']; ?>', <?php echo json_encode($r['kekuatan']); ?>);
+
+            //-- icon --
+            var icon = new OpenLayers.Icon(baseUrl + '/images/icons/red-intel-AU.png', size, offset); //object icon
+			addMarker(layerKekuatanUdara, ll, AutoSizeFramedCloud, popupContentHTML, false, true, icon);
+		<?php endforeach; ?>
+
+		/* == End of Fitur Tampilan Kekuatan Musuh */
+
+		helperLayer = new OpenLayers.Layer.Markers('Posisi Titik', {displayInLayerSwitcher: false});
+		helperLayer = new OpenLayers.Layer.Markers('Posisi Titik', {displayInLayerSwitcher: false});
+		map.addLayer(helperLayer);
+
+		helperLayer.setVisibility(false);
+
+
+		map.events.register('click', map, function(e) {
+			if (helperLayer.getVisibility()) {
+
+				// isikan field
+				var lonlat = map.getLonLatFromViewPortPx(e.xy);
+				$('#dtitik-lon').val(lonlat.lon);
+				$('#dtitik-lat').val(lonlat.lat);
+
+				helperLayer.removeMarker(helperMarker);
+
+                var icon = null;
+                if( matraIcon !== null ) {
+                    icon = new OpenLayers.Icon(baseUrl + '/images/icons/' + matraIcon, size, offset); //object icon
+                } else {
+                    icon = helperIcon;
+                }
+				helperMarker = new OpenLayers.Marker(lonlat, icon);
+				helperLayer.addMarker(helperMarker);
+			}
+		});
+
+		map.events.register('changelayer', null, function(evt){
+			if(evt.layer.name == "Simbol Pergerakan" && simbolPergerakan.visibility == true)
+			{
+				$.post(baseUrl + '/latihan/api/simbol.pergerakan',
+					{
+						"skenario_id" : '<?php echo $this->skenario->getId(); ?>',
+						"table" : 1
+					},
+					function(data){
+						insertPergerakan(data);
+					},
+					"json"
+				);
+			}
+		});
+
+		function insertPergerakan(data)
+		{
+			for(var i in data)
+			{
+				if(data[i]['id_simbol_pergerakan'] != undefined)
+				{
+					var splitPoint = data[i]['point'].split(', ');
+					var point = new OpenLayers.Geometry.Point(splitPoint[0], splitPoint[1]);
+					var feature = new OpenLayers.Feature.Vector(point);
+					var splitSize = data[i]['size'].split(' : ');
+					var size = new OpenLayers.Size(splitSize[0], splitSize[1]);
+
+					feature.style = {
+						externalGraphic:baseUrl + data[i]['filepath'],
+						graphicXOffset:-size.w/2,
+						graphicYOffset:-size.h,
+						graphicWidth:size.w,
+						graphicHeight:size.h,
+						pointRadius:0,
+						rotation:data[i]['rotation']
+					};
+
+					simbolPergerakan.addFeatures(feature);
+				}
+			}
+		}
+
+
+		$('#klaut_lawan').click(function(){
+			$.get('<?php echo $this->siteUrl('latihan/kekuatan.lawan/laut/skenario_id/'.$this->skenario->getId()); ?>',
+				{
+				}, function(data, status, xhr) {
+
+					$('#view-data').html(data);
+					$('.controlmap').show('slow');
+					minMap(map);
+					layerKekuatanLaut.setVisibility(true);
+					helperLayer.setVisibility(false);
+                    matraIcon = 'red-intel-AL.png';
+
+				}, 'html')
+				.error(function() {
+				})
+				.complete(function() {
+				});
+		});
+
+		$('#kdarat_lawan').click(function(){
+			$.get('<?php echo $this->siteUrl('latihan/kekuatan.lawan/darat/skenario_id/'.$this->skenario->getId()); ?>',
+				{
+				}, function(data, status, xhr) {
+
+					$('#view-data').html(data);
+					$('.controlmap').show('slow');
+					minMap(map);
+					layerKekuatanDarat.setVisibility(true);
+					helperLayer.setVisibility(false);
+                    matraIcon = 'red-intel-AD.png';
+
+				}, 'html')
+				.error(function() {
+				})
+				.complete(function() {
+				});
+
+		});
+
+		$('#kudara_lawan').click(function(){
+			$.get('<?php echo $this->siteUrl('latihan/kekuatan.lawan/udara/skenario_id/'.$this->skenario->getId()); ?>',
+				{
+				}, function(data, status, xhr) {
+
+					$('#view-data').html(data);
+					$('.controlmap').show('slow');
+					minMap(map);
+					layerKekuatanUdara.setVisibility(true);
+					helperLayer.setVisibility(false);
+                    matraIcon = 'red-intel-AU.png';
+
+				}, 'html')
+				.error(function() {
+				})
+				.complete(function() {
+				});
+
+		});
+
+	})
+
+
+	function bersihkan(data, matra)
+	{
+        var xLayer;
+        var matraIcon;
+
+		if (matra == 1){
+            xLayer = layerKekuatanDarat;
+            matraIcon = 'red-intel-AD.png';
+        }
+		if (matra == 2){
+            xLayer = layerKekuatanLaut;
+            matraIcon = 'red-intel-AL.png';
+        }
+		if (matra == 3){
+            xLayer = layerKekuatanUdara;
+            matraIcon = 'red-intel-AU.png';
+        }
+
+		xLayer.clearMarkers();
+
+		var ll, laa, popupContentHTML;
+		var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+			'autoSize': true
+		});
+        var size = new OpenLayers.Size(21,22); // size icon
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h); //offset icon
+
+		data.forEach(function(item){
+			ll = new OpenLayers.LonLat(item.longitude, item.latitude);
+			popupContentHTML = buildPopupContent(item.nama+' - '+item.negara, item.kekuatan);
+
+            //-- icon --
+            var icon = new OpenLayers.Icon(baseUrl + '/images/icons/' + matraIcon, size, offset); //object icon
+			addMarker(xLayer, ll, AutoSizeFramedCloud, popupContentHTML, true, true, icon);
+		});
+	}
+
+</script>

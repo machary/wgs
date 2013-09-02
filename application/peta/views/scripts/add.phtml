@@ -1,0 +1,46 @@
+<div class="flat_area grid_16">
+    <p><a href="<?php echo $this->url(array('action'=>'index')); ?>">Kembali</a></p>
+</div>
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour">Tambah Telegram</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+
+    //$('.tidak_aktif').attr("readonly","true");
+
+	$('.to').toggle(
+		function(){
+			var ieu = $(this);
+			var arrval = $(this).next().children('input:hidden').val();
+
+			$.get('<?php echo $this->url(array('controller'=>'telegram','action'=>'list.to.html')); ?>',
+                { arrval:arrval },
+                function(data, status, xhr){
+					ieu.next().append('<div class="pilih">'+data+'</div>');
+				},'html');
+		},function(){
+		$(this).next().children('.pilih').remove();
+		}
+	)
+
+    $('#datehide').hide();
+    $('#terjadwal').click(function(){
+        $('#datehide').toggle();
+    });
+
+    $('.tgl').datetimepicker({
+        changeYear: true,
+        changeMonth: true
+    });
+
+</script>

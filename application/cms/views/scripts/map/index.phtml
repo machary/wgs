@@ -1,0 +1,53 @@
+<style type="text/css">
+	#topbuttons {
+		float: left;
+	}
+	#topbuttons button {
+		margin-bottom: 0;
+	}
+
+</style>
+<div class="flat_area grid_16">
+
+	<!-- box header label -->
+	<h2>STANDAR MAP</h2>
+	<!-- container -->
+	<div class="toggle_container" style="display: block; ">
+
+		<div id="map-wrapper" class="block">
+			<div class="map-data">
+				<div class="box no-margin">
+					<h2 id="marker-caption" class="box_head grad_colour">Data Daerah Peta Yang Di Klik</h2>
+					<a href="#" class="grabber">&nbsp;</a>
+					<a href="#" class="toggle">&nbsp;</a>
+					<div id="tampung-data" class="toggle_container">
+
+					</div>
+				</div>
+			</div>
+			<div id="map"></div>
+			<div id="wrapper">
+				<div id="location" style="float:right">location</div>
+				<div id="scale" style="float:left"></div>
+				<div id="coordclick" style="width:350px;margin:auto">Koordinat: <input size="50"></div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+// global map object
+
+var map;
+
+$(function(){
+
+	map = standardMap('map', {
+		locationElement: $('#location').get(0),
+		scaleElement: $('#scale').get(0),
+		coordinateJquery: $('#coordclick')
+	});
+
+});
+</script>

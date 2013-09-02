@@ -1,0 +1,17 @@
+.xl_style{
+    float:right;
+    border: 1px solid #bebebe;
+    padding: 0 10px;
+    background: url(../images/xls.png) no-repeat center right;
+    width:54px;
+    margin-right: 15px;
+}
+
+.xl_style:hover{
+    background: url(../images/xls_hover.png) no-repeat center right;
+}
+
+#toExcel{
+   line-height: 30px;
+   display: block;
+}

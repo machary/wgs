@@ -1,0 +1,73 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>" class="weaponry">
+
+	<label>Kendaraan Tempur</label>
+	<table>
+		<tr class="ranpur-count-row hidden">
+			<td><?php echo $f->idranpur->renderViewHelper(); ?></td>
+			<td><?php echo $f->nomor_mesin->renderViewHelper(); ?></td>
+			<td><?php echo $f->nomor_chasis->renderViewHelper(); ?></td>
+			<td><?php echo $f->nomor_registrasi_pusat->renderViewHelper(); ?></td>
+			<td><?php echo $f->nomor_registrasi_baru->renderViewHelper(); ?></td>
+			<td><?php echo $f->nomor_lambung->renderViewHelper(); ?></td>
+			<td><?php echo $f->kondisi->renderViewHelper(); ?></td>
+			<td><?php echo $f->keterangan->renderViewHelper(); ?></td>
+			<td><button onclick="remove_row(this)" type="button">X</button></td>
+		</tr>
+		<tr>
+			<th>Jenis</th>
+			<th>Nomor Mesin</th>
+			<th>Nomor Chasis</th>
+			<th>Nomor Registrasi Pusat</th>
+			<th>Nomor Registrasi Baru</th>
+			<th>Nomor Lambung</th>
+			<th>Kondisi</th>
+			<th>Keterangan</th>
+			<th></th>
+		</tr>
+	</table>
+	<button onclick="add_row('ranpur-count-row', '', 0)" type="button">+Tambah</button>
+
+	<button class="button_colour round_all">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+</form>
+
+<script type="text/javascript">
+
+function remove_row(el) {
+	$(el).parent().parent().remove();
+}
+
+function add_row(
+	cls,
+	id,
+	nomor_mesin,
+	nomor_chasis,
+	nomor_registrasi_pusat,
+	nomor_registrasi_baru,
+	nomor_lambung,
+	kondisi,
+	keterangan
+	) {
+	var $origin = $('.'+cls).first();
+	var $dup = $origin.clone();
+	$dup.removeClass('hidden');
+	$dup.find('select')
+		.bind('change', function(e) {
+			var $this = $(this);
+			$this.prev('span').text($this.find('option:selected').text());
+		})
+		.val(id);
+	$dup.find('#nomor_mesin').val(nomor_mesin);
+	$dup.find('#nomor_chasis').val(nomor_chasis);
+	$dup.find('#nomor_registrasi_pusat').val(nomor_registrasi_pusat);
+	$dup.find('#nomor_registrasi_baru').val(nomor_registrasi_baru);
+	$dup.find('#nomor_lambung').val(nomor_lambung);
+	$dup.find('#kondisi').val(kondisi);
+	$dup.find('#keterangan').val(keterangan);
+	$origin.parent().append($dup);
+}
+
+</script>

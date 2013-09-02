@@ -1,0 +1,36 @@
+<?php $this->printGoBackUrl($this->url(array('action'=>'index'))); ?>
+
+<?php
+echo $this->errorMessage;
+echo $this->form;
+?>
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart() ?>
+    $(function(){
+        $("#frmGun input, #frmGun select").blur(function(){
+            $("#frmGun").validate().element($(this));
+        });
+
+        $("#frmGun").validate({
+            rules: {
+                GUN_NAME: "required",
+                GUN_CATEGORY: "required",
+                COUNTRY_ID: "required"
+            },
+            messages:
+            {
+                GUN_NAME: "Nama Senjata harus diisi",
+                GUN_CATEGORY: "Kategori Senjata harus dipilih",
+                COUNTRY_ID: "Kategori Harus Dipilih"
+            },
+
+            errorElement: "label",
+            errorPlacement: function(error, element)
+            {
+                var tampung = element.parent('div').parent('dd').append(error);
+            }
+        });
+    });
+
+    <?php $this->inlineScript()->captureEnd() ?>
+</script>

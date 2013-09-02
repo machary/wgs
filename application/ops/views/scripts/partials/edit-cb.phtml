@@ -1,0 +1,94 @@
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'index', 'id'=>null)); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Ubah CB <?php echo $this->kogas; ?></h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+
+<style type="text/css">
+    #uniform-waktu-mulai-status, #uniform-waktu-selesai-status  {
+        float: left;
+    }
+
+    span.label-float {
+        float: left;
+        display: block;
+        font-weight: bold;
+        margin: 6px 0;
+        margin-left: 10px;
+        margin-right: 5px;
+    }
+</style>
+
+<script>
+$(function () {
+	$('#waktu_pembuatan').datetimepicker({
+		dateFormat: 'yy-mm-dd'
+	});
+
+    var waktuMulai = $('#waktu_mulai');
+    var waktuSelesai = $('#waktu_selesai');
+
+    var $valueMulai = <?php echo floor($this->form->getValue('waktu_mulai')); ?>;
+    var $valueSelesai = <?php echo floor($this->form->getValue('waktu_selesai')); ?>;
+
+    waktuMulai.hide().parent().append(craeteElement('waktu-mulai', $valueMulai));
+    waktuSelesai.hide().parent().append(craeteElement('waktu-selesai', $valueSelesai));
+
+    function craeteElement(el, $value)
+    {
+
+        var $value_d = ($value < 0) ? Math.ceil($value / 24) * -1 : Math.floor($value / 24),
+            $value_h = ($value < 0) ? ($value % 24) * -1 : $value % 24,
+            negative = '',
+            positive = '';
+
+        if($value < 0)
+            negative = selected ="selected";
+        else
+            positive = selected ="selected";
+
+        var returned = '<select id="' + el + '-status"><option '+ positive +' value = "1">normal</option><option '+ negative +' value="-1">minus</option></select>';
+            returned += '<span class="label-float">H</span><input value="' + $value_d + '" size="5" style="float: left;margin: 3px  10px 3px 7px;" id="' + el + '-days" /><span class="label-float">J</span><input value="'+ $value_h +'" style="float: left;margin: 3px 0;" size="5" id="' + el + '-hours" />';
+        return returned;
+    }
+
+    $('#waktu-mulai-days').keyup(function(){
+        waktuMulai.val(((parseInt(this.value) * 24) + parseInt($('#waktu-mulai-hours').val())) * $('#waktu-mulai-status').val());
+    });
+
+    $('#waktu-mulai-hours').keyup(function(){
+        waktuMulai.val((($('#waktu-mulai-days').val() * 24 ) + parseInt(this.value)) * $('#waktu-mulai-status').val());
+    });
+
+    $('#waktu-selesai-days').keyup(function(){
+        waktuSelesai.val(((parseInt(this.value) * 24) + parseInt($('#waktu-selesai-hours').val())) * $('#waktu-selesai-status').val());
+    });
+
+    $('#waktu-selesai-hours').keyup(function(){
+        waktuSelesai.val((($('#waktu-selesai-days').val() * 24 ) + parseInt(this.value)) * $('#waktu-selesai-status').val());
+    });
+
+    $('#waktu-mulai-status').change(function(){
+        var minus = (parseInt(waktuMulai.val()) < 0) ?  this.value * -1: this.value;
+        waktuMulai.val(waktuMulai.val() * minus);
+    });
+
+    $('#waktu-selesai-status').change(function(){
+        var minus = (parseInt(waktuSelesai.val()) < 0) ?  this.value * -1: this.value;
+        waktuSelesai.val(waktuSelesai.val() * minus);
+    });
+});
+</script>

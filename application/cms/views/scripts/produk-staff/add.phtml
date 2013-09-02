@@ -1,0 +1,55 @@
+<?php $this->printGoBackUrl($this->url(array('action'=>'index'))); ?>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Upload Produk Staff</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	pros = $('#nama_prosrenmil').val();
+	getlangkah(pros);
+
+	$('.tgl').datepicker();
+	$('#nama_prosrenmil').change(function(){
+		pros = $(this).val();
+		getlangkah(pros);
+	})
+
+	function getlangkah(pros)
+	{
+		$.ajax({
+			url      : baseUrl + '/cms/produk.staff/langkah.opt',
+			type     : 'post',
+			dataType : 'json',
+			data     : {
+				"prosrenmil"  : pros
+			},
+
+			success  : function(feed){
+				if(typeof(feed) != undefined)
+				{
+					var optiona="";
+					var selected = 1;
+					for (var keya in feed)
+					{
+						optiona = optiona + "<option value=" + keya + " >" + feed[keya] + "</option>";
+						if (selected){
+							$('#id_langkah').prev().html(feed[keya]);
+							selected = 0;
+						}
+					}
+					$('#id_langkah').html(optiona);
+				}
+			}
+		});
+	}
+
+</script>

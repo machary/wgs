@@ -1,0 +1,127 @@
+<div class="box grid_8 round_all">
+    <h2 class="box_head grad_colour">Tambahkan kegiatan ke dalam ROL</h2>
+    <div class="toggle_container">
+        <div class="block">
+            <form id="rol-form" action="<?php echo $this->baseUrl('latihan/rol/save/rolid/'.$this->rolID); ?>" method="post">
+                <p>
+                    <label style="font-weight: bold;" for="nama-kegiatan">Nama Kegiatan</label>
+                    <input type="text" id="nama-kegiatan" name="nama_kegiatan"
+                           value="<?php echo $this->rowData['nama_kegiatan']; ?>"/>
+                </p>
+                <p>
+                    <label style="font-weight: bold;" for="skenario-id-input">Nomor Skenario</label>
+                    <select id="skenario-id-input" name="id_skenario">
+                        <option value="0">Pilih Skenario</option>
+                        <?php if($this->scenarioList): ?>
+                        <?php foreach($this->scenarioList as $scenario): ?>
+                            <option
+                                <?php if($scenario['id'] == $this->rowData['id_skenario']):?>selected="selected"<?php endif;?>
+                                value="<?php echo $scenario['id']; ?>">
+                                <?php echo $scenario['nomor']; ?>
+                            </option>
+                            <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </p>
+
+                <p>
+                    <label style="font-weight: bold;" for="komando-id-input">Komando</label>
+                    <select id="komando-id-input" name="id_jabatan">
+                        <option value="0">Pilih Jabatan</option>
+                        <?php if($this->jabatanList): ?>
+                        <?php foreach($this->jabatanList as $jabatan): ?>
+                            <option
+                                <?php if($jabatan['id_jabatan'] == $this->rowData['id_jabatan']):?>selected="selected"<?php endif;?>
+                                value="<?php echo $jabatan['id_jabatan']; ?>">
+                                <?php echo $jabatan['nama_jabatan']; ?>
+                            </option>
+                            <?php endforeach;?>
+                        <?php endif;?>
+                    </select>
+                </p>
+
+                <p>
+                    <label style="font-weight: bold;" for="input-start-real">
+                        Tanggal &amp; Waktu Mulai (Sebenarnya)
+                    </label>
+                    <input class="mydatepicker" id="input-start-real" readonly="true"
+                           name="realtime_start" value="<?php echo $this->rowData['realtime_start']; ?>"/>
+                </p>
+
+                <p>
+                    <label style="font-weight: bold;" for="input-end-real">
+                        Tanggal &amp; Waktu Berakhir (Sebenarnya)
+                    </label>
+                    <input class="mydatepicker" id="input-end-real" readonly="true" name="realtime_end"
+                           value="<?php echo $this->rowData['realtime_end']; ?>"/>
+                </p>
+
+                <p>
+                    <label style="font-weight: bold;" for="input-start-assump">
+                        Tanggal &amp; Waktu Mulai (Asumsi)
+                    </label>
+                    <input class="mydatepicker" id="input-start-assump" readonly="true" name="asumsi_start"
+                           value="<?php echo $this->rowData['asumsi_start']; ?>"/>
+                </p>
+
+                <p>
+                    <label style="font-weight: bold;" for="input-start-assump">
+                        Tanggal &amp; Waktu Berakhir (Asumsi)
+                    </label>
+                    <input class="mydatepicker" id="input-end-assump" readonly="true" name="asumsi_end"
+                           value="<?php echo $this->rowData['asumsi_end']; ?>"/>
+                </p>
+
+                <p>
+                    <label style="font-weight: bold;" for="comparison-time">
+                        Perbandingan waktu sebenarnya dan asumsi
+                    </label>
+                    <input id="comparison-time" name="asumsi_perbandingan"
+                           value="<?php echo $this->rowData['asumsi_perbandingan']; ?>"/>
+                </p>
+
+                <p>
+                    <button class="skin_colour round_all" id="update-event" type="submit">
+                        <img width="24" height="24" src="<?php echo $this->imgUrl('icons/small/white/Cog 2.png'); ?>" alt="Update Kegiatan">
+                        <span>Update Kegiatan</span>
+                    </button>
+
+                    <button class="skin_colour round_all" id="delete-event" type="submit">
+                        <img width="24" height="24" src="<?php echo $this->imgUrl('icons/small/white/Cut Scissors.png'); ?>" alt="Hapus Kegiatan">
+                        <span>Hapus Kegiatan</span>
+                    </button>
+                </p>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="flat_area grid_16">
+    <p><a href="<?php echo $this->url(array('action'=>'index')); ?>">Kembali</a></p>
+</div>
+
+<script type="text/javascript">
+
+    var targetUrl = '<?php echo $this->baseUrl('latihan/rol/save'); ?>';
+
+    $(function() {
+
+        $('#update-event').click(function(){
+            $('#rol-form').attr('action', targetUrl + '/do/update/rolid/'+'<?php echo $this->rolID; ?>');
+        });
+
+        $('#delete-event').click(function(){
+            $('#rol-form').attr('action', targetUrl + '/do/delete/rolid'+'<?php echo $this->rolID; ?>');
+        });
+
+        $('.mydatepicker').datetimepicker({
+            changeYear: true,
+            changeMonth: true,
+            dateFormat: 'dd/mm/yy',
+            timeFormat: 'hh:mm:ss'
+        });
+
+    });
+</script>

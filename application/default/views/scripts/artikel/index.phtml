@@ -1,0 +1,76 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Data Artikel</h2>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+            <table id="data_table" class="display">
+
+                <thead>
+
+                <tr>
+                    <th>Judul</th>
+                    <th width="20%">Tanggal</th>
+                    <th width="20%">&nbsp;</th>
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript">
+    $(function(){
+        var oTable = $('#data_table').dataTable( {
+            "bJQueryUI": true,
+            "sScrollX": "",
+            "bSortClasses": false,
+            "aaSorting": [[1,'DESC']],
+            "bAutoWidth": true,
+            "bInfo": true,
+            "aoColumns":[
+                null,
+                null,
+                {bSortable:false}
+            ],
+            "sScrollY": "100%",
+            "sScrollX": "100%",
+            "bScrollCollapse": true,
+            "sPaginationType": "full_numbers",
+            "bProcessing" : true,
+            "bServerSide" : true,
+            "sAjaxSource" : baseUrl + '/artikel/dataapi',
+            "fnServerData" : function(sSource, aoData, fnCallback)
+            {
+                //filter category content
+                if(jQuery('#feed-filter').length)
+                {
+                    filter = jQuery('#feed-filter').val()
+
+                    aoData.push({
+                        "name": "filter",
+                        "value":  filter
+                    });
+                }
+
+                jQuery.getJSON(sSource, aoData, function(json) {
+                    //if(aaData != 'undefined')
+                    //{
+                    fnCallback(json)
+                    //}
+                });
+
+                $('.custom-rows').parent().css('vertical-align','middle');
+            }
+        })//.makeEditable()
+    });
+</script>

@@ -1,0 +1,47 @@
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+
+    var no_cb = '<?php echo $this->no_cb; ?>';
+
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>
+
+<?php
+$this->inlineScript()->appendFile( $this->jsUrl( 'view/decisive-datatable.js' ) );
+//$this->inlineScript()->appendFile( $this->jsUrl( 'view/map-autocomplete.js' ) );
+echo $this->errorMessage;
+echo $this->form;
+?>
+<script type="text/javascript">
+    document.frmDecisive.no_cb_operasional.disabled = true;
+</script>
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Decisive Point Table</h2>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+            <table id="table_penyalur" class="display">
+                <thead>
+                <tr>
+                    <th>No Cb Operasional</th>
+                    <!--<th>Target</th>-->
+                    <th>Longitude</th>
+                    <th>Latitude</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

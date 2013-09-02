@@ -1,0 +1,43 @@
+<?php $this->printGoBackUrl($this->url(array('action'=>'index', 'id'=>null))); ?>
+
+<?php
+echo $this->errorMessage;
+echo $this->form;
+?>
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+    $(function(){
+
+        $("#frmMissile input, #frmMissile select").blur(function(){
+            $("#frmMissile").validate().element($(this));
+        });
+
+        $("#frmMissile").validate({
+            rules:{
+                'MISSILE_NAME': "required",
+                'COUNTRY_ID': "required",
+                'MISSILE_MID_COURSE_TYPE': "required",
+                'LAUNCH_TYPE': "required",
+                'DETECT_TYPE': "required"
+            },
+
+            messages:{
+                'MISSILE_NAME': "Nama Misil Harus Di Isi",
+                'COUNTRY_ID': "Negara Asal Harus Di Dipilih",
+                'MISSILE_MID_COURSE_TYPE': "Nama Senjata Harus Di Isi",
+                'LAUNCH_TYPE': "Tipe Pelontar Harus Di Dipilih",
+                'DETECT_TYPE': "Tipe Deteksi Harus Di Dipilih"
+            },
+
+            errorElement:"label",
+            errorPlacement: function(error, element)
+            {
+                if ((element.attr("name") == "COUNTRY_ID")||(element.attr("name") == "DETECT_TYPE")||(element.attr("name") == "LAUNCH_TYPE")||(element.attr("name") == "MISSILE_MID_COURSE_TYPE"))
+                    var tampung = element.parent('div').parent('dd').append(error);
+                else
+                    var tampung = element.parent('dd').append(error);
+            }
+        });
+    });
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>

@@ -1,0 +1,266 @@
+<div class="flat_area grid_16">
+	<h2>Rute Operasinal untuk CB <?php echo $this->model->cb()->no_cb_operasional; ?></h2>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Koordinat Rute</h2>
+	<div class="block">
+		<form method="post">
+			<table id="rute-table" class="simple-table">
+				<tr>
+					<th>Longitude</th>
+					<th>Latitude</th>
+					<th></th>
+				</tr>
+			</table>
+			
+			<button class="button_colour round_all">
+				<span>Simpan</span>
+			</button>
+		</form>
+	</div>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Peta</h2>
+	
+	<div id="map2"></div>
+	<div class="block">
+		<button id="button-simulasi" type="button">Simulasi</button>
+	</div>
+</div>
+	
+<div class="flat_area grid_16">	
+	<p><a href="<?php echo $this->url(array('action'=>'cblist', 'id'=>null)); ?>">Kembali</a></p>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+
+
+// global container
+var g = {
+	i: 0,
+	simulating: false
+};
+
+function hapus_row(el) {
+	$(el).parent().parent().remove();
+	refresh_rute();
+}
+
+function tambah_row(lon, lat) {
+	var $tr = $('<tr/>');
+	
+	var $lon = $('<input class="ipt-longitude" name="point['+g.i+'][longitude]">');
+	if (lon) $lon.val(lon);
+	$lon.bind('change', function(e) {
+		// edit form langsung update rute
+		refresh_rute();
+	});
+	$lon.appendTo($tr).wrap('<td>');
+	
+	var $lat = $('<input class="ipt-latitude" name="point['+g.i+'][latitude]">');
+	if (lat) $lat.val(lat);
+	$lat.bind('change', function(e) {
+		// edit form langsung update rute
+		refresh_rute();
+	});
+	$lat.appendTo($tr).wrap('<td>');
+	
+	var $button = $('<button type="button" onclick="hapus_row(this)" />');
+	$button.html('X');
+	$button.appendTo($tr).wrap('<td>');
+	
+	$('#rute-table').append($tr);
+	// tambah titik pada rute
+	g.ruteVector.geometry.addPoint(new OpenLayers.Geometry.Point(parseFloat(lon), parseFloat(lat)));
+	g.ruteLayer.drawFeature(g.ruteVector);
+	
+	g.i++;
+}
+
+// update tampilan rute pada peta
+function refresh_rute() {
+	// clear old points
+	g.ruteVector.geometry.destroy();
+	g.ruteVector.geometry = new OpenLayers.Geometry.LineString([]);
+	// add new points
+	var lons = [];
+	$('input[class="ipt-longitude"]').each(function() {
+		lons.push(parseFloat($(this).val()));
+	});
+	var lats = [];
+	$('input[class="ipt-latitude"]').each(function() {
+		lats.push(parseFloat($(this).val()));
+	});
+	for (var i=0,inum=lons.length; i<inum; i++) {
+		g.ruteVector.geometry.addPoint(new OpenLayers.Geometry.Point(lons[i], lats[i]));
+	}
+	// redraw
+	g.ruteLayer.removeAllFeatures();
+	g.ruteLayer.addFeatures([g.ruteVector]);
+}
+
+$(function() {
+	$('#map2').css('height', '400px');
+	// inisiasi peta
+	map = standardMap('map2');
+
+	/* == Fitur Klik Tambah Koordinat */
+	map.events.register('click', map, function(e) {
+		var lonlat = map.getLonLatFromViewPortPx(e.xy);
+		tambah_row(lonlat.lon, lonlat.lat);
+	});
+	/* == End of Fitur Klik Tambah Koordinat */
+	
+	/* == Fitur Tampilan Garis Rute */
+	var layerPath = new OpenLayers.Layer.Vector('Rute', {
+		displayInLayerSwitcher:true
+	});
+	map.addLayer(layerPath);
+	
+	var linePath = new OpenLayers.Feature.Vector(
+		new OpenLayers.Geometry.LineString([]), 
+		null, 
+		{
+			strokeOpacity: 0.5,
+			strokeWidth: 3
+		}
+	);
+	layerPath.addFeatures([linePath]);
+	
+	g.ruteLayer = layerPath;
+	g.ruteVector = linePath;
+	/* == End of Fitur Tampilan Garis Rute */
+	
+	/* == Fitur Simulasi Gerak di Rute */
+	var themarker = new OpenLayers.Feature.Vector(
+		new OpenLayers.Geometry.Point(map.getCenter().lon, map.getCenter().lat),
+		null,
+		{externalGraphic: imgUrl+"symbol/perusak kawal.png", pointRadius: 10}
+	);
+	var linePath;
+	var indexPoint = 0;
+	var bergeraklah = function() {
+		var pindah = function(dari, ke, asal) {
+			var jumlah = 10; // hardcoded
+			var xmove = Math.abs(asal.x - ke.x)/jumlah;
+			var ymove = Math.abs(asal.y - ke.y)/jumlah;
+			// x-axis
+			if (dari.x < ke.x) {
+				if (dari.x + xmove < ke.x) {
+					dari.x += xmove;
+				} else {
+					dari.x = ke.x;
+				}
+			} else {
+				if (dari.x - xmove > ke.x) {
+					dari.x -= xmove;
+				} else {
+					dari.x = ke.x;
+				}
+			}
+			// y-axis
+			if (dari.y < ke.y) {
+				if (dari.y + ymove < ke.y) {
+					dari.y += ymove;
+				} else {
+					dari.y = ke.y;
+				}
+			} else {
+				if (dari.y - ymove > ke.y) {
+					dari.y -= ymove;
+				} else {
+					dari.y = ke.y;
+				}
+			}
+		};
+		
+		var interval = 100; // hardcoded
+		if (themarker.isMoving) {
+			var tujuan = linePath.geometry.components[indexPoint];
+			if (themarker.geometry.x != tujuan.x || themarker.geometry.y != tujuan.y) {
+				pindah(themarker.geometry, tujuan, linePath.geometry.components[indexPoint-1]);
+				themarker.geometry.calculateBounds();
+				g.ruteLayer.drawFeature(themarker);
+				window.setTimeout(bergeraklah, interval);
+			} else {
+				themarker.isMoving = false;
+				bergeraklah();
+			}
+		} else if (indexPoint < (linePath.geometry.components.length-1)) {
+			var prev = linePath.geometry.components[indexPoint];
+			// fetch next point
+			var tujuan = linePath.geometry.components[++indexPoint];
+			// hitung kemiringan
+			var bearing = tc1(prev.x, prev.y, tujuan.x, tujuan.y);
+			themarker.isMoving = true;
+			themarker.style.rotation = bearing - 90; // gambarnya hadap kanan 90 derajat
+			pindah(themarker.geometry, tujuan, linePath.geometry.components[indexPoint-1]);
+			themarker.geometry.calculateBounds();
+			g.ruteLayer.drawFeature(themarker);
+			window.setTimeout(bergeraklah, interval);
+		} else {
+			// selesai
+			g.simulating = false;
+			g.ruteLayer.removeFeatures([themarker]);
+		}
+	};
+	
+	/**
+	 * Hitung derajat kemiringan garis dari titik 1 (lon1, lat1) ke titik 2 (lon2, lat2)
+	 * Reference: http://mathforum.org/library/drmath/view/55417.html
+	 * @param float lon1,lat1 koordinat EPSG:4326 titik asal
+	 * @param float lon2,lat2 koordinat EPSG:4326 titik tujuan
+	 * @return float derajat kemiringan [-179.9 s/d 180] (utara = 0) clockwise positif
+	 */
+	function tc1(lon1, lat1, lon2, lat2) {
+		// ubah ke radian karena Math pakainya radian
+		lon1 = toRad(lon1);
+		lat1 = toRad(lat1);
+		lon2 = toRad(lon2);
+		lat2 = toRad(lat2);
+		
+		var y = Math.sin(lon2-lon1) * Math.cos(lat2);
+		var x = Math.cos(lat1)*Math.sin(lat2) - Math.sin(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1);
+		if (y > 0) {
+		// sisi "kanan" (0.1-179.9)
+			if (x > 0) return toDeg(Math.atan(y/x));
+			if (x < 0) return 180 - toDeg(Math.atan(-y/x));
+			return 90; // x = 0
+		} else if (y < 0) {
+		// sisi "kiri" (180.1-359.9)
+			if (x > 0) return -toDeg(Math.atan(-y/x));
+			if (x < 0) return toDeg(Math.atan(y/x)) - 180;
+			return 270; // x = 0
+		} else { // y = 0
+			if (x > 0) return 0;
+			if (x < 0) return 180;
+			return NaN; // [the 2 points are the same]
+		}
+	}
+	
+	$('#button-simulasi').bind('click', function(e) {
+		if (!g.simulating) {
+			g.simulating = true;
+			indexPoint = 0;
+			linePath = g.ruteVector.clone();
+			themarker.geometry.x = linePath.geometry.components[0].x;
+			themarker.geometry.y = linePath.geometry.components[0].y;
+			g.ruteLayer.addFeatures([themarker]);
+			themarker.isMoving = false;
+			bergeraklah();
+		}
+	});
+	/* == End of Fitur Simulasi Gerak di Rute */
+	
+	// repopulate points
+	<?php foreach ($this->model->points() as $p) : ?>
+		tambah_row(<?php 
+			echo json_encode($p['longitude']).',';
+			echo json_encode($p['latitude']);
+		?>);
+	<?php endforeach; ?>
+});
+</script>

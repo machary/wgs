@@ -1,0 +1,106 @@
+<div class="flat_area grid_16">
+    <h2>Peta Cuaca</h2>
+    <div id="map-wrapper" class="block">
+        <div class="map-data">
+            <div class="box no-margin">
+                <h2 class="box_head grad_colour">Data Daerah Peta Yang Di Klik</h2>
+                <a href="#" class="grabber">&nbsp;</a>
+                <a href="#" class="toggle">&nbsp;</a>
+                <div class="toggle_container">
+                    <ul class="block content_accordion">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="map"></div>
+        <div id="wrapper">
+            <div id="location" style="float:right"></div>
+            <div id="scale" style="float:left"></div>
+            <div id="coordclick" style="width:400px;margin:auto">Clicked Coordinate : <input size="40"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+var map;
+var darat,laut,udara,pergerakan;//layer kekuatan sendiri
+var	layerKekuatanDarat,layerKekuatanLaut,layerKekuatanUdara, simbolPergerakan ; //layer kekuatan musuh
+
+$(function(){
+    map = standardMap('map');
+
+    cuaca = new OpenLayers.Layer.Markers(
+        "Prakiraan Cuaca",
+        {isBaseLayer:false, visibility:false}
+    );
+
+    map.addLayer(cuaca);
+    map.redrawSwitcherTree();
+
+    /* == Fitur Klik Dapatkan Informasi */
+    map.events.register('click', map, function(e) {
+        var lonlat = map.getLonLatFromViewPortPx(e.xy);
+        var willan = map.layers[3]; // lihat script.js untuk listnyna
+
+        if (willan.getVisibility()) {
+            $('#tampung-data').html('<img src="<?php echo $this->imgUrl('loading1.gif'); ?>">');
+
+            $.get('<?php echo $this->siteUrl('cms/map/get.info.lanal'); ?>', {
+                lon: lonlat.lon,
+                lat: lonlat.lat
+            }, function(data, status, xhr) {
+                $('#tampung-data').html(data);
+            }, 'html');
+        }
+    });
+
+    var ll, popupContentHTML;
+    var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+        'autoSize': true,
+        'panMapIfOutOfView' : true,
+        'keepInMap' : true
+    });
+
+    $.ajax({
+        url      : baseUrl + '/api/ibuprov',
+        type     : 'GET',
+        dataType : "json",
+        success  : function(ibuprov){
+            var dataMark = new Array();
+            for(var i in ibuprov)
+            {
+                var koordinate = new OpenLayers.LonLat(ibuprov[i].longitude, ibuprov[i].latitude);
+                var feature = new OpenLayers.Feature(cuaca, koordinate);
+
+                var size = new OpenLayers.Size(21,25);
+                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+
+                switch(ibuprov[i].cuaca.toLowerCase())
+                {
+                    case 'hujan ringan':
+                        var icon = new OpenLayers.Icon(baseUrl + '/images/icons/hujan_ringan.png', size, offset);
+                        break;
+                    case 'cerah berawan':
+                        var icon = new OpenLayers.Icon(baseUrl + '/images/icons/cerah_berawan.png', size, offset);
+                        break;
+                    case 'berawan':
+                        var icon = new OpenLayers.Icon(baseUrl + '/images/icons/berawan.png', size, offset);
+                        break;
+                }
+
+                feature.data.icon = icon;
+                marker = feature.createMarker();
+                cuaca.addMarker(marker);
+            }
+        },
+        statusCode: {
+            404: function(){
+                alert('Error: API NOT FOUND - Please report to developer');
+            },
+            500: function(){
+                alert('Error: API CODE ERROR - Please report to developer');
+            }
+        }
+    });
+});
+</script>

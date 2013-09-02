@@ -1,0 +1,90 @@
+<div class="flat_area grid_16">
+    <h2>Daftar Role</h2>
+
+    <div class="map-top-nav">
+        <a class="roundall_grey add_icon" href="<?php echo $this->url(array('action'=>'add')); ?>">
+            <span class="ml22">Tambah Role</span>
+        </a>
+    </div>
+
+    <div class="block">
+        <table id="table-dtables" class="display">
+            <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Jabatan</th>
+                <th>Status Panglima</th>
+                <th></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<!-- dialog form new user -->
+<div id="dialog-add-user" class="hidden box">
+    <div class="block">
+        <?php echo $this->form; ?>
+    </div>
+</div>
+
+
+<script>
+    var htmlFilter = '<select id="feed-filter">'
+        +'<option value="" selected="selected">[Pilih]</option>'
+        +'<option value="0">Nama</option>'
+        +'<option value="1">Nama Jabatan</option>'
+        +'<option value="2">Panglima</option>'
+        +'</select>';
+
+    var oTable = $('#table-dtables').dataTable( {
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "aoColumns":[
+            null,
+            null,
+            null,
+            {bSortable:false}
+        ],
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : baseUrl + '/management/role/dataapi',
+        "fnServerData" : function(sSource, aoData, fnCallback)
+        {
+            //filter category content
+            if(jQuery('#feed-filter').length)
+            {
+                filter = jQuery('#feed-filter').val();
+
+                aoData.push({
+                    "name": "filter",
+                    "value":  filter
+                });
+            }
+
+            jQuery.getJSON(sSource, aoData, function(json) {
+                //if(aaData != 'undefined')
+                //{
+                fnCallback(json);
+                //}
+            });
+
+            $('.custom-rows').parent().css('vertical-align','middle');
+        }
+    })//.makeEditable()
+
+    $('#table-dtables_filter').css('width', '360px');
+    var elmntSearch = $("#table-dtables_filter").find("input:text");
+    $(htmlFilter).insertBefore(elmntSearch);
+
+</script>
+

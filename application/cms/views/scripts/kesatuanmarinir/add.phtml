@@ -1,0 +1,15 @@
+<?php $this->printGoBackUrl($this->url(array('action'=>'index'))); ?>
+<div class="grid_8" style="margin-top: 10px;">
+    <?php
+    $this->form->setAction($this->url());
+    echo $this->form;
+    ?>
+</div>
+<?php echo $this->render('kesatuanmarinir/map.phtml');?>
+<script type="text/javascript">
+<?php if($this->edit) :?>
+var lon = $.trim( $('#longitude').val() );
+var lat = $.trim( $('#latitude').val() );
+previewMarker(lon,lat);
+<?php endif;?>
+</script>

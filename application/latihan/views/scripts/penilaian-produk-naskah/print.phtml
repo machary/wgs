@@ -1,0 +1,182 @@
+
+<?php $this->headLink()->appendStylesheet( $this->cssUrl( 'print/preview-layout3.css' ), 'screen' )
+    ->appendStylesheet( $this->cssUrl( 'print/print-layout3.css' ),'print' )
+;
+?>
+
+<?php $i = 1; ?>
+<?php if($this->items): ?>
+    <?php foreach($this->items as $items): ?>
+        <div class="halaman" style="width: 19cm; position: relative; height:25.5cm; margin-left: 10px; page-break-after:always; display: inline-block;">
+            <div class="header-area">
+                <div class="header">
+                    MARKAS BESAR ANGKATAN LAUT<br/>
+                    SEKOLAH STAF DAN KOMANDO
+                </div>
+                <div class="dateday-area">
+                    <span>Hari ................... , </span>
+                    <span>Tgl ....................</span>
+                </div>
+            </div>
+            <div style="width: 100%; text-align: center; clear: both;">
+                <h3 style="margin-bottom: 0;">PENILAIAN PRODUK NASKAH RKA KOTAMA TAHUN 20 .......</h3>
+                <h3 style="margin-top: 0;">PADA <?php echo $this->scenario; ?></h3>
+            </div>
+            <div><h3 style="margin-left: 50px;"><?php echo $this->kogas; ?></h3></div>
+            <div style="position: relative;">
+                <table class="btable">
+                    <thead>
+                    <tr>
+                        <th rowspan="2">No.</th>
+                        <th rowspan="2" colspan="3">Materi Penilaian</th>
+                        <th colspan="5">Nilai</th>
+                    </tr>
+                    <tr>
+                        <th>Mako</th>
+                        <th>LANT I</th>
+                        <th>LANT II</th>
+                        <th>LANT III</th>
+                        <th>LANT IV</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php if (!empty($items)) foreach ($items as $i => $item) : ?>
+                        <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                            <?php if(isset($item['id'])): ?>
+                            <td rowspan="<?php echo $item['rowspan']; ?>" style="text-align: center; vertical-align: top; font-weight: bold;"><?php echo $item['numbering'] . '.'; ?></td>
+                            <?php if(!empty($item['the_materi'])){ ?>
+                            <td width="60%" colspan="3" style="border-bottom: none;padding: 5px; font-weight: bold;"><?php echo strtoupper($item['materi']); ?></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <?php } else { ?>
+                            <td width="60%" colspan="3" style="padding: 5px; font-weight: bold;"><?php echo strtoupper($item['materi']); ?></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <?php } ?>
+                        <?php else: ?>
+                            <td rowspan="<?php echo $item['rowspan']; ?>" style="text-align: center; vertical-align: top; font-weight: bold;"></td>
+                            <td width="60%" colspan="3" style="border-bottom: none;padding: 5px; font-weight: bold;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                        <?php endif; ?>
+                        </tr>
+                            <?php if (!empty($item['the_materi'])) foreach ($item['the_materi'] as $itemMateriIndex => $itemMateri) : ?>
+                                <?php if(isset($itemMateri['id'])): ?>
+                                <?php if(!empty($itemMateri['the_submateri'])){ ?>
+                                <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                    <td width="5%" rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;; border-right:none; text-align: center; vertical-align: top; font-weight: bold;"><?php echo $itemMateri['numbering'] . '.'; ?></td>
+                                    <td colspan="2" width="60%" style="border-bottom: none; border-top: none;border-left: none;padding: 5px;"><?php echo $itemMateri['materi'] . ' ('. $itemMateri['singkatan'] . ') . ('. $itemMateri['point'] .')'; ?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 1, $this->teamId, 'nilai');?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 2, $this->teamId, 'nilai');?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 3, $this->teamId, 'nilai');?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 4, $this->teamId, 'nilai');?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 5, $this->teamId, 'nilai');?></td>
+                                </tr>
+                                    <?php } else { ?>
+                                <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                    <td width="5%" rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;; border-right:none; text-align: center; vertical-align: top; font-weight: bold;"><?php echo $itemMateri['numbering'] . '.'; ?></td>
+                                    <td colspan="2" width="60%" style="border-top: none;border-left: none;padding: 5px;"><?php echo $itemMateri['materi'] . ' ('. $itemMateri['singkatan'] . ') . ('. $itemMateri['point'] .')'; ?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 1, $this->teamId, 'nilai');?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 2, $this->teamId, 'nilai');?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 3, $this->teamId, 'nilai');?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 4, $this->teamId, 'nilai');?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"><?php echo $this->model->getByData( $i, $itemMateriIndex, $this->kogasIndex, 5, $this->teamId, 'nilai');?></td>
+                                </tr>
+                                    <?php } ?>
+                                <?php else: ?>
+                                <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                    <td width="5%" rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;; border-right:none; text-align: center; vertical-align: top; font-weight: bold;"></td>
+                                    <td colspan="2" width="60%" style="border-bottom: none; border-top: none;border-left: none;padding: 5px;"></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;vertical-align: middle;"></td>
+                                </tr>
+                                <?php endif; ?>
+                                <?php if (!empty($itemMateri['the_submateri'])): ?>
+                                <?php $numSubmateri = count($itemMateri['the_submateri']); ?>
+                                <?php $lastSubmateri = 0;?>
+
+                                <?php foreach ($itemMateri['the_submateri'] as $itemSubmateri) : ?>
+                                    <?php if(++$lastSubmateri === $numSubmateri) { ?>
+                                    <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                        <td width="2%" style="border-top: none; border-left: none; border-right: none; vertical-align: top;"><?php echo $itemSubmateri['numbering'] . '. '; ?></td>
+                                        <td width="60%" style="border-top: none; border-left:none; padding: 5px;"><?php echo $itemSubmateri['materi']; ?></td>
+                                    </tr>
+                                        <?php } else { ?>
+                                    <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                        <td width="2%" style="border-bottom: none; border-top: none; border-left: none; border-right: none; vertical-align: top;"><?php echo $itemSubmateri['numbering'] . '. '; ?></td>
+                                        <td width="60%" style="border-bottom: none; border-top: none; border-left:none; padding: 5px;"><?php echo $itemSubmateri['materi']; ?></td>
+                                    </tr>
+                                        <?php } ?>
+                                    <?php endforeach; ?>
+
+                                <?php endif; ?>
+                                <?php endforeach; ?>
+                        <?php if(isset($item['nilai_naskah'])): ?>
+                        <tr>
+                            <td></td>
+                            <td colspan="3" style="text-align: center;">
+                                <span style="display: inline-block;text-align: center;">
+                                    <span style="height: 100%;display: block;float: left; padding: 7px;">
+                                        <span style="height: 100%;">Nilai Naskah (Nn)</span>
+                                        <span style="height: 100%;">=</span>
+                                    </span>
+                                    <span style="height: 100%;display: block;float: left;">
+                                        <span style="text-align:center;border-bottom: 1px solid #000000; display: block;clear: both;"><?php echo $item['nilai_naskah']['top'];?></span>
+                                        <span style="text-align:center;display: block;clear: both;"><?php echo $item['nilai_naskah']['bottom'];?></span>
+                                    </span>
+                                </span>
+                            </td>
+                            <td style="text-align: center;"><?php echo $item['nilai_naskah']['mako'];?></td>
+                            <td style="text-align: center;"><?php echo $item['nilai_naskah']['lant1'];?></td>
+                            <td style="text-align: center;"><?php echo $item['nilai_naskah']['lant2'];?></td>
+                            <td style="text-align: center;"><?php echo $item['nilai_naskah']['lant3'];?></td>
+                            <td style="text-align: center;"><?php echo $item['nilai_naskah']['lant4'];?></td>
+                        </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ftable-wrapper" style="left: 60%; width: 40%;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="3">PENILAI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nama</td>
+                            <td>:</td>
+                            <td><?php echo $this->penilai['nama'];?></td>
+                        </tr>
+                        <tr>
+                            <td>PKT/KORPS/NRP</td>
+                            <td>:</td>
+                            <td><?php echo $this->penilai['pangkat'].' / - / '.$this->penilai['nrp'];?></td>
+                        </tr>
+                        <tr>
+                            <td>Tanda Tangan</td>
+                            <td>:</td>
+                            <td height="50px"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <h1>Mohon maaf, anda tidak memiliki hak akses.</h1>
+<?php endif;?>

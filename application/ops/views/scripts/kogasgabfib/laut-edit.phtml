@@ -1,0 +1,104 @@
+<?php
+$this->mapOption = array('useDefaultNavigationControl' => false);
+
+echo $this->partial('partials/rute-edit.phtml', $this);
+?>
+
+<script>
+$(function () {
+"use strict";
+
+/* == Draw Polygon Latum */
+	<?php $this->headStyle()->captureStart(); ?>
+	.olControlDrawFeaturePolygonItemActive {
+		background-position: -26px -24px;
+	}
+	.olControlDrawFeaturePolygonItemInactive {
+		background-position: -26px -1px;
+	}
+	<?php $this->headStyle()->captureEnd(); ?>
+	// var map dari kode di atas
+	var latumLayer,
+		CustomNavToolbar,
+		ctc,
+		navigationControl,
+		selectControl, deleteHandler;
+	// polygon layer
+	latumLayer = new OpenLayers.Layer.Vector("Latihan Umum", {displayInLayerSwitcher: false});
+	map.addLayer(latumLayer);
+	
+	// define custom navigation control
+	navigationControl = new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}), // disable scroll di sini
+	CustomNavToolbar = OpenLayers.Class(OpenLayers.Control.NavToolbar, {
+		initialize: function(options) {
+			OpenLayers.Control.Panel.prototype.initialize.apply(this, [options]);
+			this.addControls([
+				navigationControl,
+				new OpenLayers.Control.ZoomBox(),
+				new OpenLayers.Control.DrawFeature(latumLayer,
+					OpenLayers.Handler.Polygon,
+					{'displayClass': 'olControlDrawFeaturePolygon'})
+				]);
+		}
+	});
+	ctc = new CustomNavToolbar();
+	map.addControl(ctc);
+	ctc.moveTo(new OpenLayers.Pixel(5, 70));
+	
+	// simpan bentuk poligon ketika submit
+	$('form').bind('submit', function(e) {
+		// register new input element
+		var $polygon = $('<textarea name="latum">'),
+			geoms,
+			i, tempMulti;
+		
+		if (latumLayer.features.length == 1) {
+			$polygon.val(latumLayer.features[0].geometry.toString());
+		} else if (latumLayer.features.length > 1) {
+			geoms = [];
+			for (i=0; i<latumLayer.features.length; i++) {
+				geoms.push(latumLayer.features[i].geometry);
+			}
+			tempMulti = new OpenLayers.Geometry.MultiPolygon(geoms);
+			$polygon.val(tempMulti.toString());
+		}
+		$(this).append($polygon);
+		// e.preventDefault(); // debug
+	});
+	
+	// ability to delete polygon
+	selectControl = new OpenLayers.Control.SelectFeature(latumLayer, {
+		clickout: true, toggle: false,
+		multiple: false, hover: false,
+		box: false
+	});
+	deleteHandler = new OpenLayers.Handler.Keyboard(selectControl, {
+		keydown: function(evt) {
+			var code = evt.keyCode;
+			if (code == 46) { // "delete" key
+				latumLayer.removeFeatures(latumLayer.selectedFeatures);
+			}
+		}
+	});
+	map.addControl(selectControl);
+	// set kapan aktif
+	selectControl.activate();
+	deleteHandler.activate();
+	navigationControl.events.register('activate', navigationControl, function(e) {
+		selectControl.activate();
+		deleteHandler.activate();
+	});
+	navigationControl.events.register('deactivate', navigationControl, function(e) {
+		selectControl.deactivate();
+		deleteHandler.deactivate();
+	});
+	
+	// initial polygon
+	<?php $latum = $this->model->getRow()->latum; ?>
+	<?php if ($latum) : ?>
+		var format = new OpenLayers.Format.WKT();
+		latumLayer.addFeatures([format.read(<?php echo json_encode($latum); ?>)]);
+	<?php endif; ?>
+/* == End of Draw Polygon Latum */
+});
+</script>

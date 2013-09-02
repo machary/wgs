@@ -1,0 +1,175 @@
+<div class="grid_8">
+	<?php echo $this->form; ?>
+</div>
+
+<script type="text/javascript">
+var htmlAmount = '<div id="slider" style="height: 6px; width: 120px;"></div>';
+var htmlDay = '<b><div style="float: left; font-size: 14px" id="day-value">0 Hari 0 Jam 0 Menit</div></b>';
+
+$(htmlAmount).insertAfter('#kecepatan');
+$(htmlDay).insertAfter('#slider');
+
+var angkaArr = new Array('0','1','2','3','4','5','6','7','8','9');
+
+$('#kecepatan').keyup(function(){
+    thisElmVal = $(this).val();
+    if(in_array(thisElmVal, angkaArr) || thisElmVal >= 0 && thisElmVal <= 30){
+        $('#slider').slider('value', thisElmVal);
+        perhitunganKecepatan(thisElmVal);
+    }
+    else
+    {
+        alert('Harus Angka Yang Di Inputkan');
+        $(this).val('');
+    }
+});
+
+function perhitunganKecepatan(speed){
+    var jarak = parseInt($('#jarak').val());
+    var knot = parseInt(speed);
+    var jam = jarak / knot;
+    var hari = jam / 24;
+    var sisaJam = jam % 24;
+    var menit = sisaJam * 60;
+    var sisaMenit = menit % 60;
+    if(speed == 0 || speed == '')
+    {
+        $('#day-value').html(0 + ' Hari ' + ' ' + 0 + ' Jam ' + ' ' + 0 + ' Menit');
+    }
+    else
+    {
+        $('#day-value').html(Math.floor(hari) + ' Hari ' + ' ' + Math.floor(sisaJam) + ' Jam ' + ' ' + Math.floor(sisaMenit) + ' Menit');
+    }
+}
+
+//slider untuk mengubah rotasi
+$( "#slider" ).slider({
+    value: 0,
+    min: 0,
+    max: 30,
+    step: 1,
+    slide: function( event, ui ) {
+        if(ui.value != 0)
+        {
+            $('#kecepatan').val(ui.value);
+            perhitunganKecepatan(ui.value);
+        }
+        else
+        {
+            $('#kecepatan').val(ui.value);
+            $('#day-value').val(0);
+        }
+    }
+});
+
+var count = 0;
+var allElementArr = Array();
+$('#tujuan').bind('change',function(){
+    if($('#asal').val() != '')
+    {
+        $.post(baseUrl + '/cms/tabulasi.waktu/getjarak',
+            {
+                "asal": $('#asal').val(),
+                "tujuan": $('#tujuan').val()
+            },
+            function(data){
+                if(count == 0)
+                {
+                    allElementArr[$('#tujuan').selector] = data.jarak;
+                    $('#jarak').val(allElementArr[$('#tujuan').selector]);
+                    count++;
+                    tambahan(data.pelabuhan, count);
+                }
+                else
+                {
+                    var tamp = parseInt($('#jarak').val()) - parseInt(allElementArr[$('#tujuan').selector]);
+                    allElementArr[$('#tujuan').selector] = data.jarak;
+                    var hasil = parseInt(tamp) + parseInt(allElementArr[$('#tujuan').selector]);
+                    $('#jarak').val(hasil);
+                }
+            }, "json");
+    }
+    else
+    {
+        alert('Pelabuhan Asal Harus Dipilih');
+        $('#tujuan').val('');
+    }
+});
+
+function createElement(pelabuhan, counts)
+{
+    var berikutnya = '<label for="berikut-'+counts+'">Tujuan Berikutnya</label>'
+        +'<dd id="berikut-'+counts+'-element">'
+            +'<select id="berikut-'+counts+'" name="berikut-'+counts+'" onchange="selectChange('+counts+');">'
+            +'<option label="[Pilih]" value="">[Pilih]</option>';
+    for(var h in pelabuhan)
+    {
+        berikutnya += '<option value="'+pelabuhan[h].gid+'">'+pelabuhan[h].nama+'</option>';
+    }
+    berikutnya +'</dd>'
+        +'</select>';
+
+    return berikutnya;
+}
+
+function tambahan(pelabuhan, counts)
+{
+    var a = counts-1;
+    if(a == 0)
+    {
+        var html = createElement(pelabuhan, counts);
+        $(html).insertAfter('#tujuan-element');
+        $('select').uniform();
+
+        var asal = $('#tujuan').val();
+    }
+    else if(a > 0)
+    {
+        var html = createElement(pelabuhan, counts);
+        $(html).insertAfter('#berikut-'+a+'-element');
+        $('select').uniform();
+
+        var asal = $('#berikut-'+a).val();
+    }
+}
+
+function selectChange(index)
+{
+    var min = index - 1;
+    var sebelum = (index == 1) ? $('#tujuan').val() : $('#berikut-'+min).val();
+    $('#berikut-'+index).bind('change',function(){
+        $.post(baseUrl + '/cms/tabulasi.waktu/getjarak',
+            {
+                "asal": sebelum,
+                "tujuan": $('#berikut-'+index).val()
+            },
+            function(data){
+                var bool = 'false';
+                for(var y in allElementArr)
+                {
+                    if(y == $('#berikut-'+index).selector)
+                    {
+                        bool = 'true';
+                    }
+                }
+
+                switch(bool)
+                {
+                    case 'false':
+                        allElementArr[$('#berikut-'+index).selector] = data.jarak;
+                        var jumlah = parseInt($('#jarak').val()) + parseInt(data.jarak);
+                        $('#jarak').val(jumlah);
+                        count++
+                        tambahan(data.pelabuhan, count);
+                        break;
+                    case 'true':
+                        var tamp = parseInt($('#jarak').val()) - parseInt(allElementArr[$('#berikut-'+index).selector]);
+                        allElementArr[$('#berikut-'+index).selector] = data.jarak;
+                        var hasil = parseInt(tamp) + parseInt(allElementArr[$('#berikut-'+index).selector]);
+                        $('#jarak').val(hasil);
+                        break;
+                }
+            }, "json");
+    });
+}
+</script>

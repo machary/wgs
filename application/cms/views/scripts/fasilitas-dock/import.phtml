@@ -1,0 +1,29 @@
+<?php $f = $this->form; ?>
+
+<?php $this->printGoBackUrl($this->url(array('action'=>'index'))); ?>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Tambah Fasilitas Helling Dock</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php if (isset($this->announcement)) : ?>
+				<div class="alert alert_green">
+					<img width="24" height="24" src="<?php echo $this->imgUrl('icons/small/white/Alert%202.png'); ?>">
+					<?php echo $this->announcement; ?>
+				</div>
+			<?php endif; ?>
+			
+			<form enctype="multipart/form-data" method="post">
+				<label>File Excel</label>
+				<p>
+					<input type="file" name="import_file">
+					<?php echo $f->import_file->renderErrors(); ?>
+				</p>
+				
+				<button class="button_colour round_all">
+					<span>Import</span>
+				</button>
+			</form>
+		</div>
+	</div>
+</div>

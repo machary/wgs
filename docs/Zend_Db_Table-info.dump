@@ -1,0 +1,1245 @@
+Array
+(
+    [schema] => master
+    [name] => M_SONAR
+    [cols] => Array
+        (
+            [0] => SONAR_ID
+            [1] => SONAR_OP_MODE
+            [2] => SONAR_CATEGORY
+            [3] => SONAR_NAME
+            [4] => SONAR_ACT_DET_RG
+            [5] => SONAR_ACT_CS
+            [6] => SONAR_PASV_DET_RG
+            [7] => SONAR_ACC_SRC_LEV
+            [8] => SONAR_MAX_DETECT_RANGE
+            [9] => SONAR_OP_FREQ_ACT
+            [10] => SONAR_OP_FREQ_PASV
+            [11] => SONAR_MIN_DEPTH
+            [12] => SONAR_MAX_DEPTH
+            [13] => SONAR_CABLE_LENGTH
+            [14] => SONAR_ARRAY_LENGTH
+            [15] => SONAR_TM_INTV_OF_WTCH_SHORT
+            [16] => SONAR_TM_INTV_OF_WTCH_MED
+            [17] => SONAR_TM_INTV_OF_WTCH_LONG
+            [18] => SONAR_MIN_SPEED
+            [19] => SONAR_MAX_SPEED
+            [20] => SONAR_BEAM_WIDTH
+            [21] => SONAR_OP_POWER
+            [22] => SONAR_SOURCE_LEVEL
+            [23] => SONAR_ACTIVE_FREQ_OF_OPS
+            [24] => SONAR_ACTIVE_50_DET_RNG
+            [25] => SONAR_ACTIVE_ABSORB_COEFF
+            [26] => SONAR_ACTIVE_ATTEN_R50
+            [27] => SONAR_ACTIVE_ATTEN_R100
+            [28] => SONAR_ACTIVE_100_DET_RG
+            [29] => SONAR_PASIVE_FREQ_OF_OPS
+            [30] => SONAR_PASIVE_50_DET_RNG
+            [31] => SONAR_PASIVE_ABSORB_COEFF
+            [32] => SONAR_PASIVE_ATTEN_R50
+            [33] => SONAR_PASIVE_ATTEN_R100
+            [34] => SONAR_PASIVE_100_DET_RG
+            [35] => SONAR_DC_SURF
+            [36] => SONAR_DC_SUB
+            [37] => SONAR_DC_TORP
+            [38] => SONAR_DC_MINE
+            [39] => SONAR_ACT_RG_100
+            [40] => SONAR_ASSOC_ACC_CS
+            [41] => SONAR_PASV_RG_100
+            [42] => SONAR_ASSOC_ACC_SL
+            [43] => SONAR_OWNSHIP_NOISE_INC
+            [44] => SONAR_MAX_SONAR_SPEED
+            [45] => SONAR_INT_PER_ACTIVE
+            [46] => SONAR_INT_PER_PASIVE
+            [47] => SONAR_TGT_ID_CAP
+            [48] => SONAR_TIME_TO_ID_TGT
+            [49] => SONAR_CABLE_PAYOUT
+            [50] => SONAR_TMA_CAPABLE
+            [51] => SONAR_DEPTH_FINDING
+            [52] => SONAR_TRACKING_CAPABLE
+            [53] => SONAR_ARRAY_KINKS
+            [54] => SONAR_TURN_RATE_TO_KINKS
+            [55] => SONAR_TIME_TO_UNKINK
+            [56] => SONAR_MIN_TOW_SPEED
+            [57] => SONAR_MIN_DEPTH_TO_DEPLOY
+            [58] => SONAR_MAX_BEARING_ERROR
+            [59] => SONAR_AVERAGE_BEAMWIDTH
+            [60] => SONAR_BEARING_AMBIGUITY
+            [61] => DATATYPE
+            [62] => DESCRIPTION
+            [63] => TYPE_DESC
+        )
+
+    [primary] => Array
+        (
+            [1] => SONAR_ID
+        )
+
+    [metadata] => Array
+        (
+            [SONAR_ID] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ID
+                    [COLUMN_POSITION] => 1
+                    [DATA_TYPE] => int4
+                    [DEFAULT] => nextval(('master.M_SONAR_SONAR_ID_seq'::text)::regclass)
+                    [NULLABLE] => 
+                    [LENGTH] => 4
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 1
+                    [PRIMARY_POSITION] => 1
+                    [IDENTITY] => 1
+                )
+
+            [SONAR_OP_MODE] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_OP_MODE
+                    [COLUMN_POSITION] => 2
+                    [DATA_TYPE] => int4
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 4
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_CATEGORY] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_CATEGORY
+                    [COLUMN_POSITION] => 3
+                    [DATA_TYPE] => int4
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 4
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_NAME] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_NAME
+                    [COLUMN_POSITION] => 4
+                    [DATA_TYPE] => varchar
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 100
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACT_DET_RG] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACT_DET_RG
+                    [COLUMN_POSITION] => 5
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACT_CS] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACT_CS
+                    [COLUMN_POSITION] => 6
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_PASV_DET_RG] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_PASV_DET_RG
+                    [COLUMN_POSITION] => 7
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACC_SRC_LEV] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACC_SRC_LEV
+                    [COLUMN_POSITION] => 8
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_MAX_DETECT_RANGE] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_MAX_DETECT_RANGE
+                    [COLUMN_POSITION] => 9
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_OP_FREQ_ACT] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_OP_FREQ_ACT
+                    [COLUMN_POSITION] => 10
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_OP_FREQ_PASV] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_OP_FREQ_PASV
+                    [COLUMN_POSITION] => 11
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_MIN_DEPTH] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_MIN_DEPTH
+                    [COLUMN_POSITION] => 12
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_MAX_DEPTH] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_MAX_DEPTH
+                    [COLUMN_POSITION] => 13
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_CABLE_LENGTH] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_CABLE_LENGTH
+                    [COLUMN_POSITION] => 14
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ARRAY_LENGTH] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ARRAY_LENGTH
+                    [COLUMN_POSITION] => 15
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_TM_INTV_OF_WTCH_SHORT] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_TM_INTV_OF_WTCH_SHORT
+                    [COLUMN_POSITION] => 16
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_TM_INTV_OF_WTCH_MED] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_TM_INTV_OF_WTCH_MED
+                    [COLUMN_POSITION] => 17
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_TM_INTV_OF_WTCH_LONG] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_TM_INTV_OF_WTCH_LONG
+                    [COLUMN_POSITION] => 18
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_MIN_SPEED] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_MIN_SPEED
+                    [COLUMN_POSITION] => 19
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_MAX_SPEED] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_MAX_SPEED
+                    [COLUMN_POSITION] => 20
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_BEAM_WIDTH] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_BEAM_WIDTH
+                    [COLUMN_POSITION] => 21
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_OP_POWER] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_OP_POWER
+                    [COLUMN_POSITION] => 22
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_SOURCE_LEVEL] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_SOURCE_LEVEL
+                    [COLUMN_POSITION] => 23
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACTIVE_FREQ_OF_OPS] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACTIVE_FREQ_OF_OPS
+                    [COLUMN_POSITION] => 24
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACTIVE_50_DET_RNG] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACTIVE_50_DET_RNG
+                    [COLUMN_POSITION] => 25
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACTIVE_ABSORB_COEFF] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACTIVE_ABSORB_COEFF
+                    [COLUMN_POSITION] => 26
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACTIVE_ATTEN_R50] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACTIVE_ATTEN_R50
+                    [COLUMN_POSITION] => 27
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACTIVE_ATTEN_R100] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACTIVE_ATTEN_R100
+                    [COLUMN_POSITION] => 28
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACTIVE_100_DET_RG] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACTIVE_100_DET_RG
+                    [COLUMN_POSITION] => 29
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_PASIVE_FREQ_OF_OPS] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_PASIVE_FREQ_OF_OPS
+                    [COLUMN_POSITION] => 30
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_PASIVE_50_DET_RNG] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_PASIVE_50_DET_RNG
+                    [COLUMN_POSITION] => 31
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_PASIVE_ABSORB_COEFF] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_PASIVE_ABSORB_COEFF
+                    [COLUMN_POSITION] => 32
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_PASIVE_ATTEN_R50] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_PASIVE_ATTEN_R50
+                    [COLUMN_POSITION] => 33
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_PASIVE_ATTEN_R100] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_PASIVE_ATTEN_R100
+                    [COLUMN_POSITION] => 34
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_PASIVE_100_DET_RG] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_PASIVE_100_DET_RG
+                    [COLUMN_POSITION] => 35
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_DC_SURF] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_DC_SURF
+                    [COLUMN_POSITION] => 36
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_DC_SUB] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_DC_SUB
+                    [COLUMN_POSITION] => 37
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_DC_TORP] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_DC_TORP
+                    [COLUMN_POSITION] => 38
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_DC_MINE] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_DC_MINE
+                    [COLUMN_POSITION] => 39
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ACT_RG_100] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ACT_RG_100
+                    [COLUMN_POSITION] => 40
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ASSOC_ACC_CS] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ASSOC_ACC_CS
+                    [COLUMN_POSITION] => 41
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_PASV_RG_100] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_PASV_RG_100
+                    [COLUMN_POSITION] => 42
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ASSOC_ACC_SL] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ASSOC_ACC_SL
+                    [COLUMN_POSITION] => 43
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_OWNSHIP_NOISE_INC] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_OWNSHIP_NOISE_INC
+                    [COLUMN_POSITION] => 44
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_MAX_SONAR_SPEED] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_MAX_SONAR_SPEED
+                    [COLUMN_POSITION] => 45
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_INT_PER_ACTIVE] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_INT_PER_ACTIVE
+                    [COLUMN_POSITION] => 46
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_INT_PER_PASIVE] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_INT_PER_PASIVE
+                    [COLUMN_POSITION] => 47
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_TGT_ID_CAP] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_TGT_ID_CAP
+                    [COLUMN_POSITION] => 48
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_TIME_TO_ID_TGT] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_TIME_TO_ID_TGT
+                    [COLUMN_POSITION] => 49
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_CABLE_PAYOUT] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_CABLE_PAYOUT
+                    [COLUMN_POSITION] => 50
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_TMA_CAPABLE] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_TMA_CAPABLE
+                    [COLUMN_POSITION] => 51
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_DEPTH_FINDING] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_DEPTH_FINDING
+                    [COLUMN_POSITION] => 52
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_TRACKING_CAPABLE] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_TRACKING_CAPABLE
+                    [COLUMN_POSITION] => 53
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_ARRAY_KINKS] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_ARRAY_KINKS
+                    [COLUMN_POSITION] => 54
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_TURN_RATE_TO_KINKS] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_TURN_RATE_TO_KINKS
+                    [COLUMN_POSITION] => 55
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_TIME_TO_UNKINK] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_TIME_TO_UNKINK
+                    [COLUMN_POSITION] => 56
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_MIN_TOW_SPEED] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_MIN_TOW_SPEED
+                    [COLUMN_POSITION] => 57
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_MIN_DEPTH_TO_DEPLOY] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_MIN_DEPTH_TO_DEPLOY
+                    [COLUMN_POSITION] => 58
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_MAX_BEARING_ERROR] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_MAX_BEARING_ERROR
+                    [COLUMN_POSITION] => 59
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_AVERAGE_BEAMWIDTH] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_AVERAGE_BEAMWIDTH
+                    [COLUMN_POSITION] => 60
+                    [DATA_TYPE] => float8
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 8
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [SONAR_BEARING_AMBIGUITY] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => SONAR_BEARING_AMBIGUITY
+                    [COLUMN_POSITION] => 61
+                    [DATA_TYPE] => bool
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [DATATYPE] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => DATATYPE
+                    [COLUMN_POSITION] => 62
+                    [DATA_TYPE] => int4
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 4
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [DESCRIPTION] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => DESCRIPTION
+                    [COLUMN_POSITION] => 63
+                    [DATA_TYPE] => text
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => -1
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+            [TYPE_DESC] => Array
+                (
+                    [SCHEMA_NAME] => master
+                    [TABLE_NAME] => M_SONAR
+                    [COLUMN_NAME] => TYPE_DESC
+                    [COLUMN_POSITION] => 64
+                    [DATA_TYPE] => varchar
+                    [DEFAULT] => 
+                    [NULLABLE] => 1
+                    [LENGTH] => 100
+                    [SCALE] => 
+                    [PRECISION] => 
+                    [UNSIGNED] => 
+                    [PRIMARY] => 
+                    [PRIMARY_POSITION] => 
+                    [IDENTITY] => 
+                )
+
+        )
+
+    [rowClass] => Zend_Db_Table_Row
+    [rowsetClass] => Zend_Db_Table_Rowset
+    [referenceMap] => Array
+        (
+        )
+
+    [dependentTables] => Array
+        (
+        )
+
+    [sequence] => "master"."M_SONAR_SONAR_ID_seq"
+)

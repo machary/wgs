@@ -1,0 +1,56 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Sonar</h2>
+	<p>
+		<a class="roundall_grey add_icon" href="<?php echo $this->url(array('controller'=>'sonar','action'=>'add.sonar')); ?>">
+            <span class="ml22">Sonar Baru</span>
+		</a>
+	</p>
+	
+	<div class="block">
+		<table id="table-sonar" class="display">
+			<thead>
+				<tr>
+					<th width="25%">Name</th>
+					<th>Category</th>
+					<th>Max Detection Range</th>
+					<th>Max Depth</th>
+					<th>Max Speed</th>
+					<th width="10%"></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+<?php $this->inlineScript()->appendFile($this->jsUrl( 'script.js')); ?>
+$(function(){
+    var oTable = $('#table-sonar').dataTable({
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "bFilter": true,
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : baseUrl + '/cms/sonar/dataapi.sonar',
+        "fnServerData" : function(sSource, aoData, fnCallback) {
+            // @optional filter category content
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        },
+		'aoColumns' : [
+			null,null,
+			{bSearchable: false},{bSearchable: false},{bSearchable: false},
+			{bSortable: false, bSearchable: false}]
+    });//.makeEditable();
+	new Filterer(oTable);
+});
+</script>

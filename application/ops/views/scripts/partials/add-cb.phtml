@@ -1,0 +1,79 @@
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Tambah CB <?php echo $this->kogas; ?></h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<style type="text/css">
+    #uniform-waktu-mulai-status, #uniform-waktu-selesai-status  {
+        float: left;
+    }
+
+    span.label-float {
+        float: left;
+        display: block;
+        font-weight: bold;
+        margin: 6px 0;
+        margin-left: 10px;
+        margin-right: 5px;
+    }
+</style>
+
+<script type="text/javascript">
+$(function () {
+	$('#waktu_pembuatan').datetimepicker({
+		dateFormat: 'yy-mm-dd'
+	});
+
+    var waktuMulai = $('#waktu_mulai');
+    var waktuSelesai = $('#waktu_selesai');
+
+    waktuMulai.hide().parent().append(craeteElement('waktu-mulai'));
+    waktuSelesai.hide().parent().append(craeteElement('waktu-selesai'));
+
+    function craeteElement(el)
+    {
+        var returned = '<select id="' + el + '-status"><option selected ="selected" value = "1">normal</option><option value = "-1">minus</option></select>';
+            returned += '<span class="label-float">H</span><input value="0" size="5" style="float: left;margin: 3px 0;" id="' + el + '-days" /><span class="label-float">J</span><input value="0" style="float: left;margin: 3px 0;" size="5" id="' + el + '-hours" />';
+        return returned;
+    }
+
+    $('#waktu-mulai-days').keyup(function(){
+        waktuMulai.val(((parseInt(this.value) * 24) + parseInt($('#waktu-mulai-hours').val())) * $('#waktu-mulai-status').val());
+    });
+
+    $('#waktu-mulai-hours').keyup(function(){
+        waktuMulai.val((($('#waktu-mulai-days').val() * 24 ) + parseInt(this.value)) * $('#waktu-mulai-status').val());
+    });
+
+    $('#waktu-selesai-days').keyup(function(){
+        waktuSelesai.val(((parseInt(this.value) * 24) + parseInt($('#waktu-selesai-hours').val())) * $('#waktu-selesai-status').val());
+    });
+
+    $('#waktu-selesai-hours').keyup(function(){
+        waktuSelesai.val((($('#waktu-selesai-days').val() * 24 ) + parseInt(this.value)) * $('#waktu-selesai-status').val());
+    });
+
+    $('#waktu-mulai-status').change(function(){
+        var minus = (parseInt(waktuMulai.val()) < 0) ?  this.value * -1: this.value;
+        waktuMulai.val(waktuMulai.val() * minus);
+    });
+
+    $('#waktu-selesai-status').change(function(){
+        var minus = (parseInt(waktuSelesai.val()) < 0) ?  this.value * -1: this.value;
+        waktuSelesai.val(waktuSelesai.val() * minus);
+    });
+});
+</script>

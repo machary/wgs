@@ -1,0 +1,60 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>" class="weaponry">
+
+	<label>Bomb</label>
+	<table>
+	<tr class="bomb-count-row hidden">
+		<td><?php echo $f->bomb_id->renderViewHelper(); ?></td>
+		<td><?php echo $f->bomb_count->renderViewHelper(); ?></td>
+		<td><button onclick="remove_row(this)" type="button">X</button></td>
+	</tr>
+	</table>
+	<button onclick="add_row('bomb-count-row', '', 0)" type="button">+Tambah</button>
+	
+	<label>Radar</label>
+	<table>
+	<tr class="radar-count-row hidden">
+		<td><?php echo $f->radar_id->renderViewHelper(); ?></td>
+		<td><?php echo $f->radar_count->renderViewHelper(); ?></td>
+		<td><button onclick="remove_row(this)" type="button">X</button></td>
+	</tr>
+	</table>
+	<button onclick="add_row('radar-count-row', '', 0)" type="button">+Tambah</button>
+	
+	<label>Sonar</label>
+	<table>
+	<tr class="sonar-count-row hidden">
+		<td><?php echo $f->sonar_id->renderViewHelper(); ?></td>
+		<td><?php echo $f->sonar_count->renderViewHelper(); ?></td>
+		<td><button onclick="remove_row(this)" type="button">X</button></td>
+	</tr>
+	</table>
+	<button onclick="add_row('sonar-count-row', '', 0)" type="button">+Tambah</button>
+	
+	<button class="button_colour round_all">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+</form>
+
+<script type="text/javascript">
+
+function remove_row(el) {
+	$(el).parent().parent().remove();
+}
+
+function add_row(cls, id, count) {
+	var $origin = $('.'+cls).first();
+	var $dup = $origin.clone();
+	$dup.removeClass('hidden');
+	$dup.find('select')
+		.bind('change', function(e) {
+			var $this = $(this);
+			$this.prev('span').text($this.find('option:selected').text());
+		})
+		.val(id);
+	$dup.find('input').val(count);
+	$origin.parent().append($dup);
+}
+
+</script>

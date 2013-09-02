@@ -1,0 +1,59 @@
+<style type="text/css">
+    #table-dtables_processing {
+        margin-left: 150px;
+    }
+</style>
+<div class="flat_area grid_16">
+	<h2>Data Pangkalan Pendukung : <?php echo $this->nocb; ?></h2>
+    <p>
+        <a href="<?php echo $this->url(array('action'=>'add')); ?>" class="roundall_grey add_icon">
+            <span class="ml22">Pangkalan Pendukung Baru</span>
+        </a>
+        <a href="<?php echo $this->url(array('controller' => 'cb-logistik', 'action'=>'detail')); ?>" class="roundall_grey back_icon float-right">
+            <span class="ml22">Kembali</span>
+        </a>
+    </p>
+
+	<div class="toggle_container grid_10">
+		<div class="block">
+			<table id="table-dtables" class="display">
+				<thead>
+					<tr>
+						<th>Lantamal/Lanal</th>
+						<th width="20%"></th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+$(function(){
+    var oTable = $('#table-dtables').dataTable({
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+//        "bFilter": false,
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : '<?php echo $this->url(array('action'=>'dataapi')); ?>',
+        "fnServerData" : function(sSource, aoData, fnCallback) {
+            // @optional filter category content
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        },
+		'aoColumns' : [null,{bSortable: false}]
+    });
+	new Filterer(oTable);
+});
+</script>

@@ -1,0 +1,106 @@
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+    //    Openlayer start here
+    var proxyUrl = "<?php echo $this->baseUrl('peta/proxy/?url='); ?>";
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>
+
+
+<div class="grid_8">
+     <!-- map -->
+     <div class="box round_all">
+         <h2 class="box_head grad_colour">Map</h2>
+         <div id="map" style="top:-1px;"></div>
+     </div>
+</div>
+
+
+<script type="text/javascript">
+    var wgs84 = new OpenLayers.Projection("EPSG:4326");
+    var geoUrl = PETA_DASAR.geoUrl;
+    var format = 'image/png';
+    var map, drawControls;
+    var prevmarkers = new OpenLayers.Layer.Markers( "Posisi Kekuatan" );
+
+
+    var options = {
+        controls: [],
+        //maxExtent: bounds,
+        maxResolution: 0.0780,
+        projection: wgs84,
+        units: 'degrees',
+        restrictedExtent: new OpenLayers.Bounds(95.115729755272, -12.012413207701, 140.70672975527, 7.4095867922987)
+    };
+
+    map = standardMap('map');
+
+    var baseLayer = new OpenLayers.Layer.WMS(
+            "Base Layer", geoUrl,
+            {
+                layers: 'dangkal,provinsi,kompas,sungai,pst_lanal'
+            },{
+                isBaseLayer:true
+            });
+
+    map.addLayers([baseLayer,prevmarkers]);
+    map.addControl(new OpenLayers.Control.MousePosition());
+
+    /* == Fitur (Control)Zoom Area + Drag Pan */
+    // override NavToolbar untuk mendisable scroll
+    var CustomNavToolbar = OpenLayers.Class(OpenLayers.Control.NavToolbar, {
+        initialize: function(options) {
+            OpenLayers.Control.Panel.prototype.initialize.apply(this, [options]);
+            this.addControls([
+                new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}), // disable scroll di sini
+                new OpenLayers.Control.ZoomBox()
+            ]);
+        }
+    });
+
+    var ctc = new CustomNavToolbar();
+    map.addControl(ctc);
+    ctc.moveTo(new OpenLayers.Pixel(5, 70));
+    /* == End of Fitur Zoom Area + Drag Pan */
+
+//    map.setCenter(new OpenLayers.LonLat(118.0001, -2.4), 1);
+
+    //navigator
+    ov = new OpenLayers.Control.OverviewMap({maximized:false});
+    map.addControl(ov);
+    ov.ovmap.getResolution()/map.getResolutionForZoom(map.numZoomLevels);
+    ov.minRatio = ov.ovmap.getResolution()/map.getResolutionForZoom(0);
+
+    var koordinat;
+    var lonlatArr = [];
+    var x = 0;
+    map.events.register('click', map, function(e) {
+        var coordinate = map.getLonLatFromViewPortPx( e.xy );
+        var lon = coordinate.lon;
+        var lat = coordinate.lat;
+
+        document.getElementById('longitude').value = lon;
+        document.getElementById('latitude').value = lat;
+
+        previewMarker(lon, lat);
+       OpenLayers.Event.stop(e);
+
+    });
+
+/*
+* <previewMarker> : preview marker
+* @param : lon lat
+* */
+function previewMarker(lon, lat){
+    var icon = baseUrl + '/images/icons/blue_circle.png';
+    if( typeof( kekuatanMusuh ) != 'undefined' ){
+        icon = baseUrl + '/images/icons/red_circle.png';
+    }
+    //custom icon marker
+    var size = new OpenLayers.Size(12, 12);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon(icon, size, offset);
+
+   prevmarkers.clearMarkers();
+   prevmarkers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(lon, lat), icon));
+}
+</script>

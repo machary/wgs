@@ -1,0 +1,180 @@
+<div class="flat_area grid_16 round_all">
+    <h2>Kalender Rencana Operasi Latihan (ROL)</h2>
+    <?php if($this->showEditWarning == true): ?>
+    <div class="alert alert_green">
+        <img height="24" width="24" src="<?php echo $this->imgUrl('icons/small/white/Alert.png'); ?>">
+        Klik pada <strong>kotak kegiatan</strong> untuk mengedit!
+    </div>
+    <?php endif; ?>
+    <div class="block">
+
+        <div style="float: left;">
+
+            <p>
+                <label style="font-weight: bold;" for="skenario-id">Nomor Skenario</label>
+                <select id="skenario-id" >
+                    <?php if($this->scenarioList): ?>
+                    <?php foreach($this->scenarioList as $scenario): ?>
+                        <option value="<?php echo $scenario['id']; ?>"><?php echo $scenario['nomor']; ?></option>
+                        <?php endforeach;?>
+                    <?php else: ?>
+                        <option value="0">Tidak ada Skenario aktif</option>
+                    <?php endif;?>
+                </select>
+            </p>
+
+            <p>
+                <label style="font-weight: bold;" for="komando-id">Komando</label>
+                <select id="komando-id" >
+                    <option value="0">Semua Komando</option>
+                    <?php if($this->jabatanList): ?>
+                    <?php foreach($this->jabatanList as $jabatan): ?>
+                        <option value="<?php echo $jabatan['id_jabatan']; ?>"><?php echo $jabatan['nama_jabatan']; ?></option>
+                        <?php endforeach;?>
+                    <?php endif;?>
+                </select>
+            </p>
+        </div>
+
+        <div style="float: right;">
+            <p>
+                <button onclick="window.location ='<?php echo $this->baseUrl('latihan/rol/add'); ?>';" class="skin_colour round_all" id="show-dialog">
+                    <img width="24" height="24" src="<?php echo $this->imgUrl('icons/small/white/Speech Bubble 2.png'); ?>" alt="Tambah Kegiatan">
+                    <span>Tambah Kegiatan</span>
+                </button>
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="flat_area grid_16 round_all">
+    <div id="kalender-rol"></div>
+</div>
+
+<?php
+    //add required files for full calendar
+    //add javascript
+    $this->headScript()->appendFile($this->jsUrl('fullcalendar/fullcalendar.min.js'));
+    //add css
+    $this->headLink()->appendStylesheet($this->jsUrl('fullcalendar/fullcalendar.css'));
+?>
+
+<script type="text/javascript">
+$(function(){
+
+    var feedUrl = '<?php echo $this->baseUrl('latihan/rol/eventfeed'); ?>';
+    var kalender = $('#kalender-rol');
+    var first = true;
+
+    function setTimeline() {
+        var curTime = new Date();
+        if(curTime.getHours() == 0 && curTime.getMinutes() <= 5) // Because I am calling this function every 5 minutes
+        {// the day has changed
+            var todayElem = $(".fc-today");
+            todayElem.removeClass("fc-today");
+            todayElem.removeClass("fc-state-highlight");
+
+            todayElem.next().addClass("fc-today");
+            todayElem.next().addClass("fc-state-highlight");
+        }
+
+        var parentDiv = $(".fc-agenda-slots:visible").parent();
+        var timeline = parentDiv.children(".timeline");
+        if (timeline.length == 0) { //if timeline isn't there, add it
+            timeline = $("<hr>").addClass("timeline");
+            parentDiv.prepend(timeline);
+        }
+
+        var curCalView = kalender.fullCalendar("getView");
+        if (curCalView.visStart < curTime && curCalView.visEnd > curTime) {
+            timeline.show();
+        } else {
+            timeline.hide();
+        }
+
+        var curSeconds = (curTime.getHours() * 60 * 60) + (curTime.getMinutes() * 60) + curTime.getSeconds();
+        var percentOfDay = curSeconds / 86400; //24 * 60 * 60 = 86400, # of seconds in a day
+        var topLoc = Math.floor(parentDiv.height() * percentOfDay);
+
+        timeline.css("top", topLoc + "px");
+
+        if (curCalView.name == "agendaWeek") { //week view, don't want the timeline to go the whole way across
+            var dayCol = $(".fc-today:visible");
+            if(dayCol.position() != null)
+            {
+                var left = dayCol.position().left + 1;
+                var width = dayCol.width();
+                timeline.css({
+                    left: left + "px",
+                    width: width + "px"
+                });
+            }
+        }
+    }
+
+    $('#skenario-id').change(function(){
+
+        $('#kalender-rol').fullCalendar('removeEventSource', feedUrl);
+
+        var newSources = {
+            url: feedUrl,
+            type: 'POST',
+            data: {
+                id_jabatan: $('#komando-id').val(),
+                id_skenario: $('#skenario-id').val()
+            },
+            error: function(){
+
+            }
+        };
+
+        $('#kalender-rol').fullCalendar('addEventSource', newSources);
+
+    });
+
+    $( "#input-start-real" ).datetimepicker({
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: 'c-10:c',
+        timeFormat: 'hh:mm:ss'
+    });
+
+    $('#kalender-rol').fullCalendar({
+        viewDisplay: function(view) {
+            if(first){
+                first = false;
+            }else {
+                window.clearInterval(timelineInterval);
+            }
+            timelineInterval = window.setInterval(setTimeline, 300000);
+            try {
+                setTimeline();
+            } catch(err) {
+                //console.log(err);
+            }
+        },
+        theme: true,
+        header: {
+                left: 'prev,next,today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+        },
+        eventSources :[{
+            url: feedUrl,
+            type: 'POST',
+            data: {
+                id_jabatan: $('#komando-id').val(),
+                id_skenario: $('#skenario-id').val()
+            },
+            error: function(){
+
+            }
+        }],
+        editable: false
+    });
+
+});
+</script>

@@ -1,0 +1,87 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Data Berita Artikel</h2>
+    <p>
+        <a href="<?php echo $this->url(array('controller'=>'home','action'=>'add')); ?>" class="roundall_grey add_icon">
+            <span class="ml22">Berita Baru</span>
+        </a>
+    </p>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+            <table id="data_table" class="display">
+                <thead>
+                <tr>
+                    <th>Judul</th>
+                    <th width="20%">Tanggal</th>
+                    <th width="20%">Opsi</th>
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript">
+    var htmlFilter = '<select id="feed-filter">'
+        +'<option value="" selected="selected">[Pilih]</option>'
+        +'<option value="0">Judul</option>'
+        +'<option value="1">Tanggal</option>'
+        +'</select>';
+
+    var oTable = $('#data_table').dataTable( {
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "aoColumns":[
+            null,
+            null,
+            {bSortable:false}
+        ],
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : baseUrl + '/cms/home/dataapi',
+        "fnServerData" : function(sSource, aoData, fnCallback)
+        {
+            //filter category content
+            if(jQuery('#feed-filter').length)
+            {
+                filter = jQuery('#feed-filter').val()
+
+                aoData.push({
+                    "name": "filter",
+                    "value":  filter
+                });
+            }
+
+            jQuery.getJSON(sSource, aoData, function(json) {
+                //if(aaData != 'undefined')
+                //{
+                fnCallback(json)
+                //}
+            });
+
+            $('.custom-rows').parent().css('vertical-align','middle');
+        }
+    })
+
+    $('#data_table_filter').css('width', '360px');
+    var elmntSearch = $("#data_table_filter").find("input:text");
+    $(htmlFilter).insertBefore(elmntSearch);
+</script>

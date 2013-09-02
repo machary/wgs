@@ -1,0 +1,36 @@
+<div class="flat_area grid_16">
+    <h2>Daftar Penilaian</h2>
+    <div class="block">
+        <form method="post">
+            <table class="display simple-table">
+                <thead>
+                <tr>
+                    <th>NRP</th>
+                    <th>Nama</th>
+                    <th>Jabatan</th>
+                    <th>Tanggal dan Jam Penyimpanan</th>
+                    <th>File</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach($this->data as $data): ?>
+                <tr>
+                    <td><?php echo $data['nrp']; ?></td>
+                    <td><?php echo $data['nama']; ?></td>
+                    <td><?php echo $data['nama_jabatan']; ?></td>
+                    <td><?php echo $data['datetime']; ?></td>
+                    <td><?php List($titik, $sampah, $nama) = explode('/', $data['filepath']); ?>
+                        <a href="<?php echo $this->url(array('action'=>'download', 'id'=>$data['id_produk_staff'])); ?>" target="_blank">
+                            <?php echo $nama; ?>
+                        </a>
+                    </td>
+                </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+<!--            <button class="button_colour round_all">-->
+<!--                <span>Simpan</span>-->
+<!--            </button>-->
+        </form>
+    </div>
+</div>

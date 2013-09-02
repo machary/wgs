@@ -1,0 +1,96 @@
+<?php $this->headStyle()->captureStart(); ?>
+#jenis-toolbar input {
+display: block;
+float: left;
+margin-right: 10px;
+}
+
+#jenis-pohon {
+clear: both;
+}
+
+#jenis-pohon li {
+border: none;
+padding: 0;
+}
+
+#jenis-pohon li a {
+font-weight: normal;
+color: black;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+
+<?php //$this->printGoBackUrl($this->url(array('action'=>'index'))); ?>
+
+<div class="box grid_12 round_all">
+    <h2 class="box_head grad_colour">Folder Telegram</h2>
+    <div class="toggle_container">
+        <div class="block">
+            <form id="jenis-form" method="post">
+                <div id="jenis-toolbar">
+                    <input type="button" id="button-add" value="Tambah">
+                    <input type="button" id="button-edit" value="Ubah">
+                    <input type="button" id="button-del" value="Hapus">
+                    <input type="button" id="button-deselect" value="Deselect">
+                </div>
+
+                <div id="jenis-pohon" class="tree"></div>
+
+                <button class="button_colour round_all">
+                    <span>Simpan</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('jstree/jquery.jstree.js')); ?>
+<script>
+
+    var gpohon;
+
+    $(function() {
+        // initial data
+        var data = <?php echo json_encode($this->jenis->toJson()); ?>;
+        // inisiasi tree
+        gpohon = $('#jenis-pohon')
+            .jstree({
+                //'core' : {},
+                'plugins': ['themes', 'json_data', 'ui', 'crrm', 'contextmenu', 'dnd'],
+                'json_data': {
+                    'data': data
+                }
+            })
+            .bind('remove.jstree', function(e, data) {
+                gpohon.jstree('deselect_all');
+            })
+        ;
+
+        // inisiasi tombol
+        $('#button-add').bind('click', function(e) {
+            gpohon.jstree('create', null, 'last', {'attr': {'rel':'folder'}});
+        });
+
+        $('#button-edit').bind('click', function(e) {
+            gpohon.jstree('rename');
+        });
+
+        $('#button-del').bind('click', function(e) {
+            gpohon.jstree('remove');
+        });
+
+        $('#button-deselect').bind('click', function(e) {
+            gpohon.jstree('deselect_all');
+        });
+
+        // submit form
+        $('#jenis-form').bind('submit', function(e) {
+            // convert tree to input elements
+            var json = gpohon.jstree('get_json', -1);
+            var $text = $('<textarea name="json"/>');
+            $text.css('display', 'none');
+            $text.html(JSON.stringify(json));
+            $(this).append($text);
+        });
+    });
+</script>

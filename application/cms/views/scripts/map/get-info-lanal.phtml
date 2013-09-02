@@ -1,0 +1,114 @@
+<?php if (isset($this->pangkalan)) : ?>
+	<?php 
+	$p = $this->pangkalan;
+	$GLOBALS['mm'] = $this->model;
+	
+	/**
+	 * Menampilkan detail isi suatu fasilitas milik pangkalan dalam HTML
+	 * @param array $p informasi detail pangkalan
+	 * @param string $fasName nama table fasilitas sekaligus salah satu key $p
+	 */
+	function printFasilitas($p, $fasName) {
+		$model = $GLOBALS['mm'];
+		if ($p[$fasName]) {
+			$fas = $p[$fasName];
+			// print header
+			switch ($fasName) {
+				case 'fasilitas_labuh_udara':
+					$header = 'Pelabuhan Udara';
+					break;
+				case 'fasilitas_dock':
+					$header = 'Helling Dock';
+					break;
+				case 'fasilitas_umum':
+					$header = 'Fasilitas Umum';
+					break;
+				default:
+					$header = $model->fieldToName(substr($fasName, 10));
+					break;
+			}
+			?>
+			<h3><?php echo $header; ?></h3>
+			<?php
+			// init column
+			$cols = array_keys($fas[0]);
+			foreach ($cols as $i => $col) {
+				if (substr($col, 0, 2) == 'id') { // skip kolom diawali "id*"
+					unset($cols[$i]);
+				}
+			}
+			// print table
+			?>
+			<table>
+				<tr>
+					<?php foreach ($cols as $col) : ?>
+						<th><?php echo $model->fieldToName($col); ?></th>
+					<?php endforeach; ?>
+				</tr>
+				<?php foreach ($fas as $row) : ?>
+					<tr>
+						<?php foreach ($cols as $col) : ?>
+							<td><?php echo $row[$col]; ?></td>
+						<?php endforeach; ?>
+					</tr>
+				<?php endforeach; ?>
+			</table>
+			<?php
+		}
+	}
+	?>
+	<h2><?php echo $p['jenis_pangkalan'].' '.$p['nama']; ?></h2>
+
+	<div id="fastabel">
+		<ul>
+			<li><a href="#tab-faslabuh">Faslabuh</a></li>
+			<li><a href="#tab-fasharkan">Fasharkan</a></li>
+			<li><a href="#tab-faswatpres">Faswatpres</a></li>
+			<li><a href="#tab-fasbinlan">Fasbinlan</a></li>
+			<li><a href="#tab-fasbekul">Fasbekul</a></li>
+		</ul>
+
+		<div id="tab-faslabuh">
+			<?php printFasilitas($p, 'fasilitas_dermaga'); ?>
+
+			<?php printFasilitas($p, 'fasilitas_labuh_udara'); ?>
+		</div>
+
+		<div id="tab-fasharkan">
+			<?php printFasilitas($p, 'fasilitas_bengkel'); ?>
+
+			<?php printFasilitas($p, 'fasilitas_dock'); ?>
+		</div>
+
+		<div id="tab-faswatpres">
+			<?php printFasilitas($p, 'fasilitas_rumah'); ?>
+
+			<?php printFasilitas($p, 'fasilitas_rumah_sakit'); ?>
+
+			<?php printFasilitas($p, 'fasilitas_mess'); ?>
+
+			<?php printFasilitas($p, 'fasilitas_umum'); ?>
+		</div>
+
+		<div id="tab-fasbinlan">
+			<?php printFasilitas($p, 'fasilitas_jaringan_listrik'); ?>
+
+			<?php printFasilitas($p, 'fasilitas_ranmor'); ?>
+
+			<?php printFasilitas($p, 'fasilitas_tanah'); ?>
+		</div>
+
+		<div id="tab-fasbekul">
+		</div>
+
+	</div>
+
+	<script>
+		$(function() {
+			$('#fastabel').tabs();
+		});
+	</script>
+
+<?php else : ?>
+	<p>Tidak ada informasi</p>
+<?php endif; ?>

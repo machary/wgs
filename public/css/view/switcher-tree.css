@@ -1,0 +1,32 @@
+/* untuk fitur layer switcher tree buatan Kanwil */
+#switcher-tree li {
+	border-bottom: none;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	margin-left: 15px;
+}
+
+#switcher-tree li div,
+#switcher-tree li span {
+	color: white;
+}
+
+#switcher-tree ul {
+	margin-bottom: 0;
+}
+
+#switcher-tree .branch {
+	cursor: pointer;
+	margin-top: 10px;
+}
+
+#switcher-tree .branch:hover {
+	background-color: orange;
+}
+
+#switcher-tree input {
+	display: inline;
+	height: inherit;
+	margin-bottom: 0;
+}

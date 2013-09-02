@@ -1,0 +1,108 @@
+<?php $f = $this->element;?>
+
+<form id="telegram_post" method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+
+	<?php $drf = $f->isdraft; ?>
+	<?php echo $drf->renderViewHelper(); ?>
+
+	<?php $el = $f->nomor_telegram; ?>
+	<label><?php echo $el->getLabel(); ?></label>
+	<div class="input_group">
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $el->renderErrors(); ?>
+	</div>
+
+	<?php $pe = $f->pengirim_id; ?>
+	<?php $ke = $f->kepada_id; ?>
+	<?php $te = $f->tembusan_id; ?>
+	<?php $el = $f->pengirim; ?>
+	<label><?php echo $el->getLabel(); ?></label>
+	<div class="input_group">
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $el->renderErrors(); ?>
+		<?php echo $pe->renderViewHelper(); ?>
+	</div>
+
+	<?php $el = $f->kepada; ?>
+	<label style="display: inline-block;"><?php echo $el->getLabel(); ?></label> <input type="button" value="tujuan" class="to" style="display: inline-block;"/>
+	<div class="input_group">
+        <?php echo $el->renderErrors(); ?>
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $ke->renderViewHelper(); ?>
+	</div>
+
+	<?php $el = $f->tembusan; ?>
+	<label style="display: inline-block;"><?php echo $el->getLabel(); ?></label> <input type="button" value="tujuan" class="to" style="display: inline-block;"/>
+	<div class="input_group">
+        <?php echo $el->renderErrors(); ?>
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $te->renderViewHelper(); ?>
+	</div>
+
+	<?php $el = $f->rahasia; ?>
+	<label style="display: inline-block;"><?php echo $el->getLabel(); ?></label>
+	<div class="input_group" style="display: inline-block;">
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $el->renderErrors(); ?>
+	</div>
+
+	<?php $el = $f->segera; ?>
+	<label style="display: inline-block;"><?php echo $el->getLabel(); ?></label>
+	<div class="input_group" style="display: inline-block; ">
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $el->renderErrors(); ?>
+	</div>
+
+	<?php $el = $f->isi_berita; ?>
+	<label><?php echo $el->getLabel(); ?></label>
+    <div class="input_group">
+		<div>
+			<?php echo $el->renderViewHelper(); ?>
+		</div>
+        <?php echo $el->renderErrors(); ?>
+    </div>
+
+    <?php $identity = Zend_Auth::getInstance()->getStorage()->read(); ?>
+    <?php  if ($identity->role_id == 9): ?>
+
+        <label>Terjadwal</label>
+        <div class="input_group">
+            <input id="terjadwal" type="checkbox"/>
+        </div>
+
+    <?php endif; ?>
+
+    <?php $el = $f->jadwal; ?>
+    <div id="datehide">
+        <label><?php echo $el->getLabel(); ?></label>
+        <div class="input_group">
+            <?php echo $el->renderViewHelper(); ?>
+        </div>
+    </div>
+    <?php $team = $f->team_id; ?>
+    <?php echo $team->renderViewHelper(); ?>
+    <?php echo $team->renderErrors(); ?>
+
+	<button class="button_colour round_all"  onclick='simpan();' style="clear: none;">
+		<span>Simpan Draf</span>
+	</button>
+
+	<button class="button_colour round_all"  onclick='kirim();' style="clear: none;">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+
+</form>
+<script type="text/javascript">
+	function kirim()
+	{
+		$('#isdraft').val(false);
+		$('#telegram_post').submit();
+	}
+
+	function simpan()
+	{
+		$('#isdraft').val(true);
+		$('#telegram_post').submit();
+	}
+
+</script>

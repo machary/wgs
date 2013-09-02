@@ -1,0 +1,141 @@
+<?php
+$row = $this->model->toArray();
+?>
+
+<div class="flat_area grid_16">
+	<h2>Ubah Komposisi Kekuatan Musuh - Laut - Skenario <?php echo $this->skenario->get('nomor'); ?></h2>
+	
+	<a href="<?php echo $this->url(array('action'=>'laut','id'=>null)); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+	
+<div class="box grid_12 round_all">
+	<div class="block">
+		<form method="post">
+			<label>Nama Lokasi</label>
+			<input name="nama" value="<?php echo @$row['nama']; ?>">
+			
+			<label>Negara</label>
+			<input name="negara" value="<?php echo @$row['negara']; ?>">
+			
+			<label>Longitude</label>
+			<input name="longitude" value="<?php echo @$row['longitude']; ?>">
+			
+			<label>Latitude</label>
+			<input name="latitude" value="<?php echo @$row['latitude']; ?>">
+			
+			<table id="kekuatan-table" class="simple-table">
+				<tr>
+					<th>Unsur</th>
+					<th>Jenis Unsur</th>
+					<th>Jumlah</th>
+					<th></th>
+				</tr>
+				
+			</table>
+			
+			<button id="button-tambah-row" type="button">+Tambah</button>
+			<button class="button_colour round_all">
+				<span>Simpan</span>
+			</button>
+		</form>
+	</div>
+</div>
+	
+<script>
+var optionsUnsur = ['Kapal', 'Pesud', 'Ranpur', 'Pasukan Marinir']; // masih hardcoded
+var optionsJenis = {
+	'Kapal': <?php echo json_encode($this->model->jenisOptionsForKapal()); ?>,
+	'Pesud': <?php echo json_encode($this->model->jenisOptionsForPesud()); ?>,
+	'Ranpur': <?php echo json_encode($this->model->jenisOptionsForRanpur()); ?>,
+	'Pasukan Marinir': <?php echo json_encode($this->model->jenisOptionsForPasmar()); ?>
+};
+var globali = 0;
+
+function tambah_row(id, unsur, jenis, jumlah) {
+	/*
+	<tr>
+		input hidden id[]
+		td select unsur[]
+		td select jenis[]
+		td jumlah[]
+		td button hapus_row(this)
+	</tr>
+	*/
+	var $tr = $('<tr/>');
+	
+	var $hidden = $('<input type="hidden" name="detail['+globali+'][id]" />');
+	if (id) {
+		$hidden.val(id);
+	}
+	
+	var $select1 = $('<select name="detail['+globali+'][unsur]" />');
+	// populate options
+	for (var i=0,inum=optionsUnsur.length; i<inum; i++) {
+		var val = optionsUnsur[i];
+		$select1.append('<option value="'+val+'">'+val+'</option>');
+	}
+	if (unsur) {
+		$select1.val(unsur);
+	}
+	$select1.appendTo($tr).wrap('<td>').uniform();
+	// sisipkan $hidden
+	$hidden.insertAfter($select1);
+	
+	var $select2 = $('<select name="detail['+globali+'][jenis]" />');
+	// populate options berdasarkan nilai $select1
+	$select1.bind('change', function(e) {
+		// @TODO bug element select theme adminica
+		$select2.empty();
+		var options = optionsJenis[$select1.val()];
+		if (options) {
+			for (var i=0,inum=options.length; i<inum; i++) {
+				var val = options[i];
+				$select2.append('<option value="'+val+'">'+val+'</option>');
+			}
+		}
+		if ($.uniform.update) {
+			$.uniform.update($select2);
+		}
+	});
+	$select1.trigger('change');
+	if (jenis) {
+		$select2.val(jenis);
+	}
+	$select2.appendTo($tr).wrap('<td>').uniform();
+	
+	var $input = $('<input name="detail['+globali+'][jumlah]" />');
+	if (jumlah) {
+		$input.val(jumlah);
+	}
+	$input.appendTo($tr).wrap('<td>');
+	
+	var $button = $('<button type="button" onclick="hapus_row(this)" />');
+	$button.html('X');
+	$button.appendTo($tr).wrap('<td>');
+	
+	$('#kekuatan-table').append($tr);
+	globali++;
+}
+
+function hapus_row(el) {
+	$(el).parent().parent().remove();
+}
+
+$(function() {
+	$('#button-tambah-row').bind('click', function(e) {
+		tambah_row();
+	});
+	// populate saved data
+	<?php foreach ($this->model->details() as $e) : ?>
+		tambah_row(<?php
+			echo json_encode($e->id).',';
+			echo json_encode($e->unsur).',';
+			echo json_encode($e->jenis).',';
+			echo json_encode($e->jumlah);
+		?>);
+	<?php endforeach; ?>
+});
+
+</script>

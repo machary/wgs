@@ -1,0 +1,79 @@
+<div class="flat_area grid_16">
+
+	<!-- box header label -->
+	<h2>Setting Taktis Sendiri</h2>
+
+	<div class="map-top-nav">
+<!--		<a href="--><?php //echo $this->url(array('action'=>'add.cb')); ?><!--" class="roundall_grey add_icon mr3">-->
+<!--			<span class="ml22">CB Baru</span>-->
+<!--		</a>-->
+<!--		<a href="--><?php //echo $this->url(array('action'=>'perbandingan')); ?><!--" class="roundall_grey add_icon mr3">-->
+<!--			<span class="ml22">Perbandingan CB</span>-->
+<!--		</a>-->
+
+		<a href="<?php echo $this->url(array('controller'=>'index','action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+			<span class="ml22">Kembali</span>
+		</a>
+	</div>
+
+	<!-- container -->
+	<div class="toggle_container" style="display: block; ">
+		<div class="block">
+            <div class="grid_10" style="margin: 10px 0 0;">
+                <table id="table-dtables" class="display">
+                    <thead>
+                    <tr>
+                        <th width="60%">Skenario</th>
+                        <th width="40%"></th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+		</div>
+	</div>
+
+</div>
+
+<style type="text/css">
+	#table-dtables_processing
+	{
+		margin-left: 160px;
+	}
+
+</style>
+
+<script type="text/javascript">
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+$(function(){
+    var oTable = $('#table-dtables').dataTable({
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "bFilter": false,
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : '<?php echo $this->url(); ?>',
+        "fnServerData" : function(sSource, aoData, fnCallback) {
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        },
+        'aoColumns' : [
+            null,
+            {bSortable: false, bSearchable: false}
+        ]
+    });
+
+    new Filterer(oTable);
+
+    $('#table-dtables_filter').css('width', '260px');
+});
+</script>
+

@@ -1,0 +1,102 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Materi Penilaian</h2>
+    <div class="map-top-nav">
+		<a class="roundall_grey add_icon mr3 float-left" href="<?php echo $this->url(array('action'=>'add.detil')); ?>">
+            <span class="ml22">Detil Produk Baru</span>
+        </a>
+		<a class="roundall_grey add_icon mr3 float-left" href="<?php echo $this->url(array('action'=>'add.materi')); ?>">
+            <span class="ml22">Materi Penilaian Produk Baru</span>
+        </a>
+		<a class="roundall_grey add_icon mr3 float-left" href="<?php echo $this->url(array('action'=>'add.submateri')); ?>">
+            <span class="ml22">Poin Penilaian Produk Baru</span>
+        </a>
+	</div>
+	<div class="block">
+		<table class="display simple-table">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th colspan="3">Materi Penilaian</th>
+					<th>Singkatan</th>
+					<th>Poin</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+                <?php if (!empty($this->items)) foreach ($this->items as $i => $item) : ?>
+					<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+						<td rowspan="<?php echo $item['rowspan']; ?>" style="text-align: center; vertical-align: top; font-weight: bold;"><?php echo $item['numbering'] . '.'; ?></td>
+						<td width="60%" colspan="3" style="padding: 5px; font-weight: bold;"><?php echo strtoupper($item['materi']); ?></td>
+						<td></td>
+						<td></td>
+						<td>
+							<a href="<?php echo $this->url(array('action'=>'edit.detil', 'id'=>$item['id'])); ?>">Ubah</a> |
+							<a href="<?php echo $this->url(array('action'=>'del', 'id'=>$item['id'])); ?>" onclick="return confirm('Anda yakin?')">Hapus</a>
+						</td>
+					</tr>
+                        <?php $j = 0; ?>
+                        <?php if (!empty($item['the_materi'])) foreach ($item['the_materi'] as $itemMateri) : ?>
+                            <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                <td width="5%" rowspan="<?php echo $itemMateri['rowspan']; ?>" style="text-align: center; vertical-align: top; font-weight: bold;"><?php echo $j + 1 . '.'; ?></td>
+                                <td colspan="2" width="60%" style="padding: 5px;"><?php echo $itemMateri['materi']; ?></td>
+                                <td style="text-align: center;"><?php echo $itemMateri['singkatan']; ?></td>
+                                <td style="text-align: center;"><?php echo $itemMateri['point']; ?></td>
+                                <td>
+                                    <a href="<?php echo $this->url(array('action'=>'edit.materi', 'id'=>$itemMateri['id'])); ?>">Ubah</a> |
+                                    <a href="<?php echo $this->url(array('action'=>'del', 'id'=>$itemMateri['id'])); ?>" onclick="return confirm('Anda yakin?')">Hapus</a>
+                                </td>
+                            </tr>
+
+                            <?php if (!empty($itemMateri['the_submateri'])) foreach ($itemMateri['the_submateri'] as $itemSubmateri) : ?>
+                                <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                    <td width="2%" style="text-align: center; vertical-align: top;"><?php echo $itemSubmateri['numbering'] . '. '; ?></td>
+                                    <td width="60%" style="padding: 5px;"><?php echo $itemSubmateri['materi']; ?></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <a href="<?php echo $this->url(array('action'=>'edit.submateri', 'id'=>$itemSubmateri['id'])); ?>">Ubah</a> |
+                                        <a href="<?php echo $this->url(array('action'=>'del', 'id'=>$itemSubmateri['id'])); ?>" onclick="return confirm('Anda yakin?')">Hapus</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+
+                        <?php $j++;endforeach; ?>
+
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+        <div class="block grid_8" style="margin-top: 20px; margin-bottom: 20px;">
+            <div style="float: left; margin-top: 5px;margin-right: 20px;">
+                <label for="copy-id" style="float: left; margin-top: 5px;">Copy Dari Team: </label>
+                <select id="copy-id">
+                    <option value="">Pilih</option>
+                    <?php foreach($this->team as $team): ?>
+                    <option value="<?php echo $team['id'];?>"><?php echo $team['team_name'];?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <a id="copy-link" style="clear: none; margin: 5px; margin-left: 0;" class="skin_colour send_right on_dark text_only has_text" href="javascript:void(0)">
+                <span>Copy Materi Penilaian</span>
+            </a>
+        </div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    $('#copy-link').click(function(){
+        if($('#copy-id').val() != '') {
+            var r=confirm("Hapus semua aspek dan copy dari team lain ?");
+            if (r==true)
+            {
+                window.open('<?php echo $this->url(array('action'=>'copy')); ?>' + '/copyid/' + $('#copy-id').val() ,'_self');
+            }
+            else
+            {
+                return false;
+            }
+        } else {
+            alert('Pilih team yang akan di-copy terlebih dahulu!')
+        }
+    });
+</script>
+

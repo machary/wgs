@@ -1,0 +1,11 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+	<label>Name</label>
+	<?php echo $f->name->renderViewHelper(); ?>
+	<?php echo $f->name->renderErrors(); ?>
+	
+	<button class="button_colour round_all">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+</form>

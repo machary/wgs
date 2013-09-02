@@ -1,0 +1,719 @@
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>$this->jenis.'.index', 'id'=>null, 'cb_id'=>$this->model->getCbId())); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<form method="post">
+
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour">Rancang Gerakan Menuju Sasaran</h2>
+	<div class="block">
+		<label>Nama</label>
+		<input name="nama" value="<?php echo $this->model->getRow()->nama; ?>">
+	</div>
+</div>
+
+<!-- peta tampilkan simulasi -->
+
+<div class="grid_8">
+	<!-- preview rute -->
+	<div class="box round_all">
+		<h2 class="box_head grad_colour">Preview Rute</h2>
+		<div id="map2"></div>
+	</div>
+
+	<!-- tempat edit formasi -->
+	<div class="box round_all">
+		<h2 class="box_head grad_colour">Pengaturan Formasi</h2>
+		<div class="block">
+			<!-- daftar simbol taktis -->
+			<div id="simbol-taktis"></div>
+			
+			<!-- tempat pasang formasi -->
+			<div id="tempat-formasi">
+                <div style="margin:0; position:relative; left:222px; border-left: 1px solid #bebebe; width:1px; height:450px;"></div>
+                <hr style="width: 100%; position: relative; bottom: 230px;">
+                <div></div>
+			</div>
+			
+			<div class="non-selectable">Klik-ganda untuk menghapus</div>
+		</div>
+	</div>
+</div>
+
+<!-- daftar titik rute -->
+<div class="box grid_8 round_all float-right" style="min-height:977px;">
+	<h2 class="box_head grad_colour">Titik Rute</h2>
+	<div class="block">
+		<button id="button-add-titik" class="button_colour round_all" type="button">
+			<span>Tambah Titik</span>
+		</button>
+		
+		<table id="rute-table" class="simple-table">
+			<thead>
+				<tr>
+					<th>Nama</th>
+					<th>Longitude</th>
+					<th>Latitude</th>
+					<th>Kecepatan</th>
+					<th>Delay</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody id="container-titik">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- dialog pengeditan titik -->
+<div id="dialog-add-titik" class="hidden box">
+	<div class="block">
+        <div style="float: left;">
+            <input type="radio" name="tipe" value="manual"> Manual
+            <input type="radio" name="tipe" value="lokasi" disabled="disabled"> Lokasi
+            <input type="radio" name="tipe" value="waypoint" disabled="disabled"> Waypoint
+
+            <div id="dtitik-if-manual" class="slide">
+                <label>Nama</label>
+                <input id="dtitik-nama">
+
+                <label>Longitude
+                    <input id="conv-lon-deg" size="2" style="display:inline">&deg;
+                    <input id="conv-lon-min" size="2" style="display:inline">'
+                    <input id="conv-lon-sec" size="2" style="display:inline">"
+                    <select id="conv-lon-dir"><option>T</option><option>B</option></select>
+                    <button id="conv-lon-conv" type="button" style="display:inline;float:none">Convert</button>
+                </label>
+                <input id="dtitik-lon">
+
+                <label>Latitude
+                    <input id="conv-lat-deg" size="2" style="display:inline">&deg;
+                    <input id="conv-lat-min" size="2" style="display:inline">'
+                    <input id="conv-lat-sec" size="2" style="display:inline">"
+                    <select id="conv-lat-dir"><option>U</option><option>S</option></select>
+                    <button id="conv-lat-conv" type="button" style="display:inline;float:none">Convert</button>
+                </label>
+                <input id="dtitik-lat">
+
+                <div class="input_group">
+                    <input id="dtitik-save-waypoint" type="checkbox"> Save as waypoint?
+                </div>
+
+            </div>
+            <div id="dtitik-if-lokasi" class="slide">
+            </div>
+            <div id="dtitik-if-waypoint" class="slide">
+            </div>
+
+            <label>Kecepatan (satuan <?php echo $this->satuan['kecepatan']; ?>)</label>
+            <input id="dtitik-kecepatan">
+
+            <label>Delay</label>
+            <input type="hidden" value="0" id="dtitik-delay"/>
+            <span class="label-float">H</span>
+            <input class="number-align" value="0" size="5" style="float: left;margin: 3px 0;" id="delay-days" />
+            <span class="label-float">J</span>
+            <input class="number-align" value="0" style="float: left;margin: 3px 0;" size="5" id="delay-hours" />
+        </div>
+        <div style="float: right;">
+            <label>Bantuan pilih koordinat</label>
+            <div id="map-helper"></div>
+        </div>
+	</div>
+</div>
+
+<div class="flat_area grid_16">
+	<button class="button_colour round_all">
+		<span>Simpan</span>
+	</button>
+</div>
+
+</form>
+
+<style type="text/css">
+    .box .block input{
+        margin-bottom: 0;
+    }
+</style>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+
+var map,
+	mapHelper;
+
+$(function() {
+
+/* == Editor Formasi */
+	// konstanta
+	var boardWidth = 450,
+		boardHeight = 450,
+		marginLeft = 162, // MAGIC NUMBER! MYSTERY OF CSS! .block padding-left 20px + #tempat-formasi margin-left 142px
+		marginTop = 16, // MAGIC NUMBER! MYSTERY OF CSS! .block padding-top 16px
+		symbolWidth = 32, // genap
+		symbolHeight = 36; // genap
+
+	// inisiasi board
+	var $panel = $('#simbol-taktis')
+		.css('float', 'left')
+		.css('width', '130px')
+	;
+	// generate daftar simbol taktis
+	function addFormasiImage(imagepath, alt, title, $panel) {
+		var $img = $('<img/>')
+			.attr('src', baseUrl+'/'+imagepath)
+			.attr('alt', alt)
+			.attr('title', title)
+			.css('display', 'block')
+            .css('float', 'left')
+			.css('width', symbolWidth+'px')
+            .css('height',symbolHeight+'px')
+            .css('margin', '4px')
+			.css('cursor', 'pointer')
+			.addClass('droppable') // untuk penanda drag-n-drop
+			.addClass('non-selectable')
+			.draggable({
+				helper: 'clone'
+			})
+		;
+		$img.appendTo($panel);
+	}
+	<?php foreach ($this->model->symbols() as $sym) : ?>
+	addFormasiImage(<?php echo json_encode($sym->filepath).','.json_encode($sym->singkatan).','.json_encode($sym->nama); ?>, $panel);
+	<?php endforeach; ?>
+	
+	// object untuk ditambahkan pada formasi board
+	function createClone(draggable, left, top) {
+		var clone = $(draggable).clone();
+		clone
+			.css('position', 'absolute')
+			// .css('display', 'inline')
+			.css('left', (left)+'px')
+			.css('top', (top)+'px')
+			.attr('title', null)
+			.removeClass('droppable')
+			.draggable({
+				containment: 'parent',
+				scroll: false
+			})
+			.bind('dblclick', function(e) {
+				$(this).remove();
+			})
+		;
+		return clone;
+	}
+
+	// mengaktifkan board
+	$('#tempat-formasi')
+		.css('width', boardWidth+'px')
+		.css('height',boardHeight+'px')
+		.css('margin-left', '142px') //biar ada space di sbelah kiri untuk simbol
+		.css('background-color', '#EEF0F2')
+        .css('border','1px solid #bebebe')
+		.addClass('non-selectable')
+		.droppable({
+			accept: '.droppable',
+			drop: function(ev, ui) {
+				var $parent = $(this);
+				var left = ui.offset.left - $parent.offset().left + marginLeft;
+				var top = ui.offset.top - $parent.offset().top + marginTop;
+				
+				$(this).append(createClone(ui.draggable, left, top));
+			}
+		})
+	;
+
+	// event submit
+	$('form').bind('submit', function(e) {
+		// convert formasi ke bentuk untuk disubmit
+		$formasi = $('#tempat-formasi');
+		$formasi.find('img').each(function(i, el) {
+			// informasi yg dikirim: simbol taktis, x, y
+			var $this = $(this),
+				simbol = $this.attr('src').replace(new RegExp(baseUrl+'/'), ''), // hapus bagian baseUrl dari URL gambar formasi
+				x = parseInt($this.css('left').replace(/px$/, ''), 10) - marginLeft - (boardWidth/2) + (symbolWidth/2),
+				y = parseInt($this.css('top').replace(/px$/, ''), 10) - marginTop - (boardHeight/2) + (symbolHeight/2),
+				alt = $this.attr('alt');
+			$formasi.append(
+				'<input type="hidden" name="formasi['+i+'][simbol_taktis]" value="'+simbol+'">'+
+				'<input type="hidden" name="formasi['+i+'][x]" value="'+x+'">'+
+				'<input type="hidden" name="formasi['+i+'][y]" value="'+y+'">'+
+				'<input type="hidden" name="formasi['+i+'][singkatan]" value="'+alt+'">'
+			);
+		});
+	});
+
+	// fasilitas menambah kapal untuk data dari server
+	function initialAddFormasi(symbol, x, y) {
+		var src = baseUrl+'/'+symbol, // url image di-prepend baseURL
+			left = x + marginLeft + (boardWidth/2) - (symbolWidth/2),
+			top = y + marginTop + (boardHeight/2) - (symbolHeight/2),
+			$img = $('img[src="'+src+'"]').first(),
+			clone = createClone($img, left, top);
+		$('#tempat-formasi').append(clone);
+	}
+
+	// formasi awal
+	<?php if ($this->model->exists()) : ?>
+		<?php foreach ($this->model->getFormasi() as $f) : ?>
+			initialAddFormasi(<?php 
+				echo json_encode($f['simbol_taktis']).',';
+				echo json_encode($f['x']).',';
+				echo json_encode($f['y']);
+			?>);
+		<?php endforeach; ?>
+	<?php endif; ?>
+/* == End of Editor Formasi */
+
+/* == Editor Titik Rute */
+	<?php $this->headStyle()->appendStyle('.box .block {overflow:hidden;}'); ?>
+	<?php $this->headStyle()->appendStyle('#container-titik tr:first-child td input.kecepatan {display:none;}'); ?>
+	// inisiasi peta preview rute
+	$('#map2').css('height', '400px');
+	map = standardMap('map2' <?php if (isset($this->mapOption)) echo ','.json_encode($this->mapOption); ?>);
+	
+	// tampilan garis rute
+	var ruteLayer = new OpenLayers.Layer.Vector('Rute', {
+		displayInLayerSwitcher:true
+	});
+	map.addLayer(ruteLayer);
+	
+	var ruteVector = new OpenLayers.Feature.Vector(
+		new OpenLayers.Geometry.LineString([]), 
+		null, 
+		{
+			strokeOpacity: 0.5,
+			strokeWidth: 3
+		}
+	);
+	ruteLayer.addFeatures([ruteVector]);
+	
+	// update tampilan rute pada peta
+	function refreshPreview() {
+		// clear old points
+		ruteVector.geometry.destroy();
+		ruteVector.geometry = new OpenLayers.Geometry.LineString([]);
+		// add new points
+		var lons = [];
+		$('input[name="titik[longitude][]"]').each(function() {
+			lons.push(parseFloat($(this).val()));
+		});
+		var lats = [];
+		$('input[name="titik[latitude][]"]').each(function() {
+			lats.push(parseFloat($(this).val()));
+		});
+		for (var i=0,inum=lons.length; i<inum; i++) {
+			ruteVector.geometry.addPoint(new OpenLayers.Geometry.Point(lons[i], lats[i]));
+		}
+		// redraw
+		ruteLayer.removeAllFeatures();
+		ruteLayer.addFeatures([ruteVector]);
+	}
+	
+	// fungsi helper untuk dialog
+	function showError(el, err) {
+		var $span = $(el).prev('span');
+		if ($span.length == 0) {
+			$span = $('<span class="error"/>');
+			$span.insertBefore(el);
+		}
+		$span.html(err);
+	}
+	
+	function hideError(el) {
+		var $span = $(el).prev('span');
+		if ($span.length > 0) {
+			$span.remove();
+		}
+	}
+	
+	function anyError() {
+		return $('#dialog-add-titik').find('span.error').length > 0;
+	}
+	
+	// menambah titik rute baru pada tabel
+	function addTitik(nama, lon, lat, kecepatan, delay) {
+		var $tr = $('<tr/>');
+		// nama, lon, lat tidak bisa diedit
+		var $tdNama = $(
+			'<td>' +
+				nama +
+				'<input type="hidden" name="titik[nama][]" value="'+nama+'">' +
+			'</td>'
+		);
+		$tr.append($tdNama);
+		var $tdLon = $(
+			'<td>' +
+				lon +
+				'<input type="hidden" name="titik[longitude][]" value="'+lon+'">' +
+			'</td>'
+		);
+		$tr.append($tdLon);
+		var $tdLat = $(
+			'<td>' +
+				lat +
+				'<input type="hidden" name="titik[latitude][]" value="'+lat+'">' +
+			'</td>'
+		);
+		$tr.append($tdLat);
+		// kecepatan bisa diedit
+		var $inputKecepatan = $('<input type="text" name="titik[kecepatan][]" value="'+kecepatan+'" class="kecepatan">');
+		$inputKecepatan.bind('change', function(e) {
+			var val = parseFloat($inputKecepatan.val());
+			if (isNaN(val)) {
+				val = 1;
+			}
+			$inputKecepatan.val(val);
+		});
+		$inputKecepatan.appendTo($tr).wrap('<td>');
+
+        var $tdDelay = $('<input type="hidden" name="titik[delay][]" value="'+delay+'">');
+        var $inputHari = $('<input size="4" style="float: left;" type="text" value="'+Math.floor(delay / 24)+'">');
+        var $inputJam = $('<input size="2" style="float: left;" type="text" value="'+Math.floor(delay % 24)+'">');
+        var $hourConverted = $('<div/>');
+
+        $inputHari.bind('focus', function(e) {
+            if (parseFloat($inputJam.val()) == 0) {
+                $inputHari.val('');
+            }
+        }).bind('blur', function(e) {
+            if (!($inputHari.val())) {
+                $inputHari.val(0);
+            }
+        });
+
+        $inputHari.bind('keyup', function(e) {
+            var val = parseFloat($inputHari.val());
+
+            if (isNaN(val)) {
+                val = 0;
+                $inputHari.val(val);
+            }
+            $tdDelay.val((val * 24) + parseInt($inputJam.val()));
+        });
+
+        $inputJam.bind('focus', function(e) {
+            if (parseFloat($inputJam.val()) == 0) {
+                $inputJam.val('');
+            }
+        }).bind('blur', function(e) {
+            if (!($inputJam.val())) {
+                $inputJam.val(0);
+            }
+        });
+
+        $inputJam.bind('keyup', function(e) {
+            var val = parseFloat($inputJam.val());
+
+            if (isNaN(val) || !(val)) {
+                val = 0;
+                $inputJam.val(val);
+            }
+
+            if(val > 24)
+            {
+                alert('Angka maksimum 24');
+                $inputJam.val('24');
+                $tdDelay.val(($inputJam.val() * 24 ) + parseInt(24));
+                return false;
+            }
+
+            $tdDelay.val(($inputHari.val() * 24 ) + parseInt(val));
+        });
+
+        $hourConverted.append($tdDelay,'<span style="float: left; margin-right: 3px; margin-top: 7px;">H</span>',$inputHari,'<span style="float: left; margin-top: 7px; margin-right: 3px; margin-left: 5px;">J</span>',$inputJam);
+        $hourConverted.appendTo($tr).wrap('<td>');
+
+		// tombol delete
+		var $button = $('<button/>');
+		$button
+			.attr('type', 'button')
+			.html('X')
+			.css('cursor', 'pointer')
+			.bind('click', function(e) {
+				$(this).parent().parent().remove(); // hapus <tr>
+				refreshPreview();
+			})
+		;
+		$button.appendTo($tr).wrap('<td>');
+		$('#container-titik').append($tr);
+	}
+	
+	// inisiasi peta pembantu 
+	$('#map-helper')
+		.css('width', '400px')
+		.css('height', '400px')
+	;
+	mapHelper = standardMap('map-helper');
+	// tampilan marker ketika klik
+	var helperLayer = new OpenLayers.Layer.Markers('Posisi Titik', {displayInLayerSwitcher: false});
+	mapHelper.addLayer(helperLayer);
+	var helperIcon = new OpenLayers.Icon(baseUrl+'/js/img/marker.png', {w: 21, h: 25}, {x: -10, y:-25});
+	var helperMarker;
+	
+	mapHelper.events.register('click', mapHelper, function(e) {
+		// isikan field
+		var lonlat = mapHelper.getLonLatFromViewPortPx(e.xy);
+		$('#dtitik-lon').val(lonlat.lon);
+		$('#dtitik-lat').val(lonlat.lat);
+		// tampilkan marker
+		helperLayer.removeMarker(helperMarker);
+		helperMarker = new OpenLayers.Marker(lonlat, helperIcon);
+		helperLayer.addMarker(helperMarker);
+	});
+	
+	// event pada input lon lat
+	var onCoordChange = function (e) {
+		var lon = parseFloat($('#dtitik-lon').val()),
+			lat = parseFloat($('#dtitik-lat').val()),
+			lonlat;
+		
+		if (!isNaN(lon) && !isNaN(lat)) {
+			lonlat = new OpenLayers.LonLat(lon, lat);
+			// tampilkan marker
+			helperLayer.removeMarker(helperMarker);
+			helperMarker = new OpenLayers.Marker(lonlat, helperIcon);
+			helperLayer.addMarker(helperMarker);
+		}
+	};
+	$('#dtitik-lon').bind('change', onCoordChange);
+	$('#dtitik-lat').bind('change', onCoordChange);
+	
+	// event konversi DMS ke derajat
+	var convertDms = function (pid) {
+		var $ipt = $('#dtitik-'+pid),
+			deg = parseInt($('#conv-'+pid+'-deg').val(), 10),
+			min = parseInt($('#conv-'+pid+'-min').val(), 10),
+			sec = parseInt($('#conv-'+pid+'-sec').val(), 10),
+			dir = $('#conv-'+pid+'-dir').val(),
+			result;
+			
+		if (!isNaN(deg) && !isNaN(min) && !isNaN(sec)) {
+			result = deg + (min*60 + sec)/3600;
+			if (dir == 'B' || dir == 'S') {
+				result = -1 * result;
+			}
+			$ipt.val(result);
+			$ipt.trigger('change');
+		}
+		$ipt.focus();
+	};
+	$('#conv-lon-conv').bind('click', function(e) {
+		convertDms('lon');
+	});
+	$('#conv-lat-conv').bind('click', function(e) {
+		convertDms('lat');
+	});
+	
+	// inisiasi dialog
+	$dtitik = $('#dialog-add-titik');
+	$dtitik.dialog({
+		autoOpen: false,
+		modal: true,
+		title: 'Tambah Titik',
+		width: 800, // sesuaikan lebar peta
+		buttons: {
+			'Tambah': function() {
+				var $this = $(this);
+				var metode = $this.find('input:radio[name="tipe"]:checked').val();
+				// retrieve values
+				var nama, lon, lat, kecepatan, delay;
+				// nama,lon,lat tergantung metode
+				switch (metode) {
+					case 'manual':
+						nama = $('#dtitik-nama').val();
+						lon = $('#dtitik-lon').val();
+						lat = $('#dtitik-lat').val();
+						// validasi
+						var el = '#dtitik-nama';
+						if (nama.length < 1) {
+							showError(el, 'harus diisi');
+						} else {
+							hideError(el);
+						}
+						el = '#dtitik-lon';
+						if (lon.length < 1) {
+							showError(el, 'harus diisi');
+						} else if (isNaN(parseFloat(lon))) {
+							showError(el, 'harus bilangan pecahan');
+						} else {
+							lon = parseFloat(lon);
+							hideError(el);
+						}
+						el = '#dtitik-lat';
+						if (lat.length < 1) {
+							showError(el, 'harus diisi');
+						} else if (isNaN(parseFloat(lat))) {
+							showError(el, 'harus bilangan pecahan');
+						} else {
+							lat = parseFloat(lat);
+							hideError(el);
+						}
+						// @TODO save as waypoint
+						break;
+					case 'lokasi':
+						// @TODO
+						break;
+					case 'waypoint':
+						// @TODO
+						break;
+				}
+				// validasi kecepatan
+				kecepatan = $('#dtitik-kecepatan').val();
+				var el = '#dtitik-kecepatan';
+				if (kecepatan.length < 1) {
+					showError(el, 'harus diisi');
+				} else if (isNaN(parseFloat(kecepatan))) {
+					showError(el, 'harus berupa bilangan');
+				} else {
+					kecepatan = parseFloat(kecepatan);
+					hideError(el);
+				}
+				if (anyError()) return;
+				// generate html
+                delay = $('#dtitik-delay').val();
+
+				addTitik(nama, lon, lat, kecepatan, delay);
+				refreshPreview();
+				$this.dialog('close');
+			}
+		}
+	});
+	$dtitik.find('input[name="tipe"]').bind('click', function(e) {
+		$dtitik.find('.slide').hide();
+		$('#dtitik-if-'+$(this).val()).show();
+	});
+	
+	// inisiasi tombol add titik
+	$('#button-add-titik').bind('click', function(e) {
+		// kosongkan semua input field
+		// jquery uniform bikin susah modif form element
+		$dtitik.find('.slide').find('input').val('').removeAttr('checked');
+		$dtitik.find('span').removeClass('checked');
+		$dtitik.find('input[name="tipe"]').first().click().parent().addClass('checked');
+		$('#dtitik-kecepatan').val('');
+        $('#dtitik-delay').val('0');
+        $('#delay-hours').val('0');
+        $('#delay-days').val('0');
+		// hapuskan marker dari peta helper
+		helperLayer.removeMarker(helperMarker);
+		$dtitik.dialog('open');
+		$('#dtitik-nama').focus();
+	});
+	
+	// inisiasi table titik
+	$('#container-titik')
+		.css('cursor', 'move')
+		.sortable({
+			scroll: false,
+			update: function(e, ui) {
+				refreshPreview();
+			}
+		})
+	;
+	
+	// kalkulasi durasi total ketika simpan
+	$('form').bind('submit', function(e) {
+		var $lons = $('input[name="titik[longitude][]"]'),
+			$lats = $('input[name="titik[latitude][]"]'),
+			$kecepatans = $('input[name="titik[kecepatan][]"]'),
+			$delays = $('input[name="titik[delay][]"]'),
+			data = [],
+			durasi = 0,
+			prev, next, i,
+			$input;
+		
+		// grab data
+		$lons.each(function(i, e) {
+			data.push({
+				longitude: $lons.get(i).value,
+				latitude: $lats.get(i).value,
+				kecepatan: $kecepatans.get(i).value,
+				delay: $delays.get(i).value
+			});
+		});
+		// hitung durasi total
+		prev = data[0];
+		for (i=1; i<data.length; i++) {
+			next = data[i];
+			durasi += countDurationWithDelay(prev.longitude, prev.latitude,
+				next.longitude, next.latitude, 
+				next.kecepatan, '<?php echo $this->satuan['kecepatan']; ?>', next.delay); // function from script.js
+			prev = next;
+		}
+        // sisipkan ke halaman
+		$input = $('<input type="hidden" name="durasi">');
+		$input.val(durasi);
+		$(this).append($input);
+	});
+	
+	// titik awal
+	<?php if ($this->model->exists()) : ?>
+		<?php foreach ($this->model->getTitik() as $t) : ?>
+			addTitik(<?php 
+				echo json_encode($t['nama']).',';
+				echo json_encode($t['longitude']).',';
+				echo json_encode($t['latitude']).',';
+				echo json_encode($t['kecepatan']).',';
+				echo json_encode($t['delay']);
+			?>);
+		<?php endforeach; ?>
+		refreshPreview();
+	<?php endif; ?>
+/* == End of Editor Titik Rute */
+
+/* == Tampilan Pangkalan Aju */
+	// var map dan mapHelper dari kode di atas
+	var pangkalanAju = <?php echo json_encode($this->model->pangkalanAju()); ?>,
+		pangkalanLayer,
+		pangkalanHelperLayer,
+		ll, popupContentHTML,
+		AutoSizeFramedCloud;
+		
+	if (pangkalanAju) {
+		// tambahkan pangkalan aju ke peta preview rute
+		pangkalanLayer = new OpenLayers.Layer.Markers(
+			"Pangkalan Aju", 
+			{isBaseLayer: false, visibility: false}
+		);
+		map.addLayer(pangkalanLayer);
+		map.redrawSwitcherTree();
+		// tambahkan pangkalan aju ke peta helper
+		pangkalanHelperLayer = new OpenLayers.Layer.Markers(
+			"Pangkalan Aju", 
+			{isBaseLayer: false, visibility: false}
+		);
+		mapHelper.addLayer(pangkalanHelperLayer);
+		mapHelper.redrawSwitcherTree();
+		
+		AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+			'autoSize': true
+		});
+		ll = new OpenLayers.LonLat(parseFloat(pangkalanAju.x), parseFloat(pangkalanAju.y));
+		popupContentHTML = 'Pangkalan Aju: '+pangkalanAju.nama;
+		addMarker(pangkalanLayer, ll, AutoSizeFramedCloud, popupContentHTML, false, true);
+		addMarker(pangkalanHelperLayer, ll, AutoSizeFramedCloud, popupContentHTML, false, true);
+	}
+/* == End of Tampilan Pangkalan Aju */
+
+    var delay = $('#dtitik-delay');
+
+    $('#delay-days').live('keyup', function(){
+        delay.val(((parseInt(this.value) * 24) + parseInt($('#delay-hours').val())));
+    });
+
+    $('#delay-hours').live('keyup', function(){
+        if(parseInt(this.value) > 24)
+        {
+            alert('Angka maksimum 24');
+            $('#delay-hours').val('24');
+            delay.val((($('#delay-days').val() * 24 ) + parseInt(24)));
+            return false;
+        }
+        delay.val((($('#delay-days').val() * 24 ) + parseInt(this.value)));
+    });
+
+});
+</script>

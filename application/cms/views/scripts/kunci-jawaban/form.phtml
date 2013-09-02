@@ -1,0 +1,30 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+
+    <?php $el = $f->filepath; ?>
+    <label><?php echo $el->getLabel(); ?></label>
+    <div class="input_group">
+        <input type="file" name="filepath">
+        <?php echo $el->renderErrors(); ?>
+    </div>
+
+    <?php $el = $f->nama; ?>
+    <label><?php echo $el->getLabel(); ?></label>
+    <div class="input_group">
+        <?php echo $el->renderViewHelper(); ?>
+        <?php echo $el->renderErrors(); ?>
+    </div>
+
+    <?php $el = $f->id_skenario; ?>
+    <label><?php echo $el->getLabel(); ?></label>
+    <div class="input_group">
+        <?php echo $el->renderViewHelper(); ?>
+        <?php echo $el->renderErrors(); ?>
+    </div>
+
+    <button class="button_colour round_all">
+        <span><?php echo $f->submit->getLabel(); ?></span>
+    </button>
+
+</form>

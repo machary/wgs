@@ -1,0 +1,36 @@
+<?php
+$this->inlineScript()->appendFile( $this->jsUrl( 'view/line-operation.js' ) );
+?>
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>CB Operasional</h2>
+    <p>
+        <a href="<?php echo $this->url(array('controller'=>'operasional','action'=>'addcboperasional')); ?>" class="roundall_grey add_icon">
+            <span class="ml22">CB Baru</span>
+        </a>
+    </p>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+            <table id="table_penyalur" class="display">
+                <thead>
+                <tr>
+                    <th>Jabatan</th>
+                    <th>Sub-Jabatan</th>
+                    <th>Line Operation</th>
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

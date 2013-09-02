@@ -1,0 +1,26 @@
+<?php //$this->printGoBackUrl($this->url(array('action'=>'index'))); ?>
+
+<?php
+echo $this->errorMessage;
+echo $this->form;
+?>
+
+<script type="text/javascript">
+    $('#latihan').change(function(){
+        $.ajax({
+            url      : baseUrl + "/peta/telegram/hari",
+            type     : "post",
+            dataType : "json",
+            data     : { "latihanValue" : $('#latihan').val() },
+            success  : function(feed){
+                var hari = document.getElementById('hari');
+                hari.options.length = 0;
+                hari.options[hari.options.length] = new Option('','');
+                for(index in feed)
+                {
+                    hari.options[hari.options.length] = new Option(feed[index]['nama'],feed[index]['id']);
+                }
+            }
+        });
+    });
+</script>

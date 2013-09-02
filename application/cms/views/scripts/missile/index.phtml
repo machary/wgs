@@ -1,0 +1,101 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Daftar Peluru Kendali</h2>
+
+    <p>
+        <a href="<?php echo $this->url(array('controller'=>'missile','action'=>'add')); ?>" class="roundall_grey add_icon">
+            <span class="ml22">Rudal Baru</span>
+        </a>
+    </p>
+
+<!--    <div id="filter-container" style="width=200px;">-->
+<!--        <label for="feed-filter">Filter &#58;</label>-->
+<!--    </div>-->
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+        <div class="block">
+            <table id="table_penyalur" class="display">
+                <thead>
+                <tr>
+                    <th width="200">Nama Misil</th>
+                    <th width="200">Negara Asal</th>
+                    <th>Panjang (m)</th>
+                    <th>Cepat Maksimal (kmh)</th>
+                    <th>Jarak Minimal (km)</th>
+                    <th>Berat (Kg)</th>
+                    <th>Akurasi (%)</th>
+                    <th>Tipe Misil</th>
+                    <th>Aksi</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var htmlFilter = '<select id="feed-filter">'
+        +'<option value="" selected="selected">[Pilih]</option>'
+        +'<option value="0">Nama Misil</option>'
+        +'<option value="1">Negara Asal</option>'
+        +'<option value="5">Panjang</option>'
+        +'<option value="6">Kecepatan Maksimal</option>'
+        +'<option value="7">Jarak Minimal</option>'
+        +'<option value="8">Berat</option>'
+        +'<option value="9">Daya Hancur</option>'
+        +'</select>';
+
+    var oTable = $('#table_penyalur').dataTable( {
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "aoColumns":[
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            {bSortable:false}
+        ],
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : baseUrl + '/cms/missile/dataapi',
+        "fnServerData" : function(sSource, aoData, fnCallback)
+        {
+            //filter category content
+            if(jQuery('#feed-filter').length)
+            {
+                filter = jQuery('#feed-filter').val()
+
+                aoData.push({
+                    "name": "filter",
+                    "value":  filter
+                });
+            }
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        }
+    })//.makeEditable()
+
+    $('#table_penyalur_filter').css('width', '360px');
+    var elmntSearch = $("#table_penyalur_filter").find("input:text");
+    $(htmlFilter).insertBefore(elmntSearch);
+    //var selectFltr = $("#table_penyalur_filter").find("#feed-filter");
+    //oTable.fnDraw();
+</script>

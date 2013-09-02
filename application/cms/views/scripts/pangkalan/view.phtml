@@ -1,0 +1,150 @@
+<?php $this->printGoBackUrl($this->url(array('action'=>'index', 'id'=>null))); ?>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Pangkalan</h2>
+	<div class="toggle_container">
+		<div class="block" id="fasview">
+			<?php $x = $this->obj->toFormArray(); ?>
+			<?php
+
+			$jpangkalan = strtolower($x['jenis_pangkalan']);
+			switch($jpangkalan) :
+
+			case 'lantamal':
+
+				echo '<span>LANTAMAL:</span> '.strtoupper($x['nama']).'<br /><br />';
+				if ($x['childs']):
+				foreach ($x['childs'] as $val):
+					echo '<span>'.$val['jenis_pangkalan'].'</span> <a href="'.$val['idpangkalan'].'">'.$val['nama'].'</a><br />';
+				endforeach;
+				endif;
+				break;
+
+			default:
+
+				echo '<span>'.strtoupper($jpangkalan).':</span> '.strtoupper($x['nama']).'<br /><br />';
+				echo '<span>Lantamal</span> '.'<a href="'.$x['idparent'].'">'.$x['namaparent'].'</a><br />';
+				break;
+
+			endswitch;
+			echo '<br />';
+			?>
+<table id="fastabel">
+	<tr >
+		<th>FASLABUH</th>
+		<th>FASHARKAN</th>
+		<th>FASWATPERS</th>
+		<th>FASBINLAN</th>
+		<th>FASBEK</th>
+	</tr>
+	<tr >
+		<td>
+			<?php
+
+				if ($x['fas_dermaga']):
+				echo '<label>Dermaga:</label>';
+				foreach ($x['fas_dermaga'] as $val):
+					echo $val[0].'<br />';
+				endforeach;
+				endif;
+
+				if ($x['fas_labuh']):
+				echo '<label>Labuhan Udara:</label>';
+				foreach ($x['fas_labuh'] as $val):
+					echo $val[0].'<br />';
+				endforeach;
+				endif;
+
+			?></td>
+		<td><?php
+
+				if ($x['fas_dock']):
+			echo '<label>Dock:</label>';
+			foreach ($x['fas_dock'] as $val):
+				echo $val[0].'<br />';
+			endforeach;
+				endif;
+
+				if ($x['fas_bengkel']):
+			echo '<label>Bengkel:</label>';
+			foreach ($x['fas_bengkel'] as $val):
+				echo $val[0].'<br />';
+			endforeach;
+				endif;
+
+			?></td>
+		<td><?php
+
+				if ($x['fas_rumah']):
+			echo '<label>Rumah:</label>';
+			foreach ($x['fas_rumah'] as $val):
+				echo $val[0].'<br />';
+			endforeach;
+				endif;
+
+				if ($x['fas_mess']):
+			echo '<label>Mess:</label>';
+			foreach ($x['fas_mess'] as $val):
+				echo $val[0].'<br />';
+			endforeach;
+				endif;
+
+				if ($x['fas_rumah_sakit']):
+			echo '<label>Rumah Sakit:</label>';
+			foreach ($x['fas_rumah_sakit'] as $val):
+				echo $val[0].'<br />';
+			endforeach;
+				endif;
+
+				if ($x['fas_umum']):
+			echo '<label>Umum:</label>';
+			foreach ($x['fas_umum'] as $val):
+				echo $val['nama'].'<br />';
+			endforeach;
+				endif;
+
+			?></td>
+		<td><?php
+
+				if ($x['fas_listrik']):
+			echo '<label>Listrik:</label>';
+			foreach ($x['fas_listrik'] as $val):
+				echo $val[0].'<br />';
+			endforeach;
+				endif;
+
+				if ($x['fas_ranmor']):
+			echo '<label>Kendaraan Bermotor:</label>';
+			foreach ($x['fas_ranmor'] as $val):
+//				echo '<a href="'.$val['idpangkalan'].'">'.$val['jenis'].'</a><br />';
+				echo $val[0].'<br />';
+			endforeach;
+				endif;
+
+				if ($x['fas_tanah']):
+			echo '<label>Tanah:</label>';
+			foreach ($x['fas_tanah'] as $val):
+				echo $val[0].'<br />';
+			endforeach;
+				endif;
+
+			?></td>
+		<td><?php
+
+				if ($x['fas_bek']):
+			echo '<label>Perbekalan:</label>';
+			foreach ($x['fas_bek'] as $val):
+				echo '<a href="'.$val['idpangkalan'].'">'.$val['nama_item'].'</a><br />';
+			endforeach;
+				endif;
+
+			?></td>
+	</tr>
+</table>
+
+
+
+
+		</div>
+	</div>
+</div>

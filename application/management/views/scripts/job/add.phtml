@@ -1,0 +1,45 @@
+<?php
+$this->inlineScript()->appendFile( $this->jsUrl( 'view/user-add.js' ) );
+?>
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Tambah Jabatan</h2>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+            <table id="table_penyalur" class="display">
+                <thead>
+                <tr>
+                    <th>NRP</th>
+                    <th>Nama</th>
+                    <th>Jabatan</th>
+                    <th>Subjabatan</th>
+                    <th>Skenario</th>
+                </tr>
+                </thead>
+
+            </table>
+
+            <form action="<?php echo $this->baseUrl('management/job/addjob');?>" method="post">
+                <input type="hidden" name="jabatan_value" id="jabatan_value" />
+                <input type="hidden" name="subjabatan_value" id="subjabatan_value">
+                <input type="hidden" name="nrp_value" id="nrp_value">
+                <input type="hidden" name="skenario_value" id="skenario_value">
+                <input type="hidden" name="self" value="other"  />
+                <input type="hidden" name="filter_value" id="filter_value">
+                <button class="roundall_grey add_icon">
+                    <span>Simpan</span>
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

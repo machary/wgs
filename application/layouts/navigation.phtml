@@ -1,0 +1,274 @@
+<?php
+// link[0] URL
+// link[1] Label
+// link[2] sublink
+
+$links = array();
+if( !empty($this->links) ):
+    foreach($this->links as $link):
+        $links[] = array('a/'. $link['tautan'],$link['judul']);
+    endforeach;
+endif;
+
+$complete = array(
+	array('default/home', 'Beranda', array(
+		array('default/artikel/index', 'Arsip Berita & Artikel'),
+		array('cms/home/','Manajemen Berita & Artikel'),
+		array('cms/home/image-upload','Slider Image'),
+        array('cms/link','Tautan'),
+	)),
+
+	array('#', 'Database', array(
+		array('#', 'Kapal', array(
+			array('cms/ship.class', 'Daftar Kelas Kapal'),
+			array('cms/data-kri', 'Data Pokok KRI'),
+			array('cms/ship.weaponry', 'Persenjataan Kapal'),
+		)),
+		array('#', 'SEWACO', array(
+		   array('cms/bomb/list.bomb', 'Daftar Bomb'),
+		   array('cms/bomb/list.type', 'Tipe Bomb'),
+		   array('cms/missile', 'Peluru Kendali'),
+		   array('cms/radar/list.radar', 'Daftar Radar'),
+		   array('cms/radar/list.type', 'Tipe Radar'),
+		   array('cms/gun', 'Senapan'),
+		   array('cms/sonar/list.sonar', 'Daftar Sonar'),
+		   array('cms/sonar/list.category', 'Kategori Sonar'),
+		   array('cms/torpedo', 'Torpedo'),
+		)),
+		array('#', 'Pangkalan AL', array(
+			array('cms/pangkalan', 'Daftar Pangkalan'),
+			array('cms/fasilitas.dermaga', 'Faslabuh | Dermaga'),
+			array('cms/fasilitas.labuh.udara', 'Faslabuh | Labuh Udara'),
+			array('cms/fasilitas.dock', 'Fasharkan | Dock'),
+			array('cms/fasilitas.bengkel', 'Fasharkan | Bengkel'),
+			array('cms/rumah', 'Faswatpers | Rumah'),
+			array('cms/mess', 'Faswatpers | Mess'),
+			array('cms/rumah.sakit', 'Faswatpers| RS'),
+			array('cms/fasilitas.umum', 'Faswatpers | Fasum'),
+			array('cms/fasilitas.listrik', 'Fasbinlan | Listrik'),
+			array('cms/fasilitas.ranmor', 'Fasbinlan | Ranmor'),
+			array('cms/fasilitas.tanah', 'Fasbinlan | Tanah'),
+			array('cms/fasbek', 'Fasbek'),
+		)),
+        array('#', 'Pelabuhan', array(
+            array('cms/jarak.pangkalan', 'Daftar Pelabuhan'),
+            array('cms/tabulasi.waktu','Estimasi Waktu Tempuh'),
+        )),
+		array('#', 'Kesatuan', array(
+			array('cms/komando', 'Daftar Komando'),
+			array('cms/kesatuan', 'Daftar Kesatuan'),
+			array('cms/ranpur', 'Kendaraan Tempur'),
+			array('cms/kesatuan.ranpur', 'Daftar Ranpur Kesatuan'),
+		)),
+        array('#', 'Kesatuan Marinir', array(
+            array('cms/kesatuanmarinir/index/div/pasmar1', 'Pasmar 1'),
+            array('cms/kesatuanmarinir/index/div/pasmar2', 'Pasmar 2'),
+            array('cms/kesatuanmarinir/index/div/brigadeInfanteriMarinir3', 'Brigade Infanteri Marinir 3'),
+            array('cms/kesatuanmarinir/index/div/rsal', 'RSAL'),
+        )),
+		array('#', 'Pesud', array(
+			array('cms/pesawat.jenis', 'Jenis Pesawat'),
+			array('cms/pesawat.al', 'Penerbal'),
+		)),
+        array('cms/simbol.taktis','Simbol Taktis'),
+	)),
+
+	array('#', 'Latihan', array(
+        array('#', 'Skenario', array(
+            array('latihan/skenario/daftarlatihan', 'Daftar Skenario'),
+            array('latihan/skenario', 'Setting Strategis'),
+            array('latihan/skenario/bukupasis', 'Download Buku I dan Buku II'),
+            array('ops/index/setting.taktis', 'Setting Taktis'),
+            array('cms/kunci.jawaban', 'Kunci Jawaban')
+            )),
+        array('#', 'Penilaian Produk', array(
+            array('latihan/penilaian', 'Penilaian Produk'),
+            array('latihan/report', 'Rekap Nilai Produk'),
+        )),
+        array('#', 'Penilaian Simulasi', array(
+            array('ops/penilaian', 'Penilaian Simulasi'),
+            array('ops/penilaian/rekap', 'Rekap Penilaian')
+        )),
+        array('latihan/penilaian.individu', 'Penilaian Partisipasi Perorangan'),
+        array('#', 'Penilaian Paparan Naskah', array(
+            array('latihan/penilaian.paparan.naskah', 'Penilaian Paparan Naskah'),
+            array('latihan/penilaian.paparan.naskah/aspek', 'Pengaturan Aspek Penilaian')
+        )),
+        array('#', 'Penilaian Produk Naskah', array(
+            array('latihan/penilaian.produk.naskah', 'Penilaian Produk Naskah'),
+            array('latihan/penilaian.produk.naskah/materi', 'Pengaturan Materi Penilaian')
+        )),
+        array('#', 'ROL', array(
+           array('latihan/sheet', 'Rencana Operasi Latihan'),
+           array('latihan/sheet/sheet-upload', 'Upload ROL'),
+           array('latihan/rol', 'Kalender ROL'),
+           array('latihan/sheet-upload', 'Upload Excel ROL'),
+        )),
+	)),
+
+	array('cms/produk.staff', 'Produk Staff'),
+
+	array('#', 'Cara Bertindak', array(
+		array('#','Intelijen', array(
+            array('peta/intelijen', 'Setting Strategis'),
+            array('peta/rencana.intelijen.musuh', 'Perkiraan Gerakan Musuh'),
+            array('peta/titik.referensi', 'Titik Referensi Intelijen')
+        )),
+        array('#', 'Operasi', array(
+            array('ops/situasi', 'Peta Situasi'),
+            array('ops/index', 'Perkiraan Operasi'),
+            array('ops/kogas-panglima', 'Perbandingan CB Panglima'),
+            array('peta/titik.referensi/operasi', 'Titik Referensi Operasional')
+        )),
+        array('#', 'Logistik', array(
+		    array('peta/cb-logistik', 'Perkiraan Logistik'),
+            array('peta/titik.referensi/logistik', 'Titik Referensi Logistik')
+        )),
+        array('#', 'Rencana Operasi', array(
+            array('ops/kogab', 'Setting RO'),
+            array('ops/rencana.operasi', 'Simulasi RO Kogas'),
+            array('ops/rencana.operasi.gabungan', 'Simulasi RO Gabungan'),
+        )),
+        array('#', 'Uji RO', array(
+            array('ops/rencana.operasi.dengan.musuh', 'Simulasi RO Kogas'),
+            array('ops/rencana.operasi.gab.with.musuh', 'Simulasi RO Gabungan')
+        )),
+	)),
+
+	array('#', 'Komunikasi', array(
+        array('#', 'Telegram', array(
+            array('peta/telegram', 'Data Telegram'),
+            array('default/log', 'Log Telegram'),
+        )),
+        array('komunikasi/index', 'Video Conference')
+	)),
+
+	array('cms/referensi', 'Referensi'),
+
+    array('#', 'Integrasi Lain',
+        array(
+            array('#', 'BMKG', array(
+                array('default/integrasi/index/id/cuacaID', 'Cuaca Indonesia'),
+                array('default/integrasi/index/id/cuacaGlobal', 'Cuaca Global'),
+                array('default/integrasi/index/id/prakGel', 'Prakiraan Gelombang'),
+                array('default/integrasi/index/id/earlyEarthquake', 'Gempa Terkini'),
+                array('default/integrasi/petacuaca', 'Peta Prakiraan Cuaca'),
+            )),
+            //$links
+        )
+    ),
+
+	array('#', 'User & Role', array(
+		array('management/role', 'Manajemen Role'),
+		array('management/privilege', 'Manajemen Privilege'),
+		array('management/role.privilege', 'Manajemen Role Privilege'),
+		array('management/login', 'Manajemen Login'),
+        array('management/team', 'Manajemen Team'),
+        array('management/pelaku', 'Daftar Pelaku'),
+        array('management/penilai', 'Manajemen Penilai'),
+        array('cms/jabatan', 'Manajemen ST/KOGAS'),
+	)),
+
+    array('cms/help', 'Help'),
+);
+
+if (!function_exists('filterLinks')) {
+function filterLinks($arr) {
+	$result = array();
+//    echo '<pre>';
+//    print_r($arr);
+//    echo '</pre>';
+//    break;break;
+	foreach ($arr as $toplink) {
+		if (isset($toplink[2])) {
+			$tempsub = array();
+			foreach ($toplink[2] as $sublink) {
+				if (isset($sublink[2])) {
+					$tempsubsub = array();
+					foreach ($sublink[2] as $subsublink) {
+						$urai = explode('/', $subsublink[0]);
+						$urai[2] = isset($urai[2]) ? $urai[2] : 'index';
+                        if (App_Auth::isAllowed($urai[0], $urai[1], $urai[2])) {
+							$tempsubsub[] = $subsublink;
+						}
+					}
+					$sublink[2] = $tempsubsub;
+				}
+				$urai = explode('/', $sublink[0]);
+				$urai[2] = isset($urai[2]) ? $urai[2] : 'index';
+				if ($sublink[0] === '#' || App_Auth::isAllowed($urai[0], $urai[1], $urai[2])) { // hanya yg boleh dikunjungi
+					if (!isset($sublink[2]) || count($sublink[2])) { // kalau ada anak, pastikan tidak kosong
+						$tempsub[] = $sublink;
+					}
+				}
+			}
+			$toplink[2] = $tempsub;
+		}
+		$urai = explode('/', $toplink[0]);
+		$urai[2] = isset($urai[2]) ? $urai[2] : 'index';
+		if ($toplink[0] === '#' || App_Auth::isAllowed($urai[0], $urai[1], $urai[2])) { // hanya yg boleh dikunjungi
+//		if ( App_Auth::isAllowed($urai[0], $urai[1], $urai[2])) { // hanya yg boleh dikunjungi
+			if (!isset($toplink[2]) || count($toplink[2])) { // kalau ada anak, pastikan tidak kosong
+//                if($urai[0] == 'default')
+//                {
+//                    $toplink[0] = $urai[1].'/'.$urai[2];
+//                }
+				$result[] = $toplink;
+			}
+		}
+	}
+
+	return $result;
+}}
+
+$filtered = filterLinks($complete);
+
+// print_r($filtered);
+
+// output html dari array link
+$GLOBALS['imgUrl'] = $this->imgUrl();
+$GLOBALS['siteUrl'] = $this->siteUrl();
+if (!function_exists('printLinks')) {
+function printLinks($arr) {
+	$hasIdentity = Zend_Auth::getInstance()->hasIdentity();
+	global $imgUrl, $siteUrl;
+?>
+<!--<li><a href="--><?php //echo $siteUrl . 'home' ?><!--">Beranda</a></li>-->
+
+	<?php foreach ($arr as $toplink) : ?>
+
+		<?php if (isset($toplink[2])) : ?>
+			<li><a href='<?php echo ($toplink[0] == '#') ? '#' : $siteUrl.$toplink[0]; ?>'><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $toplink[1]; ?></a>
+				<ul class='subnavigation dropdown'>
+					<?php foreach ($toplink[2] as $sublink) : ?>
+						<?php if (isset($sublink[2])) : ?>
+							<li><a class="has_slide" href="<?php echo ($sublink[0] == '#') ? '#' : $siteUrl.$sublink[0]; ?>"><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $sublink[1]?></a>
+								<ul class="slideout">
+									<?php foreach ($sublink[2] as $subsublink) : ?>
+										<li><a href='<?php echo $siteUrl.$subsublink[0];?>'><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $subsublink[1]; ?></a></li>
+									<?php endforeach; ?>
+								</ul>
+							</li>
+						<?php else : ?>
+							<li><a href='<?php echo $siteUrl.$sublink[0]; ?>'><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $sublink[1]; ?></a></li>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</ul>
+			</li>
+		<?php else : ?>
+			<li><a href='<?php echo $siteUrl.$toplink[0]; ?>'><img src='<?php echo $imgUrl;?>icons/small/white/Blocks%20Images.png' alt="" /><?php echo $toplink[1]; ?></a></li>
+		<?php endif; ?>
+	<?php endforeach; ?>
+	<?php if( !$hasIdentity ) :?>
+		<li><a href="<?php echo $siteUrl . 'index/login' ?>">Login</a></li>
+	<?php endif; ?>
+<?php
+}}
+?>
+
+<div id="nav_top" class="clearfix  round_top">
+	<ul id="navigation" class="clearfix">
+		<?php printLinks($filtered); ?>
+	</ul>
+</div>
+<!-- #nav_top -->

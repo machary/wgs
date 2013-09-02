@@ -1,0 +1,53 @@
+<?php $hUrl = new Zend_View_Helper_Url(); ?>
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'detail')); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Buku I &amp; II - Skenario <?php echo $this->skenario->nomor; ?></h2>
+	<div class="toggle_container">
+		<div class="block">
+			<form method="post" enctype="multipart/form-data">
+			
+			<label>Buku I</label>
+			<p>
+				<?php if (!$this->skenario->buku1) : ?>
+					Belum ada
+				<?php else : ?>
+					<a href="<?php echo $this->siteUrl($this->skenario->buku1); ?>" target="_blank">Download Buku I</a></br>
+                    <a href="<?php echo $hUrl->url(array('controller'=>'skenario', 'action'=>'read', 'id'=>$this->id, 'field'=>'buku1')) ?>" target="_blank">Baca</a></br>
+                    <a href="<?php echo $hUrl->url(array('controller'=>'skenario', 'action'=>'delbook', 'id'=>$this->id, 'field'=>'buku1')) ?>" target="_blank">Hapus</a>
+				<?php endif; ?>
+			</p>
+			<label>Upload Buku I:</label>
+			<div class="input_group">
+				<input type="file" name="buku1">
+				<?php echo $this->form->buku1->renderErrors(); ?>
+			</div>
+			
+			<label>Buku II</label>
+			<p>
+				<?php if (!$this->skenario->buku2) : ?>
+					Belum ada
+				<?php else : ?>
+					<a href="<?php echo $this->siteUrl($this->skenario->buku2); ?>" target="_blank">Download Buku II</a></br>
+                    <a href="<?php echo $hUrl->url(array('controller'=>'skenario', 'action'=>'read', 'id'=>$this->id, 'field'=>'buku2')) ?>" target="_blank">Baca</a></br>
+                    <a href="<?php echo $hUrl->url(array('controller'=>'skenario', 'action'=>'delbook', 'id'=>$this->id, 'field'=>'buku2')) ?>" target="_blank">Hapus</a>
+                <?php endif; ?>
+			</p>
+			<label>Upload Buku II:</label>
+			<div class="input_group">
+				<input type="file" name="buku2">
+				<?php echo $this->form->buku2->renderErrors(); ?>
+			</div>
+			
+			<button class="button_colour round_all" style="float:none">
+				<span>Simpan</span>
+			</button>
+			
+			</form>
+		</div>
+	</div>
+</div>

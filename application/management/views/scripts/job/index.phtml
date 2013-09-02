@@ -1,0 +1,38 @@
+<?php
+$this->inlineScript()->appendFile( $this->jsUrl( 'view/user-job.js' ) );
+?>
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Manajemen Jabatan User</h2>
+    <div class="map-top-nav">
+        <a href="<?php echo $this->url(array('action'=>'add')); ?>" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Tambah</span>
+        </a>
+    </div>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+            <table id="table_penyalur" class="display">
+                <thead>
+                <tr>
+                    <th>NRP</th>
+                    <th>Nama</th>
+                    <th>Jabatan</th>
+                    <th>Subjabatan</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

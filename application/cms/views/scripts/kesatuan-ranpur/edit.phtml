@@ -1,0 +1,36 @@
+<?php
+$aKesatuan = $this->ranpur->getKesatuan()->toFormArray();
+?>
+
+<?php $this->printGoBackUrl($this->url(array('action'=>'index', 'id'=>null))); ?>
+
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour">Ubah Kendaraan Tempur Kesatuan</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<p>Nama Kesatuan: <?php echo $aKesatuan['nama_kesatuan']; ?></p>
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	// populate existing ranpur
+	<?php foreach ($this->ranpur->getRanpurs() as $b) : ?>
+		add_row('ranpur-count-row',
+			<?php echo $b['idranpur']; ?>,
+			<?php echo $b['nomor_mesin']; ?>,
+			<?php echo $b['nomor_chasis']; ?>,
+			<?php echo $b['nomor_registrasi_pusat']; ?>,
+			<?php echo $b['nomor_registrasi_baru']; ?>,
+			<?php echo $b['nomor_lambung']; ?>,
+			<?php echo $b['kondisi']; ?>,
+			<?php echo $b['keterangan']; ?>
+		);
+	<?php endforeach; ?>
+});
+</script>

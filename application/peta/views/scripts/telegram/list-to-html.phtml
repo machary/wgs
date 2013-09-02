@@ -1,0 +1,84 @@
+<?php if (isset($this->listto)) : ?>
+
+            <ul style="margin: 0; padding: 10px; width: 820px; float: left;border:1px solid #bebebe;background-color: #F5F5F5;">
+                <?php foreach ($this->listto as $row):?>
+                    <li style="display: inline; margin-bottom: 0; margin-right: 0;">
+                        <figure style="width: 200px; margin: 0 !important; padding: 2px; float: left; position: relative;">
+                            <?php echo $row[3].' ';?>
+                            <span style=" line-height: 23px; margin-left: 3px; vertical-align: top;"><?php $x = $row[2];echo $x;?></span>
+                        </figure>
+                    </li>
+                    <?php endforeach; ?>
+                <?php endif;?>
+            </ul>
+
+
+<?php //if (isset($this->listto)) : ?>
+<!--	--><?php //foreach ($this->listto as $row):?>
+<!--		--><?php //echo $row[3].' ';?><!--<span>--><?php //$x = $row[2];
+////			if ($row[1]) {
+////				$x .=' - '.$row[1];
+////			}
+//			echo $x;
+//		 ?><!--</span></br>-->
+<!--	--><?php //endforeach; ?>
+<?php //endif;?>
+
+<script>
+
+	$('.checkto').css('display','inline');
+	$('.checkto').css('margin',0);
+	$('.checkto').css('padding',0);
+
+	$('.allto').css('display','inline')
+		.css('margin',0)
+		.css('pading',0);
+
+	$('.allto').click(function(){
+
+		var str = ",";
+		var strtext = "";
+
+		if ($(this).is(':checked'))
+		{
+            $(this).closest('.pilih', this).find('input.checkto:checkbox').attr('checked','checked');
+		}else{
+            $(this).closest('.pilih', this).find('input.checkto:checkbox').attr('checked',false);
+		}
+
+        $(this).closest('.pilih', this).find('input.checkto:checkbox:checked').each(function () {
+			str += $(this).val()+',';
+			strtext += $(this).next().text()+',';
+		});
+
+		if (str == ',')
+		{
+			str='';
+		}
+		var idtext = $(this).closest('.pilih', this).prev('input:hidden').val(str);
+		idtext.val(str);
+		idtext.prev('input:hidden').val(strtext);
+	});
+
+
+
+	$('.checkto').click(function(){
+//        console.log($(this).closest('.pilih', this).find('input.checkto:checkbox:checked'));
+		var str = ",";
+		var strtext = "";
+        $(this).closest('.pilih', this).find('input.checkto:checkbox:checked').each(function () {
+				str += $(this).val()+',';
+				strtext += $(this).next().text()+',';
+		});
+		if (str == ',')
+		{
+			str='';
+            $(this).closest('.pilih', this).find('input.allto:checkbox').attr('checked',false);
+		}
+
+		var idtext = $(this).closest('.pilih', this).prev('input:hidden').val(str);
+		idtext.val(str);
+		idtext.prev('input:hidden').val(strtext);
+
+	});
+</script>

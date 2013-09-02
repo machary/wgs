@@ -1,0 +1,35 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+	<label>Name</label>
+	<?php echo $f->name->renderViewHelper(); ?>
+	<?php echo $f->name->renderErrors(); ?>
+	
+	<label>Elevation</label>
+	<?php echo $f->elevation->renderViewHelper(); ?>
+	<?php echo $f->elevation->renderErrors(); ?>
+	
+	<label>Radar Type</label>
+	<?php echo $f->type->renderViewHelper(); ?>
+	<?php echo $f->type->renderErrors(); ?>
+	
+	<label>Max Range</label>
+	<?php echo $f->max_range->renderViewHelper(); ?>
+	<?php echo $f->max_range->renderErrors(); ?>
+	
+	<label>Frequency</label>
+	<?php echo $f->freq->renderViewHelper(); ?>
+	<?php echo $f->freq->renderErrors(); ?>
+	
+	<label>Jamming Range</label>
+	<?php echo $f->jamm_range->renderViewHelper(); ?>
+	<?php echo $f->jamm_range->renderErrors(); ?>
+	
+	<label>Description</label>
+	<?php echo $f->description->renderViewHelper(); ?>
+	<?php echo $f->description->renderErrors(); ?>
+	
+	<button class="button_colour round_all">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+</form>

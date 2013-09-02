@@ -1,0 +1,98 @@
+<div class="flat_area grid_16">
+
+	<!-- box header label -->
+	<h2>Data Jarak Antar Pelabuhan</h2>
+	<p>
+		<a href="<?php echo $this->url(array('controller'=>'jarak.pangkalan','action'=>'addjarakpelabuhan')); ?>" class="roundall_grey add_icon">
+			<span class="ml22">Tambah Data</span>
+		</a>
+	</p>
+
+	<!-- toggle button -->
+	<a href="#" class="toggle">&nbsp;</a>
+
+	<!-- container -->
+	<div class="toggle_container" style="display: block; ">
+
+		<div class="block">
+
+<!--			<div id="filter-container">-->
+<!--				<label for="feed-filter">Filter &#58;</label>-->
+<!--				<select id="feed-filter">-->
+<!--					<option value="" selected="selected">[Pilih]</option>-->
+<!--					<option value="0">Nama Senjata</option>-->
+<!--					<option value="1">Kaliber Senjata</option>-->
+<!--					<option value="2">Negara</option>-->
+<!--					<option value="3">kategori Senjata</option>-->
+<!--				</select>-->
+<!--			</div>-->
+
+
+
+			<table id="dataTabel" class="display">
+
+				<thead>
+
+				<tr>
+					<th>Asal Pelabuhan</th>
+					<th>Tujuan Pelabuhan</th>
+					<th>Jarak</th>
+					<th></th>
+				</tr>
+				</thead>
+
+			</table>
+
+		</div>
+
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		var oTable = $('#dataTabel').dataTable( {
+			"bJQueryUI": true,
+			"sScrollX": "",
+			"bSortClasses": false,
+			"aaSorting": [[0,'asc']],
+			"bAutoWidth": true,
+			"bInfo": true,
+			"aoColumns":[
+				null,
+				null,
+				null,
+				{bSortable:false}
+			],
+			"sScrollY": "100%",
+			"sScrollX": "100%",
+			"bScrollCollapse": true,
+			"sPaginationType": "full_numbers",
+			"bProcessing" : true,
+			"bServerSide" : true,
+			"sAjaxSource" : baseUrl + '/cms/jarak.pangkalan/dataapi',
+			"fnServerData" : function(sSource, aoData, fnCallback)
+			{
+				//filter category content
+				if(jQuery('#feed-filter').length)
+				{
+					filter = jQuery('#feed-filter').val()
+
+					aoData.push({
+						"name": "filter",
+						"value":  filter
+					});
+				}
+
+				jQuery.getJSON(sSource, aoData, function(json) {
+					//if(aaData != 'undefined')
+					//{
+					fnCallback(json)
+					//}
+				});
+
+				$('.custom-rows').parent().css('vertical-align','middle');
+			}
+		})//.makeEditable()
+	});
+</script>

@@ -1,0 +1,202 @@
+<div class="map-top-nav">
+    <a href="<?php echo $this->url(array('action'=>'list')); ?>" class="roundall_grey add_icon float-left">
+        <span class="ml22">Pangkalan Pendukung</span>
+    </a>
+
+    <a href="<?php echo $this->url(array('controller'=>'cb-logistik','action'=>'detail','cbid'=>$this->cbid->getId())); ?>" class="roundall_grey back_icon float-right">
+        <span class="ml22">Kembali</span>
+    </a>
+</div>
+<div class="box grid_8 grid_16 round_all contentmap " >
+    <h2 class="box_head grad_colour titlemap">
+        <span>Pangkalan Pendukung</span>
+    </h2>
+    <div id="map2"></div>
+</div>
+
+<div class="box grid_8 round_all controlmap" >
+    <h2 class="box_head grad_colour">Detail Pangkalan</h2>
+    <div id="view-data" ></div>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+
+// global map object
+var map,titik_referensi;
+var Lppendukung;
+var ccc = 0;
+var willan = null;
+// layers dan geourl ada di script.js
+
+$(function(){
+
+	$('#map2').css('height', '500px');
+	map = standardMap('map2');
+	minmaxMap(map);
+
+    //klik map
+    clickMap();
+	
+	/* == Fitur Tampilan Pangkalan Pendukung */
+    var ll, popupContentHTML;
+   	var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+   		'autoSize': true
+   	});
+    //-- icon --
+    var size = new OpenLayers.Size(18,18); // size icon
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h); //offset icon
+
+    // Pangkalan Pendukung
+	Lppendukung = new OpenLayers.Layer.Markers(
+		"Pangkalan Pendukung",
+		{isBaseLayer: false, visibility: true}
+	);
+
+    titik_referensi = new OpenLayers.Layer.Markers("Titik Referensi");
+    titik_referensi.setVisibility(false);
+
+	map.addLayers([Lppendukung, titik_referensi]);
+    map.redrawSwitcherTree(); //<--- untuk memasukan layer baru ke dlm switcher
+
+    // Marker Pangkalan Pendukung
+    <?php if( !empty($this->ppendukung)): foreach($this->ppendukung as $key) : ?>
+        ll = new OpenLayers.LonLat(<?php echo $key['x'];?>,<?php echo $key['y'];?>);
+        popupContentHTML = '<p><b><?php echo $key['lanal'];?></b></p><p><?php echo json_encode($key['keterangan']);?></p>';
+
+        var icon = new OpenLayers.Icon(baseUrl + '/images/icons/blue-log-AL.png', size, offset); //object icon
+
+        addMarker(Lppendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true, icon);
+    <?php endforeach; endif; ?>
+	/* == End of Fitur Tampilan Pangkalan Pendukung */
+    changeMarkers();
+});
+
+function clickMap(){
+	/* == Fitur Klik Dapatkan Informasi */
+	map.events.register('click', map, function(e) {
+		var lonlat = map.getLonLatFromViewPortPx(e.xy);
+        var puslanBar = map.layers[25]; // lihat peta-dasar.js untuk nomor listnya
+        var puslanTim = map.layers[27]; // lihat peta-dasar.js untuk nomor listnya
+
+		if (puslanBar.getVisibility() || puslanTim.getVisibility()) {
+			$.blockUI({ css: {
+				border: 'none',
+				padding: '15px',
+				backgroundColor: '#000',
+				'-webkit-border-radius': '10px',
+				'-moz-border-radius': '10px',
+				opacity: .5,
+				color: '#fff'
+			}});
+
+			$('#tampung-data').html('<img src="<?php echo $this->imgUrl('loading1.gif'); ?>">');
+
+			$.get('<?php echo $this->siteUrl('cms/pangkalan/viewr/cbid/'.$this->cbid->getId()); ?>', {
+				lon: lonlat.lon,
+				lat: lonlat.lat
+			}, function(data, status, xhr) {
+				$('#view-data').html(data);
+				$('.controlmap').show('slow');
+				minMap(map);
+			}, 'html')
+				.error(function() {
+					$('#view-data').html('<div class="block" id="fasview"><h1>bukan Pangkalan</h1></div>');
+					$('.controlmap').show('slow');
+					minMap(map);
+				})
+				.complete(function() { $.unblockUI(); });
+		}
+	});
+	/* == End of Fitur Klik Dapatkan Informasi */
+}
+
+function bersihkan(cek, ket, idmaster,dermaga, labuh_udara, dock, bengkel,rumah, mess,rumah_sakit, umum, listrik, kendaraan_bermotor, tanah, perbekalan)
+{
+    Lppendukung.clearMarkers();
+
+    var ll, laa, popupContentHTML;
+    var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+        'autoSize': true
+    });
+
+    $.getJSON('<?php echo $this->url(array('controller'=>'cbl.pangkalan','action'=>'simpanpp','cbid'=>$this->cbid->getId())); ?>',{
+        cek: cek,
+        idmaster: idmaster,
+        ket: ket,
+        dermaga: dermaga,
+        labuh_udara: labuh_udara,
+        dock: dock,
+        bengkel: bengkel,
+        rumah: rumah,
+        mess: mess,
+        rumah_sakit: rumah_sakit,
+        umum: umum,
+        listrik: listrik,
+        kendaraan_bermotor: kendaraan_bermotor,
+        tanah: tanah,
+        perbekalan: perbekalan
+    }, function(data){
+        data.pp.forEach(function(item){
+            ll = new OpenLayers.LonLat(item.x,item.y);
+            popupContentHTML = '<p><b>'+item.lanal+'</b></p><p>'+item.keterangan+'</p>';
+            addMarker(Lppendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true);
+        });
+    });
+}
+
+function changeMarkers()
+{
+    map.events.register('changelayer', null, function(evt){
+        if(evt.layer.name == 'Titik Referensi' && titik_referensi.visibility == true){
+            parseData(3, 'referensi', '/peta/api/referensi', 0);
+        }
+    });
+}
+
+function parseData(id_divisi, jenis, url, matra)
+{
+    $.post(baseUrl + url,
+        {
+            "id_divisi": id_divisi
+        },
+        function(data){
+            if(jenis == 'referensi'){
+                addReferensi(data);
+            }
+        }, "json");
+}
+
+function addReferensi(data)
+{
+    AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+        'autoSize': true
+    });
+    popupClass = AutoSizeFramedCloud;
+
+    for(var i in data)
+    {
+        popupContentHTML = '<table style="width: 250px;">'
+            +'<tr>'
+            +'<th>'
+            + data[i]['keterangan']
+            +'</th>'
+            +'</tr>'
+            +'</table>';
+
+        var iconUrl = baseUrl + '/images/info.png';
+
+        if(data[i]['longitude'] != undefined && data[i]['latitude'] != undefined)
+        {
+            var realKoordinate = new OpenLayers.LonLat(data[i]['longitude'], data[i]['latitude']);
+
+            var size = new OpenLayers.Size(21,25);
+            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+            var icon = new OpenLayers.Icon(iconUrl, size, offset);
+
+            addMarker(titik_referensi, realKoordinate, popupClass, popupContentHTML, true, false, icon);
+        }
+    }
+}
+</script>
+

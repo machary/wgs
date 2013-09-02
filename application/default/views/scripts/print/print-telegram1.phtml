@@ -1,0 +1,240 @@
+
+<?php $this->headLink()->appendStylesheet( $this->cssUrl( 'reset.css' ), '' )
+	->appendStylesheet( $this->cssUrl( 'print/preview-layout1.css' ), 'screen' )
+    ->appendStylesheet( $this->cssUrl( 'print/print-layout1.css' ),'print' )
+;
+?>
+
+<?php
+$max_col = 50;
+$max_berita = count($this->isiBerita);
+if ($this->telegram):    
+$i=1;
+?>
+<?php foreach($this->isiBerita as $berita) : ?>
+	<?php
+		if($this->telegram['rahasia'] == 'TBA' || $this->telegram['rahasia'] == 'TBT')
+		{
+			$tklasif = 'btbb';
+			$rklasif = 'brbb';
+			$bklasif = 'bbbb';
+			$lklasif = 'blbb';
+		}
+		else
+		{
+			$tklasif = 'btb';
+			$rklasif = 'brb';
+			$bklasif = 'bbb';
+			$lklasif = 'blb';
+		}
+	?>
+
+	<div class="halaman" style="width: 20cm; " <?php echo ($i == $max_berita) ? 'page-break-after: auto;' : 'page-break-after: always;' ?>>
+		<table border="0" cellspacing="0" style="width: inherit;" >
+			<tr>
+	<!--1-->
+				<th height="5px" width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+	<!--2-->
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+	<!--3-->
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<!--4-->
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<!--5-->
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+				<th width="2%"></th>
+			</tr>
+			<tr>
+				<td style="font-size: 16px;" align="center" colspan="27"  class="bb"><?php echo ($this->telegram['header_telegram']) ? $this->telegram['header_telegram'] : 'SEKOLAH STAF DAN KOMANDO ANGKATAN LAUT';?></td>
+			</tr>
+			<tr>
+				<td align="center" colspan="27"><?php echo ($this->telegram['header_telegram2']) ? $this->telegram['header_telegram2'] : $this->telegram['nomor'];?></td>
+			</tr>
+			<tr>
+				<td colspan="<?php echo floor($max_col*3/4);?>"></td>
+				<td style="font-size: 20px; font-weight: bold; font-family: times new roman;" colspan="<?php echo $max_col-floor($max_col*3/4);?>">REGISTRASI</td>
+			</tr>
+			<tr>
+				<td colspan="<?php echo floor($max_col*3/4);?>"></td>
+				<td style="font-size: 20px; font-weight: bold; font-family: times new roman;" colspan="<?php echo $max_col-floor($max_col*3/4);?>">No.</td>
+			</tr>
+			<tr>
+				<td align="center" colspan="<?php echo $max_col;?>" style="font-size: 20px; font-weight: bold; font-family: times new roman;">FORMULIR BERITA</td>
+			</tr>
+			<tr>
+				<td align="center" colspan="<?php echo $max_col;?>">&nbsp;</td>
+			</tr>
+
+
+			<tr>
+				<td align="center" class="bt bl" colspan="<?php echo floor($max_col/4);?>">Panggilan (Petunjuk PAHUB)</td>
+				<td align="center" class="bt bl" colspan="<?php echo floor($max_col/5);?>">Jenis</td>
+				<td align="center" class="bt bl" colspan="<?php echo $max_col-2*floor($max_col/5)-2*floor($max_col/4);?>">No</td>
+				<td align="center" class="bt bl" colspan="<?php echo floor($max_col/5);?>">Derajat</td>
+				<td align="center" class="bt bl br" colspan="<?php echo floor($max_col/4);?>">Instr. Mengirim</td>
+			</tr>
+			<tr>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/4);?>"></td>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/5);?>">
+					<?php echo $this->telegram['rahasia']; ?>
+				</td>
+				<td align="center" class="bl" colspan="<?php echo $max_col-2*floor($max_col/5)-2*floor($max_col/4);?>"></td>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/5);?>">
+					<?php echo $this->telegram['segera']; ?>
+				</td>
+				<td align="center" class="bl br" colspan="<?php echo floor($max_col/4);?>"></td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> <?php echo $tklasif?>" colspan="<?php echo floor($max_col/10)+1;?>">DARI</td>
+				<td class="<?php echo $tklasif?>" colspan="1">:</td>
+				<td class="<?php echo $tklasif?> <?php echo $rklasif?>" colspan="<?php echo $max_col-2*floor($max_col/5)-floor($max_col/10)+1;?>" ><?php echo $this->telegram['pengirim'];?></td>
+				<td class="bb bt" align="right" colspan="<?php echo floor($max_col/5)-1;?>">TWU</td>
+				<td class="bb bt" colspan="1">:</td>
+				<td class="bb br bt" colspan="<?php echo floor($max_col/5)-2;?>"><?php echo $this->telegram['twu']; ?></td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> " colspan="<?php echo floor($max_col/10)+1;?>">KEPADA</td>
+				<td colspan="1">:</td>
+				<td class="<?php echo $rklasif?>"  colspan="<?php echo $max_col-2*floor($max_col/5)-floor($max_col/10)+1;?>" ><?php echo ($this->telegram['nama_kepada']) ? substr($this->telegram['nama_kepada'],0,100) : $this->telegram['kepada'];?></td>
+				<td align="center" colspan="<?php echo floor($max_col/5)-2;?>">Tanda Dinas</td>
+				<td align="center" class="br" colspan="<?php echo floor($max_col/5)-1;?>">Group</td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> bb" colspan="<?php echo floor($max_col/10)+1;?>">TEMBUSAN</td>
+				<td class="bb" colspan="1">:</td>
+				<td class=" <?php echo $rklasif?> bb"  colspan="<?php echo $max_col-2*floor($max_col/5)-floor($max_col/10)+1;?>" ><?php echo ($this->telegram['nama_tembusan']) ? substr($this->telegram['nama_tembusan'],0,100) : $this->telegram['tembusan'];?></td>
+				<td class="<?php echo $bklasif?>" colspan="<?php echo floor($max_col/5)-2;?>"></td>
+				<td class="<?php echo $bklasif?> br" colspan="<?php echo floor($max_col/5)-1;?>"></td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> " colspan="<?php echo floor($max_col/10)+1;?>">KLASIFIKASI</td>
+				<td colspan="1">:</td>
+				<td colspan="<?php echo $max_col-floor($max_col/10)-2;?>">
+					<?php
+						switch($this->telegram['rahasia'])
+						{
+							case 'RHS':
+								$klasif = 'Rahasia';
+								break;
+							case 'TBA':
+								$klasif = 'Terbuka';
+								break;
+							case 'TBT':
+								$klasif = 'Terbatas';
+								break;
+						}
+					?>
+					<?php echo $klasif?>
+
+				</td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> " colspan="<?php echo floor($max_col/10)+1;?>">NOMOR</td>
+				<td colspan="1">:</td>
+				<td colspan="<?php echo $max_col-floor($max_col/10)-2;?>"><?php echo $this->telegram['nomor_telegram'];?></td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> isi-berita" colspan="<?php echo $max_col;?>" style="padding: 10px; height: 20cm; overflow-y: hidden;"><p><?php echo $berita['isi_berita'];?></p></td>
+			</tr>
+			<tr>
+                <td class="<?php echo $lklasif?> <?php echo $bklasif?>" colspan="<?php echo $max_col-2*floor($max_col/5)+3;?>" ><?php echo 'Halaman : '.$berita['halaman'].' dari '.$berita['max']; ?></td>
+                <td align="right" class="<?php echo $bklasif?>" colspan="<?php echo floor($max_col/5)-1;?>">TWB</td>
+                <td class="<?php echo $bklasif?>" colspan="1">:</td>
+                <td class="<?php echo $bklasif?>" colspan="<?php echo floor($max_col/5)-2;?>"><?php echo ($this->telegram['twu']) ? $this->telegram['twb'] : date('md.Hi', strtotime($this->telegram['datetime']));?></td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> " colspan="<?php echo floor($max_col/10)+1;?>">PENGIRIM</td>
+				<td colspan="1">&nbsp;</td>
+				<td colspan="<?php echo $max_col-3*floor($max_col/10)-2*floor($max_col/5)-2;?>"></td>
+				<td align="center" class="bl bb" colspan="<?php echo floor($max_col/5);?>">Derajat</td>
+				<td align="center" class="<?php echo $lklasif?> bb" colspan="<?php echo floor($max_col/5);?>">Waktu</td>
+				<td align="center" class="bl bb" colspan="<?php echo floor($max_col/10);?>">Per</td>
+				<td align="center" class="bl br bb" colspan="<?php echo floor($max_col/10);?>">Paraf</td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> " colspan="<?php echo floor($max_col/10)+1;?>">Nama</td>
+				<td colspan="12">: <?php echo $this->telegram['nama_pengirim']; ?></td>
+				<td colspan="2"></td>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/10);?>">Aksi</td>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/10);?>">Tembusan</td>
+				<td align="center" class="<?php echo $lklasif?>" colspan="<?php echo floor($max_col/10);?>">Terima</td>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/10);?>">Kirim</td>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/10);?>"></td>
+				<td align="center" class="bl br" colspan="<?php echo floor($max_col/10);?>"></td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> " colspan="<?php echo floor($max_col/10)+1;?>">Jabatan</td>
+				<td colspan="12">: <?php echo $this->telegram['jabatan_pengirim']; ?></td>
+				<td colspan="2"></td>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/10);?>"></td>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/10);?>"></td>
+				<td align="center" class="<?php echo $lklasif?> bb" colspan="<?php echo floor($max_col/10);?>" rowspan="2"><?php echo date('md.Hi', strtotime($this->telegram['datetime']));?></td>
+				<td align="center" class="bl bb" colspan="<?php echo floor($max_col/10);?>" rowspan="2"><?php echo date('md.Hi', strtotime($this->telegram['datetime']));?></td>
+				<td align="center" class="bl" colspan="<?php echo floor($max_col/10);?>"></td>
+				<td align="center" class="bl br" colspan="<?php echo floor($max_col/10);?>"></td>
+			</tr>
+			<tr>
+				<td class="<?php echo $lklasif?> " colspan="<?php echo floor($max_col/10)+1;?>">Tanda Tangan</td>
+				<td colspan="12">:</td>
+				<td colspan="2"></td>
+				<td align="center" class="bl bb" colspan="<?php echo floor($max_col/10);?>"></td>
+				<td align="center" class="bl bb" colspan="<?php echo floor($max_col/10);?>"></td>
+				<td align="center" class="bl bb" colspan="<?php echo floor($max_col/10);?>"></td>
+				<td align="center" class="bl br bb" colspan="<?php echo floor($max_col/10);?>"></td>
+			</tr>
+
+		</table>
+	</div>
+	<?php $i++;endforeach; ?>
+	<?php else: ?>
+		<h1>Mohon maaf, anda tidak memiliki hak akses.</h1>
+	<?php endif;?>

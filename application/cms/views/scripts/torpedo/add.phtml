@@ -1,0 +1,41 @@
+<?php $this->printGoBackUrl($this->url(array('action'=>'index'))); ?>
+
+<?php
+echo $this->errorMessage;
+echo $this->form;
+?>
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+    $(function(){
+
+        $("#frmTorpedo input, #frmTorpedo select").blur(function(){
+            $("#frmTorpedo").validate().element($(this));
+        });
+
+        $("#frmTorpedo").validate({
+            rules:{
+                'TORPEDO_NAME': "required",
+                'COUNTRY_ID': "required",
+                'DETECT_TYPE': "required",
+                'LAUNCH_TYPE': "required"
+            },
+
+            messages:{
+                'TORPEDO_NAME': "Nama Torpedo Harus Di Isi",
+                'COUNTRY_ID': "Asal Senjata Harus Di Isi",
+                'DETECT_TYPE': "Tipe Pendeteksi Harus Di Isi",
+                'LAUNCH_TYPE': "Tipe Pelontar Harus Di Isi"
+            },
+
+            errorElement:"label",
+            errorPlacement: function(error, element)
+            {
+                if ((element.attr("name") == "COUNTRY_ID")||(element.attr("name") == "DETECT_TYPE")||(element.attr("name") == "LAUNCH_TYPE"))
+                    var tampung = element.parent('div').parent('dd').append(error);
+                else
+                    var tampung = element.parent('dd').append(error);
+            }
+        });
+    });
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>

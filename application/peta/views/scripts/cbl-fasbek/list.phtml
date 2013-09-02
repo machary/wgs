@@ -1,0 +1,54 @@
+<div class="flat_area grid_16">
+	<h2>Data Pangkalan Pendukung</h2>
+    <p>
+        <a href="<?php echo $this->url(array('action'=>'add')); ?>" class="roundall_grey add_icon">
+            <span class="ml22">Pangkalan Pendukung Baru</span>
+        </a>
+    </p>
+
+	<div class="toggle_container" style="display: block; ">
+		<div class="block">
+			<table id="table-dtables" class="display">
+				<thead>
+					<tr>
+						<th>Lantamal/Lanal</th>
+						<th width="10%"></th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="flat_area grid_16">
+	<p><a href="<?php echo $this->url(array('action'=>'index')); ?>">Kembali</a></p>
+</div>
+
+<script type="text/javascript">
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+$(function(){
+    var oTable = $('#table-dtables').dataTable({
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+//        "bFilter": false,
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : '<?php echo $this->url(array('action'=>'dataapi')); ?>',
+        "fnServerData" : function(sSource, aoData, fnCallback) {
+            // @optional filter category content
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        },
+		'aoColumns' : [null,{bSortable: false}]
+    });
+	new Filterer(oTable);
+});
+</script>

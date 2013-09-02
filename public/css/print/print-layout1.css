@@ -1,0 +1,109 @@
+
+html{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+}
+
+div{
+    margin: 0;
+    padding: 0;
+}
+
+.halaman {
+    page-break-after: always;
+    height:32cm;
+}
+
+.halaman:last-child {
+    page-break-after: auto;
+}
+
+.isi-berita{
+    font-size: 18px;
+}
+
+.bt{ border-top: 2px solid #000000; padding-top: 2px; }
+.br{ border-right: 2px solid #000000; padding-right: 2px;}
+.bb{ border-bottom: 2px solid #000000; padding-bottom: 2px;}
+.bl{ border-left: 2px solid #000000; padding-left: 2px;}
+
+
+.btb{ border-top: 5px solid red; padding-top: 3px; }
+.brb{ border-right: 5px solid red; padding-right: 3px;}
+.bbb{ border-bottom: 5px solid red; padding-bottom: 3px;}
+.blb{ border-left: 5px solid red; padding-left: 3px;}
+
+.btbb{ border-top: 5px solid #000000; padding-top: 3px; }
+.brbb{ border-right: 5px solid #000000; padding-right: 3px;}
+.bbbb{ border-bottom: 5px solid #000000; padding-bottom: 3px;}
+.blbb{ border-left: 5px solid #000000; padding-left: 3px;}
+
+td{
+    vertical-align: top;
+
+}
+
+.btable {
+    border-collapse: collapse;
+    margin: 20px 0;
+    width: 100%;
+
+}
+
+.btable .no-padding td, .btable .no-padding th {
+    padding: 0;
+}
+
+.btable td, .btable th {
+    border: 1px solid #000000;
+    padding: 5px;
+    word-wrap: break-word;
+}
+
+.ftable-wrapper{
+    position: absolute;
+    bottom: 0;
+}
+
+.ftable{
+    width: 100%;
+}
+
+.ftable td, .ftable th {
+    padding: 5px;
+    word-wrap: break-word;
+}
+
+.header-area {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.header {
+    width: 40%;
+    text-align: center;
+    border-bottom: 1px solid #000000;
+    font-size: 18px;
+    float: left;
+}
+
+.dateday-area {
+    width: 60%;
+    text-align: center;
+    font-size: 18px;
+    float: left;
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: underline;
+    position: absolute;
+    bottom: 0;
+    left: 40%;
+}

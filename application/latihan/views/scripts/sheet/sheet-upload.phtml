@@ -1,0 +1,58 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Rencana Operasi Latihan (ROL)</h2>
+	<div class="map-top-nav">
+		<a href="<?php echo $this->url(array('action'=>'upload-sheet')); ?>" class="roundall_grey add_icon float-left">
+			<span class="ml22">Upload ROL Baru</span>
+		</a>
+	</div>
+
+	<div class="grid_10" style="margin: 10px 0 0;">
+		<table id="table-dtables" class="display">
+			<thead>
+			<tr>
+				<th width="45%">Pembuat</th>
+				<th width="35%">Pembaharuan Terakhir</th>
+				<th width="20%"></th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+	<style type="text/css">
+		#table-dtables_processing
+		{
+			margin-left: 160px;
+		}
+	</style>
+
+<script type="text/javascript">
+	<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+	$(function(){
+		var oTable = $('#table-dtables').dataTable({
+			"bJQueryUI": true,
+			"sScrollX": "",
+			"bSortClasses": false,
+			"aaSorting": [[0,'asc']],
+			"bAutoWidth": true,
+			"bInfo": true,
+			"bFilter": false,
+			"sScrollY": "100%",
+			"sScrollX": "100%",
+			"bScrollCollapse": true,
+			"sPaginationType": "full_numbers",
+			"bProcessing" : true,
+			"bServerSide" : true,
+			"sAjaxSource" : '<?php echo $this->url(); ?>',
+			"fnServerData" : function(sSource, aoData, fnCallback) {
+				jQuery.getJSON(sSource, aoData, function(json) {
+					fnCallback(json);
+				});
+			},
+            'aoColumns' : [null,null,{bSortable: false}]
+		});
+
+		new Filterer(oTable);
+
+		$('#table-dtables_filter').css('width', '260px');
+	});
+</script>

@@ -1,0 +1,30 @@
+<div class="flat_area grid_16">
+
+	<!-- box header label -->
+	<h2>Rencana Operasi</h2>
+
+	<div class="map-top-nav">
+		<?php
+		$kogas = array(
+			'kogasgabla' => 'Kogasgabla',
+			'kogasgabfib' => 'Kogasgabfib',
+            'kogasgablinud' => 'Kogasgablinud',
+            'pasrat' => 'Pasrat',
+            'kogasgabrat' => 'Kogasgabrat',
+			'kogasud' => 'Kogasud',
+		);
+		?>
+		<?php foreach ($kogas as $c => $label) : ?>
+			<a href="<?php echo $this->url(array('action'=>$c)); ?>" class="roundall_grey add_icon mr3">
+				<span class="ml22"><?php echo $label; ?></span>
+			</a>
+		<?php endforeach; ?>
+		
+	</div>
+
+	<!-- container -->
+	<div class="block">
+		<!-- what to write here? -->
+	</div>
+	
+</div>

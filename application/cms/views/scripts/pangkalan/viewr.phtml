@@ -1,0 +1,201 @@
+<?php $x = $this->obj->toFormArray(); ?>
+<?php if ($x['nama'] != null) : ?>
+<div class="block" id="fasview">
+<?php
+
+$jpangkalan = strtolower($x['jenis_pangkalan']);
+switch($jpangkalan) :
+
+	case 'lantamal':
+
+		echo '<span>LANTAMAL:</span> '.strtoupper($x['nama']).'<br /><br />';
+		if ($x['childs']):
+			foreach ($x['childs'] as $val):
+				echo '<span>'.$val['jenis_pangkalan'].'</span> <a href="'.$this->url(array('controller'=>'pangkalan','action'=>'view', 'id'=>$x['idpangkalan'])).'">'.$val['nama'].'</a><br />';
+			endforeach;
+		endif;
+		break;
+
+	default:
+
+		echo '<span>'.strtoupper($jpangkalan).':</span> '.strtoupper($x['nama']).'<br /><br />';
+		echo '<span>Lantamal</span> '.'<a href="'.$this->url(array('controller'=>'pangkalan','action'=>'view', 'id'=>$x['idparent'])).'">'.$x['namaparent'].'</a><br />';
+		break;
+
+endswitch;
+echo '<br />';
+?>
+	<form>
+	<table id="fastabel">
+		<tr >
+			<th>FASLABUH</th>
+			<th>FASHARKAN</th>
+			<th>FASWATPERS</th>
+			<th>FASBINLAN</th>
+			<th>FASBEK</th>
+		</tr>
+		<tr >
+			<td>
+				<?php
+
+					echo '<label>Dermaga:</label>';
+				if ($x['fas_dermaga']):
+					foreach ($x['fas_dermaga'] as $val):
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+					echo '<textarea id="dermaga"></textarea>';
+
+
+					echo '<label>Labuhan Udara:</label>';
+				if ($x['fas_labuh']):
+					foreach ($x['fas_labuh'] as $val):
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+					echo '<textarea id="labuh_udara"></textarea>';
+
+				?></td>
+			<td><?php
+
+					echo '<label>Dock:</label>';
+				if ($x['fas_dock']):
+					foreach ($x['fas_dock'] as $val):
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+				echo '<textarea id="dock"></textarea>';
+
+					echo '<label>Bengkel:</label>';
+				if ($x['fas_bengkel']):
+					foreach ($x['fas_bengkel'] as $val):
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+				echo '<textarea id="bengkel"></textarea>';
+
+				?></td>
+			<td><?php
+
+					echo '<label>Rumah:</label>';
+				if ($x['fas_rumah']):
+					foreach ($x['fas_rumah'] as $val):
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+				echo '<textarea id="rumah"></textarea>';
+
+					echo '<label>Mess:</label>';
+				if ($x['fas_mess']):
+					foreach ($x['fas_mess'] as $val):
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+				echo '<textarea id="mess"></textarea>';
+
+					echo '<label>Rumah Sakit:</label>';
+				if ($x['fas_rumah_sakit']):
+					foreach ($x['fas_rumah_sakit'] as $val):
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+				echo '<textarea id="rumah_sakit"></textarea>';
+
+					echo '<label>Umum:</label>';
+				if ($x['fas_umum']):
+					foreach ($x['fas_umum'] as $val):
+						echo $val['nama'].'<br />';
+					endforeach;
+				endif;
+				echo '<textarea id="umum"></textarea>';
+
+				?></td>
+			<td><?php
+
+					echo '<label>Listrik:</label>';
+				if ($x['fas_listrik']):
+					foreach ($x['fas_listrik'] as $val):
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+				echo '<textarea id="listrik"></textarea>';
+
+				echo '<label>Kendaraan Bermotor:</label>';
+				if ($x['fas_ranmor']):
+					foreach ($x['fas_ranmor'] as $val):
+	//				echo '<a href="'.$val['idpangkalan'].'">'.$val['jenis'].'</a><br />';
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+				echo '<textarea id="kendaraan_bermotor"></textarea>';
+
+					echo '<label>Tanah:</label>';
+				if ($x['fas_tanah']):
+					foreach ($x['fas_tanah'] as $val):
+						echo $val[0].'<br />';
+					endforeach;
+				endif;
+				echo '<textarea id="tanah"></textarea>';
+
+				?></td>
+			<td><?php
+
+					echo '<label>Perbekalan:</label>';
+				if ($x['fas_bek']):
+					foreach ($x['fas_bek'] as $val):
+						echo '<a href="'.$val['idpangkalan'].'">'.$val['nama_item'].'</a><br />';
+					endforeach;
+				endif;
+				echo '<textarea id="perbekalan"></textarea>';
+
+				?></td>
+		</tr>
+	</table>
+
+		<label>Keterangan Umum Pangkalan Pendukung</label>
+	<?php if (is_null($x['pp'][0])): ?>
+		<textarea rows="5" cols="100" name="keterangan" id="keterangan" ><?php echo $x['pp'][0]['keterangan'];?></textarea>
+		<br/>
+		<input type="hidden" value="<?php echo $x['idpangkalan'];?>" name="idmaster" id="idmaster">
+		<input type="checkbox" name="pangkalan_pendukung" title="pangkalan pendukung" id="jadi" > pangkalan pendukung
+	<?php else: ?>
+		<textarea rows="5" cols="100" name="keterangan" id="keterangan" disabled="disabled"><?php echo $x['pp'][0]['keterangan'];?></textarea>
+		<br/>
+		<input type="checkbox" name="pangkalan_pendukung" title="pangkalan pendukung" id="jadi" checked="checked"> pangkalan pendukung
+		<input type="hidden" value="<?php echo $x['idpangkalan'];?>" name="idmaster" id="idmaster">
+	<?php endif; ?>
+	</form>
+</div>
+	<?php endif; ?>
+
+
+<script type="text/javascript">
+	$('#jadi').click(function(){
+		ket = $('#keterangan').val();
+		dermaga = $('#dermaga').val();
+		labuh_udara = $('#labuh_udara').val();
+		dock = $('#dock').val();
+		bengkel = $('#bengkel').val();
+		rumah = $('#rumah').val();
+		mess = $('#mess').val();
+		rumah_sakit = $('#rumah_sakit').val();
+		umum = $('#umum').val();
+		listrik = $('#listrik').val();
+		kendaraan_bermotor = $('#kendaraan_bermotor').val();
+		tanah = $('#tanah').val();
+		perbekalan = $('#perbekalan').val();
+		idmaster = $('#idmaster').val();
+		if ($(this).is(':checked'))
+		{
+			cek = 1;
+			$('textarea').attr('disabled','disabled');
+		}
+		else
+		{
+			cek = 0;
+			$('textarea').removeAttr('disabled');
+
+		}
+		bersihkan(cek,ket,idmaster,dermaga, labuh_udara, dock, bengkel,rumah, mess,rumah_sakit, umum, listrik, kendaraan_bermotor, tanah, perbekalan);
+	});
+</script>

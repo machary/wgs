@@ -1,0 +1,799 @@
+/*--------------------------------------------
+                General.css
+---------------------------------------------*/
+.relative {position: relative;}
+.absolute {position: absolute;}
+.add_icon{background: url(../images/icons/add-icon.png) no-repeat center left;}
+.red_icon{background: url(../images/icons/red_circle.png) no-repeat center left;}
+.xl_icon{background: url(../images/icons/xlsx.png) no-repeat center left;}
+
+.pangkalan_icon{background: url(../images/icons/pangkalan_square.png) no-repeat center left;}
+.rs_icon{background: url(../images/icons/cross_square.png) no-repeat center left;}
+.depo_icon{background: url(../images/icons/fuel_square.png) no-repeat center left;}
+
+.roundall_grey{
+    border-radius: 2px;
+    border: 1px solid #bebebe;
+    padding: 8px 10px;
+}
+a.float-left,a.float-right {padding: 0 10px;}
+
+.no-margin{margin:0 !important;}
+.mt5{margin-top: 5px !important;}
+.ml22{margin-left: 22px !important;}
+.mb3{margin-bottom: 3px; }
+.mt3{margin-top: 3px !important;}
+.mr3{margin-right: 3px !important;}
+.mr16{margin-right: 16px;}
+.mr40{margin-right: 40px;}
+
+.clear{clear: both;}
+.toggle_container{display: block;}
+
+.float-left{float:left;}
+.float-right{float:right;}
+.float-none{float:none;}
+
+.hidden{display:none;}
+.inline{display: inline;}
+
+/*---------------------------------------------
+    @author: irfan.muslim@sangkuriang.co.id
+    Fasilitas Pangkalan
+----------------------------------------------*/
+#fastabel th{
+	border: 10px solid #ffffff;
+	margin: 8px;
+	background-color: #1C5EA0;
+	color: #f3faff;
+	padding: 5px 15px;
+}
+
+#fastabel td{
+	border: 10px solid #ffffff;
+	margin: 8px ;
+	padding: 5px;
+}
+
+#fasview label {
+	margin-bottom: 0;
+	margin-top: 5px;
+}
+
+#fasview span {
+	font-weight: bold;
+}
+
+/*----------------------------
+        @author Kanwil
+-----------------------------*/
+table.simple-table {
+	border-collapse: collapse;
+	margin: 20px 0;
+	width: 100%;
+}
+
+table.simple-table .block>input, fieldset input{
+	height:1.8em;
+}
+
+table.simple-table .block>input,
+table.simple-table .block>textarea,
+fieldset input,
+fieldset textarea {
+	display:block;
+	border:1px solid #b5b8bb;
+	background-color:#e7edef;
+	margin-bottom:15px;
+
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	text-indent:5px;
+}
+
+table.simple-table td.block{
+}
+
+table.simple-table th {
+	background: none repeat scroll 0 0 #064792;
+	border: 1px solid #064792;
+	color: #FFFFFF;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 10px 8px;
+}
+
+table.simple-table td {
+	padding: 8px;
+	border: 1px solid #064792;
+}
+
+table.simple-table tr.odd {
+	background: none repeat scroll 0 0 #EDF1F3;
+}
+table.simple-table tr.even {
+	background: none repeat scroll 0 0 #FFFFFF;
+}
+form table.simple-table td {
+	vertical-align: middle;
+}
+.box .block form table.simple-table td input {
+	margin-bottom: 0;
+}
+form .box .block table.simple-table td button,
+.box .block form table.simple-table td button {
+	padding: 5px;
+}
+
+.non-selectable {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+/*---------------------------------
+            Custom Notify
+---------------------------------*/
+.message
+{
+    border: 1px solid #ffffff;
+    margin: 10px 15px;
+    padding: 5px 35px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    border-radius: 3px 3px 3px 3px;
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+    box-shadow: 0 0 5px #888;
+}
+
+.success
+{
+    color: #4F8A10;
+    background: #DFF2BF url(../images/icons/done.gif) no-repeat center left;
+}
+
+.error
+{
+    color: #9C2212;
+    background: #F8C7C4 url(../images/icons/error.gif) no-repeat center left;
+}
+
+span.error {
+    display: block;
+    height: 30px;
+    line-height: 2.5em;
+    margin-bottom: 5px;
+    padding-left: 35px;
+}
+
+.info
+{
+    color: #0F5980;
+    background: #BCDFEE url(../images/icons/info.gif) no-repeat center left;
+}
+
+.message h3{
+    line-height: 40px;
+    margin:0 5px;
+}
+
+/*---------------------------------
+        Isolate Login Form
+---------------------------------*/
+#login_box .box{
+    margin-bottom: 0 !important;
+    padding: 15px;
+}
+
+#login_box{
+    background:none !important;
+    border: none !important;
+    width:500px !important;
+}
+
+#login_box div.main_container {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.3);
+    border: 1px solid #000000;
+    margin: 10px;
+    padding: 20px;
+    position: relative;
+}
+
+div.main_container .box {
+    background-color: white;
+    box-shadow: 0 2px 0 1px rgba(0, 0, 0, 0.03);
+    margin-bottom: 15px;
+    padding: 0;
+    position: relative;
+    z-index: 400;
+}
+
+fieldset{
+    margin: -1px 0 0;
+    border-bottom: 1px solid #DDDDDD;
+    border-top: 1px solid #DDDDDD;
+    clear: both;
+    position: relative;
+}
+
+
+fieldset.label_side > label {
+    border-right: 1px solid #EEEEEE;
+    clear: left;
+    float: left;
+    left: 0;
+    line-height: normal;
+    padding: 18px 20px 8px;
+    position: relative;
+    width: 100px;
+}
+
+fieldset.label_side > label > span {
+    float:left;
+    display: block;
+    margin: 3px 0;
+    color: #999999;
+    display: inline;
+    font-family: sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+fieldset.label_side > div {
+    border-left: 1px solid #EEEEEE;
+    clear: right;
+    margin-left: 140px;
+    padding: 15px 20px;
+    width: auto;
+}
+
+fieldset.label_side > div > input.text {
+    width: 100%;
+    border-radius: 2px 2px 2px 2px;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 0 0 5px;
+    -moz-box-sizing: border-box;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.05);
+    border: 0 none;
+    box-shadow: 0 0 2px 0 #DDDDDD inset;
+    width: 100% !important;
+}
+
+#header_login{
+    background-image: -moz-linear-gradient(center top , #E6ECEF, #BAC5CC);
+    border-color: #BAC5CC;
+    color: #333333;
+    text-shadow: 0 1px 0 #FFFFFF;
+    margin:10px;
+    background: #E6ECEF url(../images/icons/small/white/Locked.png) no-repeat center left  ;
+
+}
+
+#header_login h4{
+    margin:0 15px;
+    width:80% !important;
+}
+
+#login_box button {
+    margin-bottom: 10px !important;
+}
+
+/*----------------------
+        slider
+------------------------*/
+
+#slider-image {
+   overflow: hidden !important;
+}
+
+/* link Kembali */
+a.back_icon {
+    /* @TODO icon */
+    background: url(../images/icon-goback.png) no-repeat scroll left center transparent;
+    line-height: 1.2em;
+    margin-top: -6px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+}
+/* link Kembali di dalam Heading H2 */
+a.kembali {
+    /* @TODO icon */
+    background: url(../images/icon-goback.png) no-repeat scroll left center transparent;
+    line-height: 1.2em;
+    margin-top: 3px;
+    padding: 8px 23px;
+    margin-bottom: 10px;
+}
+/*div.map-top-nav a.back_icon {*/
+	/*line-height: inherit;*/
+	/*margin-top: 0;*/
+	/*padding: 0 10px;*/
+/*}*/
+
+a.add_icon {
+	/* @TODO icon */
+	background: url(../images/add-icon.png) no-repeat scroll left center transparent;
+	line-height: 1.2em;
+	margin-top: -6px;
+	padding: 8px 10px;
+}
+
+/* untuk gritter */
+
+.gritter-image{margin-top: 12px;}
+
+/* untuk Telegram */
+
+#counterTelegram{
+    margin:0 !important;
+    color:#ffffff !important;
+    font-weight: bold;
+}
+
+/*  Untuk Topbar */
+
+#topbar .user_box{width:240px !important;}
+
+/*---------------------------------------------
+                Map Style.css
+----------------------------------------------*/
+
+#map-wrapper{
+    height:575px;
+    border:1px solid #bebebe;
+    margin-bottom: 3px !important;
+    max-width: 100%;
+    clear:both;
+}
+
+#map{
+    height: 500px;
+    width: 100%;
+    float:left;
+    position: relative;
+    top:42px;
+}
+
+.map-data{
+    width:100% !important;
+    position: absolute;
+    z-index: 999;
+}
+
+#wrapper {
+    width:99.9%;
+    border: 1px solid #bebebe;
+    background-color: #5e5e5e;
+    color:#ececec;
+    padding:5px 0;
+    bottom:0;
+    position: absolute;
+
+}
+
+.block{
+    overflow-x: auto !important;
+    position: relative !important;
+}
+
+.sidemap-item{
+    width:80px;
+    height:80px;
+    border: 1px solid #bebebe;
+    float:left;
+}
+
+.map-top-nav{
+    height: 35px;
+    line-height: 35px;
+    margin-bottom: 5px;
+}
+
+/*-----------------------------------------
+            Style.css
+------------------------------------------*/
+/* khusus form crud persenjataan */
+.box .block form.weaponry table tr td input {
+    display: inline;
+    margin: 0px 10px;
+}
+
+.box .block form.weaponry table tr td button {
+    padding: 5px;
+}
+
+form.weaponry tr {height: 35px;}
+form.weaponry td {vertical-align: middle;}
+
+.trplus {vertical-align: top;}
+.row-kekuatan:hover{
+    background-color: #ffebcd;
+}
+.rkterpilih{
+    background-color: #ffebcd;
+}
+
+#animator-toolbar{border-top: 1px solid #bebebe;}
+
+#time-notice{font-weight: bold;
+    font-size:18px;
+}
+
+#jarak-cb, .jarak-cb {
+    font-weight: bold;
+    font-size:18px;
+}
+
+.ui-slider{
+    margin: 13px 10px 15px !important;
+}
+
+/* --------------------------------------------------------
+                HOME.css
+----------------------------------------------------------*/
+.border {
+    border : 1px solid #ccc;
+}
+
+.cleareBtn{
+    float: right;
+    background: transparent;
+    border: 1px solid #ccc;
+    color: #3441a6;
+    padding: 3px;
+}
+.cleareBtn:hover{
+    background: none;
+}
+
+#slider-image, #news {
+    margin: 10px 0 20px 0;
+}
+.slider-wrapper {
+    border-color: #ffffff !important;
+    -moz-box-shadow: 5px 3px 10px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 5px 3px 10px rgba(0,0,0,0.2);
+    box-shadow: 5px 3px 10px rgba(0,0,0,0.2);
+}
+#slider-image{
+    height: 420px;
+    padding: 5px 0;
+}
+
+#news {
+    height: 330px;
+    width: 980px;
+    padding: 5px 0;
+    margin: 0 auto;
+    /*border: 1px solid #ccc;*/
+}
+#news a{
+    color: #328695;
+}
+#news a:hover{
+    color: #175560;
+}
+#news .headline {
+    float: left;
+    width: 308px;
+    height: 300px;
+    /*border: 1px solid red;*/
+}
+
+#news .headline .title {
+    /*border: 1px solid red;*/
+    min-height: 70px;
+}
+#news .headline .shortdesc {
+    /*border: 1px solid;*/
+}
+#news .headline .title{
+    font-size: 1.2em;
+}
+#news .headline p{
+    text-align: justify;
+}
+#news .headline p.title{
+    text-align: left;
+}
+
+/*--------------------------------------------
+                 INTEGRASI.css
+---------------------------------------------*/
+
+.api-data{
+    background: #fff;
+    padding: 5px;
+}
+.api-data .caption{
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 0;
+}
+.api-data .caption span{
+    text-transform: uppercase;
+}
+.api-data table thead{}
+.api-data table thead tr{}
+.api-data table thead tr td{
+    background: #101045;
+    color: #fff;
+    padding: 10px 5px;
+}
+.api-data table tbody{}
+.api-data table tbody tr{}
+.api-data table tbody tr td{
+    padding: 10px 5px;
+}
+#cuacaID{}
+#tbl-cuacaID{
+    width: 100%;
+}
+
+.links{
+    clear: both;
+    width: 825px;;
+    height: auto;
+    min-height: 100px;
+    margin : 0 auto;
+    text-align: center;
+}
+.links a{
+    float: left;
+    height: 35px;
+    width: 35px;
+    padding: 10px;
+    margin: 3px;
+    border: 1px solid #CCD5DD;
+    background: #dfe1e3;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    -moz-transition: background 0.5s;
+    -webkit-transition: background 0.5s;
+}
+.links a img{
+    height: 35px;
+    width: 35px;
+}
+
+.links a:hover{
+    float: left;
+    height: 35px;
+    width: 35px;
+    padding: 10px;
+    margin: 3px;
+    background: #fff;
+    border: 1px solid #CCD5DD;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+}
+
+/*-------------------------------------------------
+        Latihan - Kekuatan Sendiri
+--------------------------------------------------*/
+table.sendiri {
+    border: 1px solid blue;
+    background-color : #fff !important;
+}
+table.sendiri td,table.sendiri th {padding: 5px;}
+
+table.sendiri th {
+    background-color: blue;
+    border: 1px solid blue;
+    color: white;
+}
+
+table.sendiri th{
+    background-color: blue;
+    border: 1px solid blue;
+    color: white;
+}
+
+table.sendiri td {
+    border-left: 1px solid blue;
+    border-right: 1px solid blue;
+}
+
+table.child-sendiri {
+    border: none !important;
+    background-color : #fff !important;
+}
+table.child-sendiri tr td {
+    border: none !important;
+}
+
+/*-------------------------------------------------
+        Custom Style Untuk openlayer PopupFormCloud
+--------------------------------------------------*/
+.olFramedCloudPopupContent{}
+.myPopupContent {
+    padding: 2px;
+    height: 158px;
+}
+
+/*-------------------------------------------------
+        Latihan - Kekuatan Musuh
+--------------------------------------------------*/
+table.musuh {
+    border: 1px solid #FF0000;
+    background-color : #fff !important;
+}
+table.musuh td,table.musuh th {padding: 5px;}
+
+table.musuh th {
+    background-color: #FF0000;
+    border: 1px solid blue;
+    color: white;
+}
+
+table.musuh th{
+    background-color: #FF0000;
+    border: 1px solid #FF0000;
+    color: white;
+}
+
+table.musuh td {
+    border-left: 1px solid #FF0000;
+    border-right: 1px solid #FF0000;
+}
+
+table.child-musuh {
+    border: none !important;
+    background-color : #fff !important;
+}
+table.child-musuh tr td {
+    border: none !important;
+}
+
+/*-------------------------------------------------
+        Overlay Hover
+--------------------------------------------------*/
+.grey-hover{
+   background-color:#dfe1e3;
+   opacity:0.5;
+   width:55px;
+   height:55px;
+   position:absolute;
+   left:0;
+   top:0
+
+}
+
+span.label-float {
+    float: left;
+    display: block;
+    font-weight: bold;
+    margin: 6px 0;
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+input.number-align {
+    text-align: right;
+    padding-right: 5px;
+}
+
+/*-------------------------------------------------
+        CSS Excel Reader
+--------------------------------------------------*/
+table.excel {
+    width: 100%;
+    background: #ffffff;
+	border-style:ridge;
+	border-width:1px;
+	border-collapse:collapse;
+	font-family:sans-serif;
+	font-size:12px;
+}
+table.excel thead th, table.excel tbody th {
+	background:#CCCCCC;
+	border-style:ridge;
+	border-width:1px;
+	text-align: center;
+	vertical-align:bottom;
+    padding: 3px;
+}
+table.excel tbody th {
+	text-align: center;
+	width: 20px;
+}
+table.excel tbody td {
+	/*vertical-align: bottom;*/
+}
+table.excel tbody td {
+    padding: 0 3px;
+	border: 1px solid #EEEEEE;
+}
+
+
+/*-------------------------------------------------
+        Caption Slider
+--------------------------------------------------*/
+.mini-slider-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.inblock-start {
+	display: inline-block;
+    position: absolute;
+    z-index: 100;
+    top: 45px;
+    float:left;
+    left: 0px;
+}
+
+.inblock-end {
+	display: inline-block;
+    position: absolute;
+    z-index: 100;
+    top: 45px;
+    margin-left: -20px;
+}
+
+.inblock-slider-start {
+	display: inline-block;
+    position: absolute;
+    z-index: 100;
+    top: 40px;
+    float:left;
+    left: 5px;
+    font-weight: normal;
+}
+
+.inblock-slider-end {
+	display: inline-block;
+    position: absolute;
+    z-index: 100;
+    top: 40px;
+    right: 5px;
+    font-weight: normal;
+}
+
+.inblock-caption {
+	display: inline-block;
+    position: absolute;
+    z-index: 100;
+}
+
+.range-caption {
+    font-size: 10px;
+}
+
+.printer{
+    border: 1px solid #BEBEBE;
+    border-radius: 3px 3px 3px 3px;
+    margin: 10px 0;
+    padding: 5px 10px;
+    position: absolute;
+    right: 10px;
+    top:35px;
+    width: 110px;
+    z-index: 500;
+}
+
+.send-draft{
+    background: url(../images/icons/send-telegram.png) no-repeat scroll left center transparent;
+    border: 1px solid #BEBEBE;
+    border-radius: 3px 3px 3px 3px;
+    position: absolute;
+    right: 10px;
+    bottom:22px;
+    text-align: center;
+    width: 100px;
+    padding: 18px 0 18px 28px;
+}
+
+a.send-draft span{
+    margin-left: 18px;
+}
+

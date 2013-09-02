@@ -1,0 +1,31 @@
+<div class="flat_area grid_16">
+	<p>
+		<a href="<?php echo $this->url(array('action'=>'pergerakan')); ?>" class="roundall_grey back_icon float-right">
+			<span class="ml22">Kembali</span>
+		</a>
+	</p>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Tambah Pergerakan Musuh</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<script>
+$(function() {
+	$('input[name="tanggal"]').datepicker({
+		dateFormat: 'yy-mm-dd'
+	});
+	$('input[name="waktu"]').timepicker({
+		showSecond: true,
+		timeFormat: 'hh:mm:ss'
+	});
+});
+</script>

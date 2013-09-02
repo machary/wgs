@@ -1,0 +1,42 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Fasilitas Perbekalan</h2>
+	<div class="block">
+		<table id="table-dtables" class="display">
+			<thead>
+				<tr>
+					<th>Pangkalan</th>
+					<th>Jumlah Fasbek</th>
+					<th></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+    var oTable = $('#table-dtables').dataTable({
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "bFilter": false,
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : '<?php echo $this->url(array('action'=>'dataapi')); ?>',
+        "fnServerData" : function(sSource, aoData, fnCallback) {
+            // @optional filter category content
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        },
+		'aoColumns' : [null,null,{bSortable: false}]
+    });//.makeEditable();
+});
+</script>

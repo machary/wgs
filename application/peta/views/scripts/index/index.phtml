@@ -1,0 +1,83 @@
+<?php
+$this->inlineScript()->appendFile( $this->jsUrl( 'view/tesgis.js' ) );
+//$this->inlineScript()->appendFile( $this->jsUrl( 'view/map-autocomplete.js' ) );
+?>
+<style type="text/css">
+    #map{
+        height: 600px;border: 1px solid red;
+    }
+    #wrapper {
+        width: 737px;
+    }
+</style>
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+        //    Openlayer start here
+        var proxyUrl = "<?php echo $this->baseUrl('peta/proxy/?url='); ?>";
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>
+
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Test Map GIS</h2>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+<!--            <label for="find-location">Find Location</label>-->
+<!--            <input name="find-location" id="find-location">-->
+            <div id="map"></div>
+            <select name="features" size="1" id="features">
+                <option selected="selected" value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="150">150</option>
+                <option value="200">200</option>
+                <option value="300">300</option>
+                <option value="400">400</option>
+            </select>
+
+            <select name="refreshinterval" id="refreshinterval" size="1">
+                <option value="5000">5 Seconds</option>
+                <option value="2000">2 Seconds</option>
+                <option selected="selected" value="1000">1 Second</option>
+                <option value="750">0.75 Seconds</option>
+                <option value="500">0.5 Seconds</option>
+            </select>
+            <div  id="update"></div>
+        </div>
+        <div id="wrapper">
+            <div id="location"></div>
+            <div id="scale">
+            </div>
+        </div>
+        <div style="min-height: 200px; border: 1px solid blue" id="tampung-data"></div>
+
+    </div>
+
+</div>
+<style type="text/css">
+    .olControlOverviewMap {
+        left: 0px;
+        right: auto;
+        bottom: 0px;
+    }
+
+    .olControlNavToolbar {
+        left: 0px;
+        right: auto;
+        top: 60px;
+    }
+
+    .olControlZoomPanel{
+        left: 5px;
+        right: auto;
+        top: 5px;
+    }
+
+</style>

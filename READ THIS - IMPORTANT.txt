@@ -1,0 +1,18 @@
+Cara menghidupkan/Mematikan Server Mongrel - Redmine
+------------------------------------------
+Menghidupkan ketikkan: sudo sh redmine-start.sh
+Mematikan :
+1. ketikkan: ps axl | grep SCREEN
+2. Lihat id process untuk redmine (angka ke tiga dari kiri)
+3. ketikkan: kill -9 id process nya
+
+
+Posisi repository git
+---------------------
+repo git dibuat di /home/user/project
+
+Cara clone:
+Url: ssh://user@10.1.1.119/home/user/project/repo.git
+
+IP di vmware diset static 10.1.1.119 kalau bentrok diubah saja di kanan atas dari vmware
+jangan lupa ganti url nya git nya kalo diganti

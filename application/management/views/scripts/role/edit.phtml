@@ -1,0 +1,10 @@
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'index', 'id'=>null)); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<?php
+$this->form->setAction($this->url());
+echo $this->form;
+?>

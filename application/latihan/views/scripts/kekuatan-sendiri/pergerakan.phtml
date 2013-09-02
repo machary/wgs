@@ -1,0 +1,60 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Pergerakan Sendiri</h2>
+	<p>
+		<a href="<?php echo $this->url(array('action'=>'pergerakan.add')); ?>" class="roundall_grey add_icon">
+			<span class="ml22">Pergerakan Sendiri Baru</span>
+		</a>
+	</p>
+	
+	<div class="block">
+		<table id="table-dtables" class="display">
+			<thead>
+				<tr>
+					<th>Tanggal</th>
+					<th>Waktu</th>
+					<th>Keterangan</th>
+					<th></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+<div class="flat_area grid_16">
+	<p><a href="<?php echo $this->url(array('action'=>'index')); ?>">Kembali</a></p>
+</div>
+
+<script type="text/javascript">
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+$(function(){
+	var oTable = $('#table-dtables').dataTable({
+		"bJQueryUI": true,
+		"sScrollX": "",
+		"bSortClasses": false,
+		"aaSorting": [[0,'asc']],
+		"bAutoWidth": true,
+		"bInfo": true,
+		"bFilter": true,
+		"sScrollY": "100%",
+		"sScrollX": "100%",
+		"bScrollCollapse": true,
+		"sPaginationType": "full_numbers",
+		"bProcessing" : true,
+		"bServerSide" : true,
+		"sAjaxSource" : '<?php echo $this->url(); ?>',
+		"fnServerData" : function(sSource, aoData, fnCallback) {
+			jQuery.getJSON(sSource, aoData, function(json) {
+				fnCallback(json);
+			});
+		},
+		'aoColumns' : [
+			{bSearchable: false},
+			{bSearchable: false},
+			null,
+			{bSortable: false, bSearchable: false, sWidth: '100px'}
+		]
+	});
+	
+	new Filterer(oTable);
+});
+</script>

@@ -1,0 +1,29 @@
+<div class="flat_area grid_16">
+    <h2>Rekap Penilaian</h2>
+    <div class="block">
+        <table class="display simple-table">
+            <thead>
+            <tr>
+                <th class="ps">Produk Staf</th>
+                <?php foreach($this->data as $team): ?>
+                <th class="<?php echo $team['team_name']; ?>"><?php echo $team['team_name']; ?></th>
+                <?php endforeach ?>
+            </tr>
+            </thead>
+            <tbody>
+                <?php foreach($this->ps as $ps): ?>
+                <tr>
+                    <td class="ps"><?php echo $ps['nama_product_staff']; ?></td>
+                    <?php foreach($this->data as $data): ?>
+                        <?php if($ps['id'] == $data['id_product_staff']): ?>
+                            <td class="<?php echo $team['team_name']; ?>"><?php echo $data['nilai']; ?></td>
+                        <?php else: ?>
+                            <td class="<?php echo $team['team_name']; ?>">-</td>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                </tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+    </div>
+</div>

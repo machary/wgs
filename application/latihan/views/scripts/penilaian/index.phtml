@@ -1,0 +1,80 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Penilaian</h2>
+</div>
+<div class="grid_16">
+	<div class="box clearfix grid_5">
+		<h2 class="box_head grad_colour round_top">Nama Produk Staff</h2>
+		<div id="list">
+			<div class="list-content">
+				<ul>
+					<?php foreach($this->produkstaff as $ps): ?>
+						<li><span id="ps-<?php echo $ps['id'];?>"><?php echo $ps['nama_product_staff'];?></span></li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="grid_11">
+		<table id="table-dtables" class="display">
+			<thead>
+			<tr>
+				<th>Nama Team</th>
+				<th>Nama Kogas</th>
+				<th>Skenario Latihan</th>
+				<th>Nilai</th>
+				<th></th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+<style type="text/css">
+	#table-dtables_processing {
+		margin-left: 200px;
+	}
+</style>
+
+<script type="text/javascript">
+	$(function(){
+		var $idps = null;
+
+		var oTable = $('#table-dtables').dataTable({
+			"bJQueryUI": true,
+			"sScrollX": "",
+			"bSortClasses": false,
+			"aaSorting": [[0,'asc']],
+			"bAutoWidth": true,
+			"bInfo": true,
+			"bFilter": true,
+			"sScrollY": "100%",
+			"sScrollX": "100%",
+			"bScrollCollapse": true,
+			"sPaginationType": "full_numbers",
+			"bProcessing" : true,
+			"bServerSide" : true,
+			"sAjaxSource" : '<?php echo $this->url(); ?>',
+			"fnServerData" : function(sSource, aoData, fnCallback) {
+				// @optional filter category content
+
+				aoData.push({
+					"name": "idps",
+					"value":  $idps
+				});
+
+				jQuery.getJSON(sSource, aoData, function(json) {
+					fnCallback(json);
+				});
+			},
+			'aoColumns' : [null,null,null,null,{bSortable: false}]
+		});
+
+
+		$('.list-content ul li span').click(function(){
+			var myarr = $(this).attr('id').split("-");
+			$idps = myarr[1];
+
+			oTable.fnDraw();
+		});
+	});
+</script>

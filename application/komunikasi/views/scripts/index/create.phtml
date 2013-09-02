@@ -1,0 +1,37 @@
+<div class="flat_area grid_16">
+
+	<a class="roundall_grey back_icon float-right" href="<?php echo $this->siteUrl('komunikasi'); ?>">
+		<span class="ml22">Kembali</span>
+	</a>
+
+	<div class="box grid_8 round_all">
+		<h2 class="box_head grad_colour">Membuat Ruang Diskusi</h2>
+		<div class="toggle_container">
+			<div class="block">
+				<?php
+					$this->form->setAction($this->siteUrl('komunikasi/index/saveroom'));
+					echo $this->form;
+				?>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+
+	var defaultRoomPw = <?php echo $this->defaultPassword; ?>
+
+	$(function(){
+		$('#status').change(function(){
+			if($(this).val() == 'open'){
+				$('#label_attendeePW').hide();
+				$('#attendeePW').hide().val(defaultRoomPw);
+			}else{
+				$('#label_attendeePW').show();
+				$('#attendeePW').show().val('');
+			}
+		});
+	});
+
+</script>

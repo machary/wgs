@@ -1,0 +1,135 @@
+Zend Project Standard
+=====================
+
+Sangkuriang menggunakan Zend Framework dalam membangun web application. Zend 
+Framework bisa dipakai dengan cara macam-macam. Dokumen ini dibuat untuk menetapkan 
+berbagai standard yang akan dipakai dalam project.
+
+
+Pengaturan Server
+-----------------
+Zend mendukung pemisahan konfigurasi berdasarkan konstanta APPLICATION_ENV. Ini
+bertujuan untuk memudahkan deployment project. Kalau berjalan lancar, deployment
+project akan berupa sekedar upload seluruh file tanpa perlu mengedit apapun lagi.
+Untuk itu, di setiap web server development (Apache di komputer lokal tiap-tiap 
+programmer) tambahkan baris ini pada httpd.conf:
+
+	SetEnv APPLICATION_ENV development
+
+Dengan begini, project di lokal akan menggunakan pengaturan "development", sedangkan
+di server deployment akan menggunakan pengaturan default, yaitu "production". 
+Nama pengaturan default bisa dilihat pada file /public/index.php:
+
+	defined('APPLICATION_ENV')
+		|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+
+
+Struktur Direktori
+------------------
+Menggabungkan Zend Framework Manual's Recommended Project Directory Structure
+	http://framework.zend.com/manual/en/project-structure.project.html
+dan Zend Framework Manual's Using a Conventional Modular Directory Structure
+	http://framework.zend.com/manual/en/zend.controller.modular.html
+dihasilkanlah struktur seperti ini:
+
+	application/
+		default/
+			controllers/
+				IndexController.php
+				FooController.php
+			models/
+			views/
+				scripts/
+					index/
+					foo/
+				helpers/
+				filters/
+		module1/
+			controllers/
+				IndexController.php
+			models/
+			views/
+				scripts/
+					index/
+				helpers/
+				filters/
+		layouts/
+			layout.phtml
+		application.ini
+		Bootstrap.php
+	data/
+		cache/
+		indexes/
+		locales/
+		logs/
+		sessions/
+		uploads/
+	docs/
+	library/
+	public/
+		css/
+		images/
+		js/
+		.htaccess
+		index.php
+	scripts/
+        jobs/
+        build/
+	temp/
+	tests/
+	
+Esensinya adalah module default disejajarkan dengan module-module lain. Untuk 
+mencapai bentuk struktur di atas, diperlukan beberapa modifikasi dan guideline
+(dasarnya zf create project):
+	
+	Lokasi application.ini:
+		Satu-satunya script yang perlu path ke application.ini adalah /public/index.php
+			
+			$application = new Zend_Application(
+				APPLICATION_ENV,
+				APPLICATION_PATH . '/application.ini'
+			);
+	
+	Set module directory:
+		Path ke module diubah agar menjadi APPLICATION_PATH pada application.ini:
+		
+			resources.frontController.moduleDirectory = APPLICATION_PATH
+			
+	Layout:
+		Satu direktori layout untuk semua module (application.ini):
+			
+			resources.layout.layoutPath = APPLICATION_PATH "/layouts/"
+	
+	Module:
+		Isi tiap-tiap direktori module mengikuti mapping autoloader:
+		
+			forms/       => Form
+			models/      => Model
+				DbTable/ => Model_DbTable
+				mappers/ => Model_Mapper
+			plugins/     => Plugin
+			services/    => Service
+			views/
+				helpers  => View_Helper
+				filters  => View_Filter
+		
+		Contoh: file /application/module1/forms/Apply.php berisi class Module1_Form_Apply
+
+	Menambah komponen baru:
+		Lakukan secara manual (create direktori, create file) karena Zend_Tool
+		command-line zf sudah tidak jalan lagi dengan struktur direktori seperti 
+		ini. 
+		Ingat: semua nama class komponen punya prefix nama modulenya, bahkan default
+			Contoh: /application/default/models/Lala.php berisi class Default_Model_Lala
+		Pengecualian: controller di dalam module default tanpa prefix
+			Contoh: /application/default/controllers/HuhuController.php berisi class HuhuController
+			sedangkan /application/module1/controllers/HahaController.php berisi class Module1_HahaController
+		
+	Tambah Module:
+		buat direktori /application/<module>
+		buat file /application/<module>/Bootstrap.php berisi:
+		
+			class <Module>_Bootstrap extends Zend_Application_Module_Bootstrap
+			{}
+			
+		bootstrap ini untuk mengaktifkan resource autoloader mapping

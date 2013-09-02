@@ -1,0 +1,19 @@
+<div class="grid_16" style="margin-bottom: 5px;">
+    <a href="<?php echo $this->url( array('action' => 'index'));?>" class="roundall_grey back_icon float-right">
+        <span class="ml22">Kembali</span>
+    </a>
+</div>
+<div class="box grid_16">
+    <div class="toggle_container">
+        <div class="block" style="opacity: 1; ">
+            <div class="section">
+                <h1><?php echo $this->news['judul'];?></h1>
+                <small>
+                    <?php echo $this->date($this->news['tanggal'], '-', 'id');?>
+                </small>
+                <p></p>
+                <?php echo $this->news['berita'];?>
+            </div>
+        </div>
+    </div>
+</div>

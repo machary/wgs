@@ -1,0 +1,64 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Upload Gambar Slider</h2>
+
+    <?php if ($this->alert) : ?>
+    <div class="alert alert_red">
+        <img width="24" height="24" src="<?php echo $this->imgUrl('icons/small/white/Alert%202.png'); ?>">
+        <?php echo $this->alertmessage; ?>
+    </div>
+    <?php endif; ?>
+
+    <div style="margin: 0 auto 20px;">
+        <form action="" method="post" enctype="multipart/form-data"">
+            <input type="file" name="file" id="file" />
+            <input type="hidden" id="x" name="x" value="0" />
+            <input type="hidden" id="y" name="y" value="0"/>
+            <input type="hidden" id="w" name="w" value="400"/>
+            <input type="hidden" id="h" name="h" value="980"/>
+            <input type="submit" value="Upload" />
+        </form>
+    </div>
+
+    <div class="toggle_container" style="display: block; ">
+        <div class="block">
+            <table id="data_table" class="display">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th width="20%">Tanggal</th>
+                        <th width="20%">Opsi</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        var oTable = $('#data_table').dataTable( {
+            "bJQueryUI": true,
+            "sScrollX": "",
+            "bSortClasses": false,
+            "aaSorting": [[0,'desc']],
+            "bAutoWidth": true,
+            "bInfo": true,
+            "aoColumns":[
+                null,
+                null,
+                {bSortable:false}
+            ],
+            "sScrollY": "100%",
+            "sScrollX": "100%",
+            "bScrollCollapse": true,
+            "sPaginationType": "full_numbers",
+            "bProcessing" : true,
+            "bServerSide" : true,
+            "bSearchable" : false,
+            "sAjaxSource" : baseUrl + '/cms/home/dataapiimage'
+        })//.makeEditable()
+    });
+</script>

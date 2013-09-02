@@ -1,0 +1,84 @@
+<div class="flat_area grid_16">
+    <h2>Daftar Login</h2>
+    <p>
+        <a class="roundall_grey add_icon" href="javascript:void(0);">
+            <span id="new-user" class="ml22">Tambah Login</span>
+        </a>
+    </p>
+
+    <div class="block">
+        <table id="table-dtables" class="display">
+            <thead>
+            <tr>
+                <th>Jabatan</th>
+                <th>Username</th>
+                <th>Nama</th>
+                <th></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<!-- dialog form new user -->
+<div id="dialog-add-user" class="hidden box">
+    <div class="block">
+        <?php echo $this->form; ?>
+    </div>
+</div>
+
+
+<script>
+
+    $(function() {
+// inisiasi dialog
+        $newUser = $('#dialog-add-user');
+        $newUser.dialog({
+            autoOpen: false,
+            modal: true,
+            title: 'Tambah User Baru',
+            width: 400,
+            height: 500
+        });
+
+        // inisiasi tombol add titik
+        $('#new-user').bind('click', function(e) {
+            $newUser.dialog('open');
+            $('#username').focus();
+        });
+
+        var oTable = $('#table-dtables').dataTable({
+            "bJQueryUI": true,
+            "sScrollX": "",
+            "iDisplayLength": 50,
+            "bSortClasses": false,
+            "aaSorting": [[0,'asc']],
+            "bAutoWidth": true,
+            "bInfo": true,
+            "bFilter": true,
+            "sScrollY": "100%",
+            "sScrollX": "100%",
+            "bScrollCollapse": true,
+            "sPaginationType": "full_numbers",
+            "bProcessing" : true,
+            "bServerSide" : true,
+            "sAjaxSource" : '<?php echo $this->url(); ?>',
+            "fnServerData" : function(sSource, aoData, fnCallback) {
+                jQuery.getJSON(sSource, aoData, function(json) {
+                    fnCallback(json);
+                });
+            },
+            'aoColumns' : [
+                {bSearchable: false},
+                null,null,
+                {bSortable: false, bSearchable: false, sWidth: '150px'}
+            ]
+        });
+
+        new Filterer(oTable);
+    });
+
+
+</script>
+

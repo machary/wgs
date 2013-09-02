@@ -1,0 +1,50 @@
+<object style="position:absolute" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="1" height="1" id="audio1" align="middle">
+    <embed src="<?php
+    $tone = $this->baseUrl('./swf/success.wav');
+    echo $this->baseUrl('./swf/wavplayer.swf?gui=none&h=1&w=1&sound='. $tone .'&'); ?>" bgcolor="#ffffff" width="1" height="1" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
+
+<script type="text/javascript">
+    var dumHitung = 0;
+    $(function(){
+        setInterval(callRefresh,3000);
+        $('#toggle').live('click',function(){
+            $('#gritter-notice-wrapper').hide("slide", { direction: "up" }, 400);
+            $(this).animate({
+                top: '-=380'
+            }, 400, function() {
+                $(this).removeAttr('style');
+                $(this).attr('id','toggle-up');
+                $('#toggle-up').show();
+            });
+        });
+        $('#toggle-up').live('click',function(){
+            $('#gritter-notice-wrapper').show("slide", { direction: "up" }, 1000);
+            $(this).animate({
+                top: '+=406'
+            }, 980, function() {
+                $(this).attr('id','toggle');
+                $('#toggle').show();
+            });
+        });
+    });
+
+    function callRefresh(){
+        $.get('<?php echo $this->siteUrl('peta/telegram/refresh'); ?>',
+            function(data) {
+                var hitung = data[0]['hitung'];
+                    if(parseInt(dumHitung) != parseInt(hitung))
+                    {
+                        $('#gritter-notice-wrapper').html('');
+                        $('#counterTelegram').text(parseInt(hitung));
+                        for(var i=0; i<parseInt(hitung); i++)
+                        {
+                            addMax(data[0]['detail'][i]['idtelegram'],
+                                   data[0]['detail'][i]['nomor_telegram'],
+                                   data[0]['detail'][i]['datetime']);
+                        }
+                        dumHitung = parseInt(hitung);
+                    }
+            },'json');
+    }
+</script>

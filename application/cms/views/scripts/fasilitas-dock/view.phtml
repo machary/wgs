@@ -1,0 +1,14 @@
+<?php $this->printGoBackUrl($this->url(array('action'=>'index', 'id'=>null))); ?>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Fasilitas Helling Dock</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php foreach($this->obj->toViewArray() as $key => $value) : ?>
+            <label><?php echo $key; ?>:</label>
+            <label style="font-weight: normal;"><?php echo $value; ?></label>
+            <br />
+            <?php endforeach; ?>
+		</div>
+	</div>
+</div>

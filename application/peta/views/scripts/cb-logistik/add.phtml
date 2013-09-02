@@ -1,0 +1,23 @@
+<div class="map-top-nav">
+    <a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+        <span class="ml22">Kembali</span>
+    </a>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Tambah CB Logistik</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php
+            $identity = Zend_Auth::getInstance()->getStorage()->read();
+			$this->form->setAction($this->url());
+            $this->form->getElement('id_team')->setValue( $identity->id_team);
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$('.tgl').datepicker();
+</script>

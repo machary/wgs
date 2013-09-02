@@ -1,0 +1,488 @@
+<style type="text/css">
+	#topbuttons {
+		float: left;
+	}
+	#topbuttons button {
+		margin-bottom: 0;
+	}
+
+</style>
+<div class="flat_area grid_16">
+
+	<!-- box header label -->
+	<h2>STANDAR MAP</h2>
+	<!-- container -->
+	<div class="toggle_container" style="display: block; ">
+
+		<div id="map-wrapper" class="block">
+            <div class="map-data">
+                <div class="box no-margin">
+                    <h2 id="marker-caption" class="box_head grad_colour">Data Daerah Peta Yang Di Klik</h2>
+                    <a href="#" class="grabber">&nbsp;</a>
+                    <a href="#" class="toggle">&nbsp;</a>
+                    <div id="tampung-data" class="toggle_container">
+
+                    </div>
+                </div>
+            </div>
+			<div id="map"></div>
+            <div id="wrapper">
+                <div id="location" style="float:right">location</div>
+                <div id="scale" style="float:left"></div>
+                <div id="coordclick" style="width:350px;margin:auto">Koordinat: <input size="50"></div>
+            </div>
+	    </div>
+	</div>
+
+</div>
+
+<script>
+// global map object
+var map;
+// map layers
+var tiled, pusat_lan_lanta, area_lantamal,teritori,zee,kedalaman,alki,wilayah_kodam,pusat_kodam,batalyon,bandara,pelabuhan,logistik,rs,ikan,musuh,radar;
+// var geoUrl = "http://10.1.1.18:8080/geoserver/wms";
+var geoUrl = "http://10.1.1.111:8080/geoserver/wms";
+
+$(function(){
+	/* == Initializing Map */
+	var format = 'image/png';
+
+	var options = {
+		controls: [],
+        maxResolution:0.1,
+		projection: "EPSG:4326",
+		units: 'degrees',
+        restrictedExtent: new OpenLayers.Bounds(95.115729755272, -12.012413207701, 140.70672975527, 7.4095867922987)
+	};
+	map = new OpenLayers.Map('map', options);
+	/* == End of Initializing Map */
+
+	/* == Setup map layers */
+	tiled = new OpenLayers.Layer.WMS(
+        "Provinsi", geoUrl,
+        {
+            layers: 'dangkal,wil_provinsi,kompas,sungai,grid,dll',
+            STYLES: '',
+			bgcolor: '0xFFFFFF',
+            format: format
+        },
+        {isBaseLayer: true, displayInLayerSwitcher:false}
+    );
+
+	teritori = new OpenLayers.Layer.WMS( "Base Map Dishidros|Teritorial",
+        geoUrl, {
+            transparent : true,
+            layers: 'laut_teritori',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+
+    zee = new OpenLayers.Layer.WMS( "Base Map Dishidros|ZEE",
+        geoUrl, {
+            transparent : true,
+            layers: 'zee',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+	
+	kedalaman = new OpenLayers.Layer.WMS( "Base Map Dishidros|Anotasi Kedalaman",
+        geoUrl, {
+            transparent : true,
+            layers: 'elevation',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+
+    alki = new OpenLayers.Layer.WMS( "Base Map Dishidros|ALKI",
+        geoUrl, {
+            transparent : true,
+            layers: 'alki',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+
+	
+	/* == Map layers Kesatuan AL*/
+    pusat_lan_lanta = new OpenLayers.Layer.WMS(
+        "Kesatuan AL|Pusat Lantamal dan Lanal", geoUrl,
+        {
+            layers: 'pst_lanal',
+            STYLES: '',
+            format: format,
+            transparent:true
+        },
+        {isBaseLayer:false,visibility: false}
+    );
+
+    area_lantamal = new OpenLayers.Layer.WMS( "Kesatuan AL|Wilayah Lantamal",
+        geoUrl, {
+            transparent : true,
+            layers: 'wil_lantamal',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+	posal = new OpenLayers.Layer.WMS( "Kesatuan AL|Pos AL",
+        geoUrl, {
+            transparent : true,
+            layers: 'posal',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+	pelud = new OpenLayers.Layer.WMS( "Kesatuan AL|Pelabuhan Udara",
+        geoUrl, {
+            transparent : true,
+            layers: 'pelud',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+	sional = new OpenLayers.Layer.WMS( "Kesatuan AL|Stasion AL",
+        geoUrl, {
+            transparent : true,
+            layers: 'sional',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+	sionudal = new OpenLayers.Layer.WMS( "Kesatuan AL|Stasion Udara AL",
+        geoUrl, {
+            transparent : true,
+            layers: 'sionudal',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+	lanudal = new OpenLayers.Layer.WMS( "Kesatuan AL|Pangkalan Udara AL",
+        geoUrl, {
+            transparent : true,
+            layers: 'lanudal',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+	lanmar = new OpenLayers.Layer.WMS( "Kesatuan AL|Pangkalan Marinir",
+        geoUrl, {
+            transparent : true,
+            layers: 'lanmar',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+
+
+
+	/* == Map layers Kesatuan AU*/
+    radar = new OpenLayers.Layer.WMS(
+        "Kesatuan AU|Radar AU", geoUrl,
+        {
+            layers: 'radar',
+            STYLES: '',
+            format: format,
+            transparent:true
+        },
+        {isBaseLayer:false,visibility: false}
+    );
+
+    /* == Map layers Kesatuan AD*/
+	
+    pusat_kodam = new OpenLayers.Layer.WMS(
+        "Kesatuan AD|Pusat Kodam", geoUrl,
+        {
+            layers: 'pst_kodam',
+            STYLES: '',
+            format: format,
+            transparent:true
+        },
+        {isBaseLayer:false,visibility: false}
+    );
+	wilayah_kodam = new OpenLayers.Layer.WMS(
+        "Kesatuan AD|Wilayah Kodam", geoUrl,
+        {
+            layers: 'wil_kodam',
+            STYLES: '',
+            format: format,
+            transparent:true
+        },
+        {isBaseLayer:false,visibility: false}
+    );
+	batalyon = new OpenLayers.Layer.WMS(
+        "Kesatuan AD|Pusat Batalyon Infantri", geoUrl,
+        {
+            layers: 'yonif',
+            STYLES: '',
+            format: format,
+            transparent:true
+        },
+        {isBaseLayer:false,visibility: false}
+    );
+	
+	/* == Map layers Asset Negara*/
+    rs = new OpenLayers.Layer.WMS( "Rumah Sakit",
+        geoUrl, {
+            transparent : true,
+            layers: 'rumahsakit',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+    bandara = new OpenLayers.Layer.WMS( "Bandara",
+        geoUrl, {
+            transparent : true,
+            layers: 'bandara',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+    pelabuhan = new OpenLayers.Layer.WMS( "Pelabuhan",
+        geoUrl, {
+            transparent : true,
+            layers: 'pelabuhan',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+    logistik = new OpenLayers.Layer.WMS( "Logistik",
+        geoUrl, {
+            transparent : true,
+            layers: 'pertamina',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+	ikan = new OpenLayers.Layer.WMS( "Perikanan",
+        geoUrl, {
+            transparent : true,
+            layers: 'ikan',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+
+	/* == Map layers Asset Musuh*/
+    musuh = new OpenLayers.Layer.WMS( "Asset Musuh | Darat, Laut, Udara ",
+        geoUrl, {
+            transparent : true,
+            layers: 'musuh',
+            format: 'image/png'},{isBaseLayer: false, visibility: false}
+    );
+	
+	
+	
+	
+
+	map.addLayers([tiled,alki,teritori,zee,kedalaman,radar,
+				   area_lantamal,pusat_lan_lanta,posal,pelud,sional,sionudal,lanmar,lanudal,
+				   wilayah_kodam,pusat_kodam,batalyon,bandara,pelabuhan,logistik,rs,ikan,musuh]);
+
+    tiled.transitionEffect = "resize";
+    map.setCenter(new OpenLayers.LonLat(118.0001, -2.4), 1);
+
+	/* == End of Setup map layers */
+	
+	/* == Setting Default Controls */
+	var zp = new OpenLayers.Control.ZoomPanel();
+	map.addControl(zp);
+	zp.moveTo(new OpenLayers.Pixel(10, 10));
+	map.addControl(new OpenLayers.Control.LayerSwitcher());
+	map.addControl(new OpenLayers.Control.Scale($('#scale').get(0)));
+	map.addControl(new OpenLayers.Control.MousePosition({element: $('#location').get(0)}));
+	/* == End of Setting Default Controls */
+	
+	/* == Fitur Zoom Area + Drag Pan */
+	// override NavToolbar untuk mendisable scroll
+	var CustomNavToolbar = OpenLayers.Class(OpenLayers.Control.NavToolbar, {
+		initialize: function(options) {
+			OpenLayers.Control.Panel.prototype.initialize.apply(this, [options]);
+			this.addControls([
+				new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}), // disable scroll di sini
+				new OpenLayers.Control.ZoomBox()
+			]);
+		}
+	});
+	var ctc = new CustomNavToolbar();
+    map.addControl(ctc);
+	ctc.moveTo(new OpenLayers.Pixel(5, 70));
+	/* == End of Fitur Zoom Area + Drag Pan */
+	
+	/* == Fitur Navigator Map */
+	var ov = new OpenLayers.Control.OverviewMap({maximized: false});
+	map.addControl(ov);
+	ov.maxRatio = ov.ovmap.getResolution()/map.getResolutionForZoom(map.numZoomLevels);
+    ov.minRatio = ov.ovmap.getResolution()/map.getResolutionForZoom(0);
+	/* == End of Fitur Navigator Map */
+	
+	/* == Fitur Hitung Jarak */
+	var pointA = new OpenLayers.Feature.Vector(
+		new OpenLayers.Geometry.Point(map.getCenter().lon, map.getCenter().lat),
+		null,
+		{externalGraphic: imgUrl+"icons/small/grey/Marker.png", graphicYOffset: -16, pointRadius: 10}
+	);
+	var pointB = new OpenLayers.Feature.Vector(
+		new OpenLayers.Geometry.Point(map.getCenter().lon, map.getCenter().lat),
+		null,
+		{externalGraphic: imgUrl+"icons/small/grey/Marker.png", graphicYOffset: -16, pointRadius: 10}
+	);
+	var layerJarak = new OpenLayers.Layer.Vector('Hitung Jarak', {
+		displayInLayerSwitcher:false
+	});
+	var layerGaris = new OpenLayers.Layer.Vector('Garis Penghubung Titik Jarak', {
+		displayInLayerSwitcher:false
+	});
+	layerJarak.setVisibility(false);
+	layerGaris.setVisibility(false);
+	map.addLayers([layerGaris, layerJarak]);
+	
+	var controlLayerJarakDrag = new OpenLayers.Control.DragFeature(layerJarak, {
+		onComplete: function(feat, pixel) { // ketika selesai drag
+			var line = new OpenLayers.Geometry.LineString([pointA.geometry, pointB.geometry]);
+			var distance = line.getGeodesicLength(new OpenLayers.Projection(options.projection));
+			// gambar garis
+			var lineFeature = new OpenLayers.Feature.Vector(line, null, {
+				strokeOpacity: 0.5,
+				strokeWidth: 3
+			});
+			// remove old line
+			layerGaris.removeAllFeatures();
+			layerGaris.addFeatures([lineFeature]);
+			var text = Math.round(distance*100)/100 + ' meter'; // desimal 2 digit koma
+			if (distance > 1000) {
+				text = Math.round(distance)/1000 + ' kilometer'; // desimal 3 digit koma
+			}
+			$('#toggle-hitung-jarak').next('span').html('Jarak: '+text);
+		}
+	});
+	map.addControl(controlLayerJarakDrag);
+	controlLayerJarakDrag.activate();
+	// event klik tombol
+	$('#toggle-hitung-jarak').bind('click', function(e) {
+		layerJarak.setVisibility(!layerJarak.getVisibility());
+		layerGaris.setVisibility(layerJarak.getVisibility());
+		
+		if (layerJarak.getVisibility()) {
+			// refresh posisi marker
+			pointA.geometry.x = map.getCenter().lon;
+			pointA.geometry.y = map.getCenter().lat;
+			pointB.geometry.x = map.getCenter().lon;
+			pointB.geometry.y = map.getCenter().lat;
+			layerJarak.addFeatures([pointA, pointB]);
+		} else {
+			// bersihkan layer
+			layerGaris.removeAllFeatures();
+			layerJarak.removeAllFeatures();
+			$(this).next('span').html('');
+		}
+	})
+	.css('display', 'inline')
+	.css('float', 'none');
+	/* == End of Fitur Hitung Jarak */
+	
+	/* == Fitur Klik Dapatkan Koordinat */
+	map.events.register('click', map, function(e) {
+		var lonlat = map.getLonLatFromViewPortPx(e.xy);
+		var text = lonlat.lon + ', ' + lonlat.lat;
+		$('#coordclick').find('input').val(text).select();
+	});
+	/* == End of Fitur Klik Dapatkan Koordinat */
+	
+	/* == Fitur Klik Dapatkan Informasi Longitude Latitude */
+	map.events.register('click', map, function(e) {
+		var lonlat = map.getLonLatFromViewPortPx(e.xy);
+
+		if (willan.getVisibility()) {
+			$('#tampung-data').html('<img src="<?php echo $this->imgUrl('loading1.gif'); ?>">');
+
+			$.get('<?php echo $this->siteUrl('cms/map/get.info.lanal'); ?>', {
+				lon: lonlat.lon,
+				lat: lonlat.lat
+			}, function(data, status, xhr) {
+				$('#tampung-data').html(data);
+			}, 'html');
+		}
+	});
+	/* == End of Fitur Klik Dapatkan Informasi */
+
+    /* == get point's information */
+    map.events.register('click', map, function(e) {
+        var lonlat = map.getLonLatFromViewPortPx(e.xy);
+
+        if (lanal.getVisibility()) {
+
+            $.get('<?php echo $this->siteUrl('cms/map/get.info.lanal.point'); ?>', {
+                lon: lonlat.lon,
+                lat: lonlat.lat
+            }, function(data, status, xhr) {
+                $('#tampung-data').html(data);
+            }, 'html');
+        }
+    });
+    /* == End of et point's information */
+	
+
+	
+
+	
+	/* == Test: Layer Tree Switcher */
+	<?php $this->headLink()->appendStylesheet($this->cssUrl('view/switcher-tree.css')); ?>
+	// parsing nama layer "<NAMA PARENT>|<NAMA ANAK>" diubah jadi tree 1 level
+	/**
+	 * Convert layer switcher jadi berbentuk tree
+	 * @param JQuery $switcher div yang menampung daftar layer (class dataLayersDiv)
+	 */
+	function makeLayerTree($switcher) {
+		$switcher.attr('id', 'switcher-tree');
+		var defaultParentName = 'Asset Negara'; // HARDCODED!
+		var tree = {};
+		var br = []; // element buangan
+		var tempSpan, tempInput;
+		// retrieve all layers
+		$switcher.children().each(function(i, e) {
+			if (e.nodeName == 'INPUT') {
+				// checkbox
+				tempInput = $(e);
+			} else if (e.nodeName == 'SPAN') {
+				// label
+				tempSpan = $(e);
+			} else if (e.nodeName == 'BR') {
+				// saatnya insert elemen baru
+				br.push(e);
+				var parentName;
+				var matches;
+				if (matches = tempSpan.html().match(/^(.*)\|(.*)$/)) {
+					parentName = matches[1];
+					tempSpan.html(matches[2]);
+				} else {
+					parentName = defaultParentName;
+				}
+				if (!tree.hasOwnProperty(parentName)) {
+					tree[parentName] = [];
+				}
+				tree[parentName].push({
+					parent: parentName,
+					checkbox: tempInput,
+					label: tempSpan
+				});
+				tempInput = tempSpan = null;
+			} else {
+				// i don't know
+			}
+		});
+		// generate tree element
+		for (var pname in tree) {
+			var $parent = $('<div class="branch">');
+			var $children = $('<ul>');
+
+			$parent.html(pname);
+			$parent.bind('click', function(e) {
+				$(this).next('ul').toggle();
+			});
+			for (var i=0; i<tree[pname].length; i++) {
+				var child = tree[pname][i];
+				var $li = $('<li>');
+				$li.append(child.checkbox).append(child.label);
+				$children.append($li);
+			}
+
+			$switcher.append($parent).append($children);
+		}
+		// remove unused elements
+		for (var i=0; i<br.length; i++) {
+			$(br[i]).remove();
+		}
+		// console.log(tree);
+		return tree;
+	}
+	// remove default layer switcher control
+	var control = map.getControlsByClass('OpenLayers.Control.LayerSwitcher');
+	map.removeControl(control[0]);
+	// create new control class
+	var $switcher;
+	var switcherControl = new OpenLayers.Control.LayerSwitcher();
+	var prevRedraw = switcherControl.redraw;
+	OpenLayers.Util.extend(switcherControl, {
+		redraw: function() {
+			prevRedraw.call(switcherControl);
+			if ($switcher) makeLayerTree($switcher);
+		}
+	});
+	map.addControl(switcherControl);
+	$switcher = $('div[class="dataLayersDiv"]').first();
+	makeLayerTree($switcher);
+
+	/* == End of Test: Layer Tree Switcher */
+});
+</script>

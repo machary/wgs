@@ -1,0 +1,64 @@
+<div class="flat_area grid_16 round_all">
+	<h2>Rencana Operasi Latihan (ROL)</h2>
+	<?php if($this->showEditWarning == true): ?>
+	<div class="alert alert_green">
+		<img height="24" width="24" src="<?php echo $this->imgUrl('icons/small/white/Alert.png'); ?>">
+		Klik pada <strong>kotak kegiatan</strong> untuk mengedit!
+	</div>
+	<?php endif; ?>
+
+	<div class="block">
+		<span id="last-changed" style="clear: both;display: inline-block; float: right; font-weight: bold;">Pembaharuan Terakhir : <span><?php echo $this->lastChanged; ?></span></span>
+	</div>
+
+	<div id="mainWrapper" class="ui-corner-all wrapper">
+		<tr>
+			<td colspan="2" style="vertical-align: top;">
+				<div id="jQuerySheet0" class="jQuerySheet" style="height: 450px;">
+				</div>
+			</td>
+		</tr>
+		</table>
+	</div>
+
+
+<!--	--><?php //echo $this->render('rol/inline-menu.phtml') ?>
+
+</div>
+
+<?php
+//add required files for full calendar
+//add javascript
+$this->headScript()->appendFile($this->jsUrl('sheet/jquery.sheet.js'))
+    ->appendFile($this->jsUrl('sheet/parser.js'))
+    ->appendFile($this->jsUrl('sheet/plugins/jquery.scrollTo-min.js'))
+	->appendFile($this->jsUrl('sheet/plugins/raphael-min.js'))
+	->appendFile($this->jsUrl('sheet/plugins/g.raphael-min.js'))
+	->appendFile($this->jsUrl('sheet/plugins/jquery.elastic.min.js'))
+	->appendFile($this->jsUrl('sheet/plugins/jquery.colorPicker.min.js'));
+
+//add css
+$this->headLink()->appendStylesheet($this->cssUrl('sheet/jquery.sheet.css'))
+	->appendStylesheet($this->cssUrl('sheet/jquery.colorPicker.css'))
+	->appendStylesheet($this->cssUrl('sheet/theme/jquery-ui.css'));
+?>
+
+<script type="text/javascript">
+	$(function(){
+
+		$(function(){
+			//Here is where we initiate the sheets
+			//every time sheet is created it creates a new jQuery.sheet.instance (array), to manipulate each sheet, the jQuery object is returned
+			$('#jQuerySheet0').sheet({
+				title: false,
+				inlineMenu: false,
+				urlGet: '<?php echo $this->url(array('action'=>'eventfeed')); ?>',
+				autoFiller: true,
+				urlMenu: '',
+				urlSave: ''
+			});
+
+		});
+
+	});
+</script>

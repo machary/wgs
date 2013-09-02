@@ -1,0 +1,179 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+
+	<?php $drf = $f->isdraft; ?>
+	<?php echo $drf->renderViewHelper(); ?>
+
+    <?php $el = $f->header_telegram; ?>
+    <div id="input_group">
+        <label><?php echo $el->getLabel(); ?></label>
+        <div class="input_group">
+            <?php echo $el->renderViewHelper(); ?>
+        </div>
+    </div>
+    <?php $el = $f->header_telegram2; ?>
+    <div id="input_group">
+        <label><?php echo $el->getLabel(); ?></label>
+        <div class="input_group">
+            <?php echo $el->renderViewHelper(); ?>
+        </div>
+    </div>
+
+	<?php $el = $f->nomor_telegram; ?>
+	<label><?php echo $el->getLabel(); ?></label>
+	<div class="input_group">
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $el->renderErrors(); ?>
+	</div>
+
+	<?php $pe = $f->pengirim_id; ?>
+	<?php $ke = $f->kepada_id; ?>
+	<?php $te = $f->tembusan_id; ?>
+	<?php $el = $f->pengirim; ?>
+	<label><?php echo $el->getLabel(); ?></label>
+	<div class="input_group">
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $el->renderErrors(); ?>
+		<?php echo $pe->renderViewHelper(); ?>
+	</div>
+
+    <?php $el = $f->nama_kepada; ?>
+    <div id="input_group" style="width:390px;float:left">
+        <label><?php echo $el->getLabel(); ?></label>
+        <div class="input_group">
+            <?php echo $el->renderViewHelper(); ?>
+        </div>
+    </div>
+
+	<?php $el = $f->kepada; ?>
+	<label style="display: inline-block;"><?php echo $el->getLabel(); ?></label>
+    <input type="button" value="Pilih Tujuan" id="btn_tujuan" style="background-color: #C1F2A0;cursor: pointer;height: 26px;margin-top: 4px;"/>
+	<div id="list_tujuan" class="input_group float-left">
+        <?php echo $el->renderErrors(); ?>
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $ke->renderViewHelper(); ?>
+	</div>
+    <div style="clear: both;"></div>
+    <?php $el = $f->nama_tembusan; ?>
+    <div id="input_group" style="width:390px;float:left;">
+        <label><?php echo $el->getLabel(); ?></label>
+        <div class="input_group">
+            <?php echo $el->renderViewHelper(); ?>
+        </div>
+    </div>
+
+	<?php $el = $f->tembusan; ?>
+	<label style="display: inline-block;"><?php echo $el->getLabel(); ?></label>
+    <input type="button" value="Pilih Tembusan" id="btn_tembusan" style="background-color: #C1F2A0;cursor: pointer;height: 26px;margin-top: 4px;"/>
+	<div id="list_tembusan" class="input_group float-left">
+        <?php echo $el->renderErrors(); ?>
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $te->renderViewHelper(); ?>
+	</div>
+    <div style="clear: both;"></div>
+
+	<?php $el = $f->rahasia; ?>
+    <label style="display: inline-block;margin-top: 6px;vertical-align: top;"><?php echo $el->getLabel(); ?></label>
+	<div class="input_group" style="display: inline-block;margin:0 5px;">
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $el->renderErrors(); ?>
+	</div>
+
+	<?php $el = $f->segera; ?>
+	<label style="display: inline-block;margin-top: 6px;vertical-align: top; "><?php echo $el->getLabel(); ?></label>
+	<div class="input_group" style="display: inline-block;">
+		<?php echo $el->renderViewHelper(); ?>
+		<?php echo $el->renderErrors(); ?>
+	</div>
+
+	<?php $el = $f->isi_berita; ?>
+	<label><?php echo $el->getLabel(); ?></label>
+    <div class="input_group">
+        <div class="te">
+            <div style="width: 366px;">
+                <?php echo $el->renderViewHelper(); ?>
+            </div>
+        </div>
+        <?php echo $el->renderErrors(); ?>
+    </div>
+
+    <?php $el = $f->nama_pengirim; ?>
+    <label><?php echo $el->getLabel(); ?></label>
+    <div class="input_group">
+        <?php echo $el->renderViewHelper(); ?>
+        <?php echo $el->renderErrors(); ?>
+    </div>
+
+    <?php $el = $f->jabatan_pengirim; ?>
+    <label><?php echo $el->getLabel(); ?></label>
+    <div class="input_group">
+        <?php echo $el->renderViewHelper(); ?>
+        <?php echo $el->renderErrors(); ?>
+    </div>
+
+    <?php $identity = Zend_Auth::getInstance()->getStorage()->read(); ?>
+    <?php  if ($identity->role_id == 9): ?>
+
+        <label>Terjadwal</label>
+        <div class="input_group">
+            <input id="terjadwal" type="checkbox"/>
+        </div>
+
+    <?php endif; ?>
+
+    <?php $el = $f->jadwal; ?>
+    <div id="datehide">
+        <label><?php echo $el->getLabel(); ?></label>
+        <div class="input_group">
+            <?php echo $el->renderViewHelper(); ?>
+        </div>
+    </div>
+
+
+    <?php $el = $f->twu; ?>
+    <div id="input_group">
+        <label><?php echo $el->getLabel(); ?></label>
+        <div class="input_group">
+            <?php echo $el->renderViewHelper(); ?>
+        </div>
+    </div>
+    <?php $el = $f->twb; ?>
+    <div id="input_group">
+        <label><?php echo $el->getLabel(); ?></label>
+        <div class="input_group">
+            <?php echo $el->renderViewHelper(); ?>
+        </div>
+    </div>
+
+    <?php $team = $f->team_id; ?>
+    <?php echo $team->renderViewHelper(); ?>
+    <?php echo $team->renderErrors(); ?>
+
+    <?php $folder = $f->folder; ?>
+    <?php echo $folder->renderViewHelper(); ?>
+    <?php echo $folder->renderErrors(); ?>
+
+	<button class="button_colour round_all"  onclick='simpan();' style="clear: none;">
+		<span>Simpan Draft</span>
+	</button>
+
+	<button class="button_colour round_all"  onclick='kirim();' style="clear: none;">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+
+</form>
+<script type="text/javascript">
+	function kirim()
+	{
+		$('#isdraft').val(false);
+		editor.post();
+	}
+
+	function simpan()
+	{
+		$('#isdraft').val(true);
+		editor.post();
+	}
+
+</script>

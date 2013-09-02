@@ -1,0 +1,50 @@
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Tambah Skenario Latihan</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<script>
+$('#id_skenario_latihan').parent('.input_group').insertBefore($('#prosrenmil_id').parent('.input_group'));
+var prosrenmil = $('#prosrenmil_id').parent('.input_group');
+var label1 = $("label:contains('Jenis Skenario Latihan')");
+var label2 = $("label:contains('Pilih Prosrenmil')");
+
+$(label1).insertBefore('#id_skenario_latihan');
+$(label2).insertBefore('#prosrenmil_id');
+
+label2.hide();
+prosrenmil.hide();
+
+$(function() {
+	$('.input-date').datepicker({
+		dateFormat: 'yy-mm-dd'
+	});
+
+    $('#id_skenario_latihan').change(function(){
+        var nilai_id = $(this).attr('value');
+        if (nilai_id == 3 || nilai_id == 4 || nilai_id == 5)
+        {
+            label2.show();
+            prosrenmil.show();
+        }
+        else
+        {
+            label2.hide();
+            prosrenmil.hide();
+        }
+    });
+});
+</script>

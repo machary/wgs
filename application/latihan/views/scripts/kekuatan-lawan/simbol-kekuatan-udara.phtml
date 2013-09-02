@@ -1,0 +1,77 @@
+<button class="hapus tombol" style="padding: 5px; margin-bottom: 5px;">Hapus Kekuatan Udara</button>
+
+<form style="clear: both;" id="simbol-form" method="post" action="<?php echo $this->url(array('controller'=>'kekuatan.lawan','action'=>'save.detail')); ?>">
+	<input type="hidden" name="parentid" id="parentid" value="<?php echo $this->parentid;?>" />
+	<input type="hidden" name="matra" id="matra" value="<?php echo $this->matra;?>" />
+	<table id="unsur-table" class="simple-table">
+		<tr>
+			<th>Kesatuan</th>
+			<th>Jumlah</th>
+            <th>Keterangan</th>
+			<th></th>
+		</tr>
+		<tr>
+			<td>
+				<select name="idsimbol" id="idsimbol">
+					<?php foreach($this->simbol as $taktis):?>
+					<option value="<?php echo $taktis['id'];?>"><?php echo $taktis['singkatan'];?></option>
+					<?php endforeach;?>
+				</select>
+			</td>
+			<td><input type="text" name="jumlah" id="jumlah" /></td>
+            <td><textarea style="width: 120px;" name="keterangan" id="keterangan"></textarea></td>
+			<td><input type="submit" value="save" name="submit" /></td>
+		</tr>
+		<?php foreach ($this->detail as $item) : ?>
+		<tr class="row-detail" id="<?php echo $item['id']; ?>">
+			<td><?php echo $item['singkatan']; ?></td>
+			<td><?php echo $item['jumlah']; ?></td>
+            <td><?php echo $item['keterangan']; ?></td>
+			<td><div id="<?php echo $item['id']; ?>" class="deldetail round_all">delete</div></td>
+		</tr>
+		<?php endforeach; ?>
+	</table>
+</form>
+
+
+
+<script type="text/javascript">
+
+    var matraID = 3; //udara
+    $('.deldetail').click(function(){
+        if (confirm('Anda yakin?')){
+            var id = $(this).attr('id');
+            $.get('<?php echo $this->url(array('controller'=>'kekuatan.lawan','action'=>'hapus.detail')); ?>',
+                {
+                    id : id,
+                    matra: matraID
+                },
+                function(data, status, xhr) {
+                    $('#klaut_lawan').click();
+                    bersihkan(data, matraID);
+                },'json');
+        };
+    });
+
+	$('.hapus').click(function(){
+		var id = $(this).parent('.trplus').before('.rkterpilih').attr('id');
+		$.get('<?php echo $this->url(array('controller'=>'kekuatan.lawan','action'=>'hapus.kekuatan')); ?>',
+			{
+                id : id,
+                matra : matraID
+            },
+			function(data, status, xhr) {
+				$('#kudara_lawan').click();
+				bersihkan(data, matraID);
+			},'json');
+	});
+
+	$('#simbol-form').ajaxForm({
+		dataType: 'json',
+		success: function(data) {
+			$('#kudara_lawan').click();
+			bersihkan(data.allmusuh, matraID);
+		}
+	});
+
+</script>

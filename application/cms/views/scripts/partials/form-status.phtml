@@ -1,0 +1,89 @@
+<?php 
+	/**
+	 * The label-name attribute is set on the form class for displaying the label purpose 
+	 * ONLYif the name wont fit the label (a.e the name has underscore)
+	 * the view script will be automatically rendering the label name 
+	 * foreach element	
+	 */
+?>
+<style type="text/css">
+#both {padding:5px 0 5px 25px;border:1px solid #e5e5e5;width:450px;height:auto;}
+</style>
+<div class="box grid_16 round_all">
+    <h2 class="box_head grad_colour"><?php echo $this->element->getLegend() ?></h2>
+		<a class="grabber" href="#">&nbsp;</a>
+		<a class="toggle" href="#">&nbsp;</a>
+		<div class="toggle_container">
+			<div class="block">
+				<form
+                    <?php foreach($this->element->getAttribs() as $attribute => $value): ?>
+                    <?php echo $attribute.'="'.$value.'"'; ?>
+                    <?php endforeach; ?>
+                >
+                <?php $dumb;  ?>
+                    <?php foreach($this->element->getElements() as $e): ?>
+                        <?php if($e->getAttrib('status-show') != 'both'){?>
+								<label for="<?php echo $e->getName(); ?>">
+					               	<?php echo $e->getAttrib('label-name'); ?>
+                                    <?php if($e->isRequired()):?><strong style="color: #ff0000;">&#42;</strong><?php endif; ?>
+                                </label> 
+                                <?php echo $e; ?>
+                                <?php
+                                
+                                 if( $e->getAttrib('title') ) 
+                                 {
+                                    $dumb = $e->getAttrib('title');
+                                 }
+                                ?>
+					<?php } endforeach;?>
+                    <div id="both">
+                    <div style="width:450px;margin-left:-15px;">                            
+                        <label style="padding-bottom: 20px;">                               
+			               	Status Alat 
+                        </label>
+                    </div> 
+                            
+                    <?php foreach($this->element->getElements() as $e): ?>	
+                        <?php if($e->getAttrib('status-show') == 'both'){?>
+                            <div>
+                                <div style="width: 75px;float: left;">                            
+                                    <label for="<?php echo $e->getName(); ?>">                                   
+    					               	<?php echo $e->getAttrib('label-code'); ?>
+                                    </label>
+                                </div> 
+                                <div style="width: 250px;float: left;">                            
+                                    <label for="<?php echo $e->getName(); ?>">                                   
+    					               	<?php echo $e->getAttrib('label-name'); ?>
+                                    </label>
+                                </div> 
+                                <div style="width: 25px;float: left;">                            
+                                    <label for="<?php echo $e->getName(); ?>">                                   
+    					               	<?php echo $e->getAttrib('label-way'); ?>
+                                    </label>
+                                </div> 
+                                <div style="width: 100px;float: left;">
+                                    <?php echo $e; ?>
+                                    <?php
+                                    
+                                     if( $e->getAttrib('title') ) 
+                                     {
+                                        $dumb = $e->getAttrib('title');
+                                     } ?>
+                                </div>
+                            </div>
+                        <?php }; ?>
+                  	<?php endforeach;?>
+                    <div style="clear:both"></div>
+                </div>
+                    <div class="separator">&nbsp;</div>
+					<button class="button_colour round_all">
+                        <img width="24" height="24" src="<?php echo $this->imgUrl('icons/small/white/Bended%20Arrow%20Right.png')?>" alt="Bended Arrow Right"/>
+                        <span>Submit</span>
+                    </button>
+                    <?php echo $this->currentModule; ?>
+				</form>
+			</div>
+		</div>
+</div>
+
+

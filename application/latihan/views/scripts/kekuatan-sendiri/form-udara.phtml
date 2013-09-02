@@ -1,0 +1,35 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+
+	<?php echo $f->skenario_id->renderViewHelper(); ?>
+	<?php echo $f->skenario_id->renderErrors(); ?>
+
+
+	<label>Pangkalan Udara</label>
+	<?php echo $f->bandara_id->renderViewHelper(); ?>
+	<?php echo $f->bandara_id->renderErrors(); ?>
+
+	<label>Nama Kogas</label>
+	<?php echo $f->nama->renderViewHelper(); ?>
+	<?php echo $f->nama->renderErrors(); ?>
+
+	<div>
+		<table id="kekuatan-table" class="simple-table">
+			<tr>
+				<th>Kesatuan</th>
+				<th>Tingkat Kesatuan</th>
+                <th>Jumlah</th>
+                <th>Keterangan</th>
+				<th></th>
+			</tr>
+
+		</table>
+
+		<button id="button-tambah-row" type="button" style="float: right;">+Tambah</button>
+	</div>
+
+	<button class="button_colour round_all">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+</form>

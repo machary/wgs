@@ -1,0 +1,58 @@
+<?php
+$this->inlineScript()->appendFile( $this->jsUrl( 'view/intel.js' ) );
+?>
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Penentuan Center Of Gravity (COG)</h2>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+
+            <div id="filter-container">
+                <label for="feed-filter"></label>
+                <select id="feed-filter" onchange="selectedValue(this)">
+                    <option value="unselected" selected="selected">[Pilih]</option>
+                    <option value="COG">Center of Gravity</option>
+                    <option value="CR">Critical Requirement</option>
+                    <option value="CC">Critical Capabilities</option>
+                    <option value="CV">Critical Vunerability</option>
+                </select>
+            </div>
+
+            <table id="table-cog" class="display">
+
+                <thead>
+
+                <tr>
+                    <th><img src="<?php echo $this->imgUrl('icons/ui-check-box.png'); ?>" alt="check icon" /></th>
+                    <th>Longitude</th>
+                    <th>Latitude</th>
+                    <th>Matra</th>
+                    <th>Jenis Unsur</th>
+                    <th>Edit CR/CC/CV</th>
+                </tr>
+                </thead>
+
+            </table>
+
+            <form action="<?php echo $this->baseUrl('peta/intelijen/addcog');?>" method="post">
+                <input type="hidden" name="id_intelijen" id="id_intelijen" />
+                <input type="hidden" name="self" value="other"  />
+                <input type="hidden" name="filter_value" id="filter_value">
+                <input type="hidden" name="status" id="status">
+                <button class="roundall_grey add_icon">
+                    <span>Simpan</span>
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,41 @@
+<div class="flat_area grid_16">
+	<h2>Kekuatan Musuh - Laut - Skenario <?php echo $this->skenario->get('nomor'); ?></h2>
+	<p>
+		<a href="<?php echo $this->url(array('action'=>'laut.edit')); ?>" class="roundall_grey add_icon">
+			<span class="ml22">Lokasi Baru</span>
+		</a>
+		
+		<a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+			<span class="ml22">Kembali</span>
+		</a>
+	</p>
+	
+	<div class="block">
+		<table class="display simple-table">
+			<thead>
+				<tr>
+					<th>Nama Lokasi</th>
+					<th>Negara</th>
+					<th>Koordinat</th>
+					<th>Kekuatan</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->items as $item) : ?>
+					<tr>
+						<td><?php echo $item['nama']; ?></td>
+						<td><?php echo $item['negara']; ?></td>
+						<td><?php echo $item['longitude'].', '.$item['latitude']; ?></td>
+						<td><?php echo implode(', ', $item['kekuatan']); ?></td>
+						<td>
+							<a href="<?php echo $this->url(array('action'=>'laut.edit','id'=>$item['id'])); ?>">Ubah</a> | 
+							<a href="<?php echo $this->url(array('action'=>'laut.del','id'=>$item['id'])); ?>" onclick="return confirm('Anda yakin?')">Hapus</a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+	
+</div>

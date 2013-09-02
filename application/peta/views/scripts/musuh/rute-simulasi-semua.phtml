@@ -1,0 +1,102 @@
+<?php $this->headStyle()->captureStart(); ?>
+#animator-toolbar button {
+	float:none;
+	display: inline-block;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>$this->jenis.'.index', 'id'=>null, 'skenario_id'=>$this->skenarioId)); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour">Simulasi Semua Rute Untuk Skenario : <?php echo $this->skenario->nomor; ?></h2>
+		
+	<div id="map2"></div>
+	
+	<div class="block" id="animator-toolbar">
+		<button id="button-start" type="button">Start</button>
+		<button id="button-pause" type="button">Pause</button>
+		<button id="button-reset" type="button">Reset</button>
+		Waktu asumsi 1 detik = <input id="second2hour" value="1"> jam
+		
+		<div id="time-slider"></div>
+		State: <span id="time-notice">0</span>
+	</div>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-operasional.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-animator.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/ops-intel.js')); ?>
+<script>
+
+var animator,
+	resetFlag = true;
+
+$(function () {
+	var map,
+		layerVector,
+		$asumsi = $('#second2hour'),
+		tempTitik, tempFormasi;
+	
+	$asumsi.css('display', 'inline');
+	// inisiasi map
+	$('#map2').css('height', '500px');
+	map = standardMap('map2');
+	layerVector = new OpenLayers.Layer.Vector('Rute', {
+		displayInLayerSwitcher:false
+	});
+
+    //layer kekuatan musuh
+    //@author : tajhul.faijin
+    var layerIntel = new OpenLayers.Layer.Markers('Kekuatan Musuh', {
+   		visibility : false
+   	});
+
+	map.addLayers([layerVector, layerIntel]);
+    map.redrawSwitcherTree();
+
+    //event check/uncheck layerSwitcher
+    map.events.register('changelayer', null, function(e) {
+        if( layerIntel.getVisibility() ){
+            var $url = "<?php echo $this->siteUrl('peta/intelijen/marker.intel');?>";
+            //render intel point
+            intelPoints( layerIntel, $url ); // detailnya lihat di ops-intel.js
+        }
+    });
+
+	// refresh features after zooming
+	map.events.register('zoomend', map, function (e) {
+		animator.redraw();
+	});
+	
+	// inisiasi data
+	animator = new Animator_Multi_Formasi(layerVector, $('#time-slider'), $('#time-notice'));
+	<?php foreach ($this->items as $item) : ?>
+		tempTitik = <?php echo json_encode($item->getTitik()); ?>;
+		tempFormasi = <?php echo json_encode($item->getFormasi()); ?>;
+		animator.addItem(tempFormasi, tempTitik);
+	<?php endforeach; ?>
+	
+	// inisiasi tombol
+	$asumsi.bind('change', function (e) {
+		resetFlag = true;
+	});
+	$('#button-start').bind('click', function (e) {
+		if (resetFlag) {
+			animator.generateState(parseInt($asumsi.val(), 10), '<?php echo $this->satuan['kecepatan']; ?>');
+			resetFlag = false;
+		}
+		animator.startAnimation();
+	});
+	$('#button-pause').bind('click', function (e) {
+		animator.stopAnimation();
+	});
+	$('#button-reset').bind('click', function (e) {
+		animator.resetAnimation();
+	});
+});
+</script>

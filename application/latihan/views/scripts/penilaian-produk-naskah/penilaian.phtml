@@ -1,0 +1,109 @@
+<div class="flat_area grid_16">
+
+    <div class="map-top-nav">
+        <a href="<?php echo $this->url(array('controller'=>'penilaian.individu','action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+            <span class="ml22">Kembali</span>
+        </a>
+    </div>
+
+    <!-- box header label -->
+    <h2>Penilaian Produk Naskah</h2>
+
+    <form action="<?php echo $this->url();?>" method="POST">
+        <div class="grid_16 box clearfix no_titlebar" style="opacity: 1;">
+            <div class="indented_button_bar clearfix">
+                <h3 style="margin-bottom: 0;margin-top: 13px; margin-left: 10px; float: left;"><?php echo ucfirst($this->kogas);?></h3>
+                <a target="_blank" href="<?php echo $this->url(array('action' => 'print')); ?>" class="skin_colour green send_right on_dark text_only has_text" style="clear: none;float: right;  margin: 5px; margin-left: 0;">
+                    <span>Print</span>
+                </a>
+                <button class="light on_dark text_only has_text" style="clear: none; float: right; margin: 5px; margin-left: 0;">
+                    <span>Simpan</span>
+                </button>
+            </div>
+        </div>
+        <div class="box grid_16 no_titlebar">
+            <div class="block">
+                <input id="item_index" name="item_index" type="hidden" value="<?php echo count($this->pelaku); ?>" />
+                <table class="display simple-table">
+                    <thead>
+                    <tr>
+                        <th rowspan="2">No.</th>
+                        <th rowspan="2" colspan="3">Materi Penilaian</th>
+                        <th colspan="5">Nilai</th>
+                    </tr>
+                    <tr>
+                        <th>Mako</th>
+                        <th>LANT I</th>
+                        <th>LANT II</th>
+                        <th>LANT III</th>
+                        <th>LANT IV</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php if (!empty($this->items)) foreach ($this->items as $i => $item) : ?>
+                    <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                        <td rowspan="<?php echo $item['rowspan']; ?>" style="text-align: center; vertical-align: top; font-weight: bold;"><?php echo $item['numbering'] . '.'; ?></td>
+                        <?php if(!empty($item['the_materi'])){ ?>
+                            <td width="60%" colspan="3" style="border-bottom: none;padding: 5px; font-weight: bold;"><?php echo strtoupper($item['materi']); ?></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                            <td style="border-bottom: none;"></td>
+                        <?php } else { ?>
+                            <td width="60%" colspan="2" style="padding: 5px; font-weight: bold;"><?php echo strtoupper($item['materi']); ?></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        <?php } ?>
+                    </tr>
+                        <?php $j = 0; ?>
+                        <?php if (!empty($item['the_materi'])) foreach ($item['the_materi'] as $itemMateri) : ?>
+                            <?php if(!empty($itemMateri['the_submateri'])){ ?>
+                                <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                    <td width="5%" rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;; border-right:none; text-align: center; vertical-align: top; font-weight: bold;"><?php echo $j + 1 . '.'; ?></td>
+                                    <td colspan="2" width="60%" style="border-bottom: none; border-top: none;border-left: none;padding: 5px;"><?php echo $itemMateri['materi'] . ' ('. $itemMateri['singkatan'] . ') . ('. $itemMateri['point'] .')'; ?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="mako<?php echo $item['id'].$itemMateri['id'];?>" id="mako<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 1, $this->teamId, 'nilai');?>"/></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="lant1<?php echo $item['id'].$itemMateri['id'];?>" id="lant1<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 2, $this->teamId, 'nilai');?>"/></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="lant2<?php echo $item['id'].$itemMateri['id'];?>" id="lant2<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 3, $this->teamId, 'nilai');?>"/></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="lant3<?php echo $item['id'].$itemMateri['id'];?>" id="lant3<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 4, $this->teamId, 'nilai');?>"/></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="lant4<?php echo $item['id'].$itemMateri['id'];?>" id="lant4<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 5, $this->teamId, 'nilai');?>"/></td>
+                                </tr>
+                            <?php } else { ?>
+                                <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                    <td width="5%" rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;; border-right:none; text-align: center; vertical-align: top; font-weight: bold;"><?php echo $j + 1 . '.'; ?></td>
+                                    <td colspan="2" width="60%" style="border-top: none;border-left: none;padding: 5px;"><?php echo $itemMateri['materi'] . ' ('. $itemMateri['singkatan'] . ') . ('. $itemMateri['point'] .')'; ?></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="mako<?php echo $item['id'].$itemMateri['id'];?>" id="mako<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 1, $this->teamId, 'nilai');?>"/></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="lant1<?php echo $item['id'].$itemMateri['id'];?>" id="lant1<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 2, $this->teamId, 'nilai');?>"/></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="lant2<?php echo $item['id'].$itemMateri['id'];?>" id="lant2<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 3, $this->teamId, 'nilai');?>"/></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="lant3<?php echo $item['id'].$itemMateri['id'];?>" id="lant3<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 4, $this->teamId, 'nilai');?>"/></td>
+                                    <td rowspan="<?php echo $itemMateri['rowspan']; ?>" style="border-top: none;text-align: center;"><input size="3" type="text" name="lant4<?php echo $item['id'].$itemMateri['id'];?>" id="lant4<?php echo $item['id'].$itemMateri['id'];?>" value="<?php echo $this->model->getByData( $item['id'], $itemMateri['id'], $this->kogasIndex, 5, $this->teamId, 'nilai');?>"/></td>
+                                </tr>
+                            <?php } ?>
+                                <?php $numSubmateri = count($itemMateri['the_submateri']); ?>
+                                <?php $lastSubmateri = 0;?>
+                                <?php if (!empty($itemMateri['the_submateri'])) foreach ($itemMateri['the_submateri'] as $itemSubmateri) : ?>
+                                    <?php if(++$lastSubmateri === $numSubmateri) { ?>
+                                        <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                            <td width="2%" style="border-top: none; border-left: none; border-right: none; vertical-align: top;"><?php echo $itemSubmateri['numbering'] . '. '; ?></td>
+                                            <td width="60%" style="border-top: none; border-left:none; padding: 5px;"><?php echo $itemSubmateri['materi']; ?></td>
+                                        </tr>
+                                    <?php } else { ?>
+                                        <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                            <td width="2%" style="border-bottom: none; border-top: none; border-left: none; border-right: none; vertical-align: top;"><?php echo $itemSubmateri['numbering'] . '. '; ?></td>
+                                            <td width="60%" style="border-bottom: none; border-top: none; border-left:none; padding: 5px;"><?php echo $itemSubmateri['materi']; ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                <?php endforeach; ?>
+
+                            <?php $j++;endforeach; ?>
+
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>

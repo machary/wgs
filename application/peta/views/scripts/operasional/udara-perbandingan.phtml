@@ -1,0 +1,29 @@
+<div class="flat_area grid_16">
+    <h2>Perbandingan CB Udara Kogasgabla</h2>
+	<a href="<?php echo $this->url(array('action'=>'cblist')); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+	<div class="alert alert_green" style="clear:both">
+		Silakan klik nama CB operasional untuk melihat detail
+	</div>
+</div>
+	
+<div class="box grid_16 round_all">
+	<div class="block">
+		<form method="post">
+			<div class="input_group">
+			<?php foreach ($this->cbList as $i => $cb) : ?>
+				<input name="cb_pilihan[]" type="checkbox" value="<?php echo $cb->id; ?>" <?php if ($cb->terpilih) echo 'checked="checked"'; ?>>
+				<a href="<?php echo $this->url(array('action'=>'udara.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+					<?php echo $cb->no_cb_operasional; ?>
+				</a>
+				<br>
+			<?php endforeach; ?>
+			</div>
+			
+			<button class="button_colour round_all">
+				<span>Simpan CB Pilihan</span>
+			</button>
+		</form>
+	</div>
+</div>

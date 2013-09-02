@@ -1,0 +1,37 @@
+
+<div class="box grid_16 round_all">
+    <h2 class="box_head grad_colour"><?php echo $this->element->getLegend() ?></h2>
+    <a class="grabber" href="#">&nbsp;</a>
+    <a class="toggle" href="#">&nbsp;</a>
+    <div class="toggle_container">
+        <div class="block">
+            <form
+                <?php foreach($this->element->getAttribs() as $attribute => $value): ?>
+                <?php echo $attribute.'="'.$value.'"'; ?>
+                <?php endforeach; ?>
+                >
+                <?php $dumb;  ?>
+                <?php foreach($this->element->getElements() as $e): ?>
+                <label for="<?php echo $e->getName(); ?>">
+                    <?php echo $e->getAttrib('label-name'); ?>
+                    <?php if($e->isRequired()):?><strong style="color: #ff0000;">&#42;</strong><?php endif; ?>
+                </label>
+                <?php echo $e; ?>
+                <?php
+
+                if( $e->getAttrib('title') )
+                {
+                    $dumb = $e->getAttrib('title');
+                }
+                ?>
+                <?php endforeach;?>
+                <div class="separator">&nbsp;</div>
+                <button class="button_colour round_all">
+                    <img width="24" height="24" src="<?php echo $this->imgUrl('icons/small/white/Bended%20Arrow%20Right.png')?>" alt="Bended Arrow Right"/>
+                    <span>Submit</span>
+                </button>
+                <?php echo $this->currentModule; ?>
+            </form>
+        </div>
+    </div>
+</div>

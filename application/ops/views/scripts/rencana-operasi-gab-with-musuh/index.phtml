@@ -1,0 +1,33 @@
+<div class="flat_area grid_16">
+
+	<!-- box header label -->
+	<h2>Rencana Operasi</h2>
+
+	<!-- container -->
+    <div class="toggle_container" style="display: block; ">
+        <div class="block">
+
+            <table id="table-cb" class="display simple-table">
+                <thead>
+                <tr>
+                    <th>Nama Team</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->items as $item) : ?>
+                    <tr>
+                        <td><?php echo $item['team_name']; ?></td>
+                        <td>
+                            <a href="<?php echo $this->url(array('action'=>'simulasi', 'team_id'=>$item['id'])); ?>">Simulasi</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+

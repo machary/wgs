@@ -1,0 +1,51 @@
+<div class="flat_area grid_16 round_all">
+    <h2>Rencana Operasi</h2>
+	<input type="text" id="amounst" style="border:0; color:#f6931f; font-weight:bold;" />
+	<div id="sliderz" style="height: 8px;"></div>
+	</br>
+	<input type="text" id="amounts" style="border:0; color:#f6931f; font-weight:bold;" />
+	<div id="slider-rangez" style="height: 8px;"></div>
+	<input type="text" id="amountz" style="border:0; color:#f6931f; font-weight:bold;" />
+	<div id="slider-range-max" style="height: 8px;"></div>
+</div>
+<script type="text/javascript">
+	$(function() {
+		$( "#sliderz" ).slider({
+				value:100,
+				min: 0,
+				max: 500,
+//				step: 50,
+				slide: function( event, ui ) {
+					$( "#amounst" ).val( "$" + ui.value );
+				}
+		});
+		$( "#amounst" ).val( "$" + $( "#sliderz" ).slider( "value" ) );
+
+
+		$( "#slider-rangez" ).slider({
+			range: true,
+			min: 0,
+			max: 5000,
+			values:  [100,400],
+			slide: function( event, ui ) {
+				xaa = ui.values[ 0 ]+300;
+				$( "#amounts" ).val( "$" + ui.values[ 0 ] + " - $" + xaa );
+			}
+		});
+		$( "#amounts" ).val( "$" + $( "#slider-rangez" ).slider( "values", 0 ) +
+			" - $" + $( "#slider-rangez" ).slider( "values", 1 ) );
+
+		$( "#slider-range-max" ).slider({
+			range: "max",
+			min: 0,
+			max: 10000,
+			value: 200,
+			step: 100,
+			slide: function( event, ui ) {
+				$( "#amountz" ).val( ui.value );
+			}
+		});
+		$( "#amountz" ).val( $( "#slider-range-max" ).slider( "value" ) );
+
+	});
+</script>

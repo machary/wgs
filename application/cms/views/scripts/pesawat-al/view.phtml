@@ -1,0 +1,33 @@
+<?php $this->printGoBackUrl($this->url(array('action'=>'index', 'id'=>null))); ?>
+
+<div class="box grid_8 round_all" style="margin-top: 10px;">
+	<h2 class="box_head grad_colour">Detail Pesawat AL</h2>
+	<div class="toggle_container">
+		<div class="block">
+            <?php $filename = null;?>
+			<?php foreach($this->obj->toViewArray() as $key => $value) : ?>
+            <?php if(strtolower($key) == "gambar"):?>
+                <?php $filename = $value; //simpan di variabel untuk ditampilkan di grid selanjutnya?>
+            <?php else:?>
+                <label><?php echo $key; ?>:</label>
+                <label style="font-weight: normal;"><?php echo $value; ?></label>
+            <?php endif;?>
+            <br />
+            <?php endforeach; ?>
+		</div>
+	</div>
+</div>
+
+<div class="box grid_8 round_all" style="margin-top: 10px;">
+ 	<h2 class="box_head grad_colour">Pesawat AL</h2>
+ 	<div class="toggle_container">
+ 		<div class="block">
+        <?php if( !is_null($filename) ):?>
+            <img src="<?php echo $this->siteUrl('upload/images/pesawat_al/' . $filename ); ?>" alt="">
+        <?php else :?>
+             <img width="50%" src="<?php echo $this->imgUrl('photo-not-available.jpg'); ?>" alt="">
+        <?php endif;?>
+ 		</div>
+ 	</div>
+ </div>
+

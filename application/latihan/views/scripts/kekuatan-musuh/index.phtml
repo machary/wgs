@@ -1,0 +1,323 @@
+<div class="flat_area grid_16">
+	<h2>Komposisi Kekuatan Musuh - <?php echo $this->skenario->get('nomor'); ?></h2>
+    <div class="map-top-nav">
+		<a href="<?php echo $this->url(array('action'=>'darat')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Darat</span>
+		</a>
+
+		<a href="<?php echo $this->url(array('action'=>'laut')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Laut</span>
+		</a>
+
+		<a href="<?php echo $this->url(array('action'=>'udara')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Udara</span>
+		</a>
+
+		<a href="<?php echo $this->url(array('action'=>'pergerakan.add')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Pergerakan</span>
+		</a>
+
+        <a href="<?php echo $this->siteUrl('latihan/skenario');?>" class="roundall_grey back_icon float-right">
+			<span class="ml22">Kembali</span>
+		</a>
+
+	</div>
+
+	<div id="map-wrapper" class="block">
+        <div class="map-data">
+            <div class="box no-margin">
+                <h2 class="box_head grad_colour">Data Daerah Peta Yang Di Klik</h2>
+            </div>
+        </div>
+		<div id="map"></div>
+        <div id="wrapper">
+            <div id="location" style="float:right"></div>
+            <div id="scale" style="float:left"></div>
+            <div id="coordclick" style="width:400px;margin:auto">Clicked Coordinate : <input size="40"></div>
+        </div>
+	</div>
+
+</div>
+
+<?php $this->headStyle()->captureStart(); ?>
+table.musuh {
+border: 1px solid red;
+background-color : #fff !important;
+}
+
+table.musuh td,
+table.musuh th {
+padding: 5px;
+}
+
+table.musuh th {
+background-color: red;
+border: 1px solid red;
+color: white;
+}
+
+table.musuh td {
+border-left: 1px solid red;
+border-right: 1px solid red;
+color: red;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+// global map object
+var map;
+var darat,laut,udara;
+// layers dan geourl ada di script.js
+
+// return HTML content for popup
+function buildPopupContent(judul, kekuatan) {
+	// kekuatan is an array
+	var html = '<table class="popup musuh">'+
+		'<tr>'+
+			'<th colspan="2">'+judul+'</th>'+
+		'</tr>';
+	if (kekuatan) for (var i=0; i<kekuatan.length; i++) {
+		html += '<tr>'+
+			'<td>'+kekuatan[i].replace(/\|/, '</td><td>')+'</td>'+
+		'</tr>';
+	}
+	html += '</table>';
+
+	return html;
+}
+
+var skenarioID = '<?php echo $this->skenario->getId();?>';
+$(function(){
+	$('#tampung-data').css('border', '1px solid blue');
+
+//	map = standardMap('map', {
+//		scaleElement: $('#scale').get(0),
+//		locationElement: $('#location').get(0),
+//		showNavigator: true,
+//		coordinateJquery: $('#coordclick')
+//	});
+    map = standardMap('map');
+
+    udara = new OpenLayers.Layer.Markers("Kekuatan Udara Musuh");
+    laut = new OpenLayers.Layer.Markers("Kekuatan Laut Musuh");
+    darat = new OpenLayers.Layer.Markers("Kekuatan Darat Musuh");
+
+    laut.setVisibility(false);
+    udara.setVisibility(false);
+    darat.setVisibility(false);
+
+    map.addLayers([laut,udara,darat]);
+	map.redrawSwitcherTree();
+
+	/* == Fitur Klik Dapatkan Informasi */
+	map.events.register('click', map, function(e) {
+		var lonlat = map.getLonLatFromViewPortPx(e.xy);
+		var willan = map.layers[3]; // lihat script.js untuk listnyna
+
+		if (willan.getVisibility()) {
+			$('#tampung-data').html('<img src="<?php echo $this->imgUrl('loading1.gif'); ?>">');
+
+			$.get('<?php echo $this->siteUrl('cms/map/get.info.lanal'); ?>', {
+				lon: lonlat.lon,
+				lat: lonlat.lat
+			}, function(data, status, xhr) {
+				$('#tampung-data').html(data);
+			}, 'html');
+		}
+	});
+	/* == End of Fitur Klik Dapatkan Informasi */
+
+	var ll, popupContentHTML;
+	var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+		'autoSize': true
+	});
+
+    changeMarkers();
+});
+
+/*
+* changeMarkers
+* Fn ketika event pilih marker di layer switcher
+* */
+function changeMarkers()
+{
+    map.events.register('changelayer', null, function(evt){
+        if(laut.visibility == true)
+        {
+            var layerID = 1; //laut
+            requestData( layerID );
+        }
+        else if(udara.visibility == true)
+        {
+            var layerID = 2; //udara
+            requestData( layerID );
+        }
+        else if(darat.visibility == true)
+        {
+            var layerID = 3; //darat
+            requestData( layerID );
+        }
+    });
+}
+/**
+ * < requestData >
+ * Fn untuk mengambil data marker kekuatan sendiri berdasarkan jenis layer
+ * @param : (int) layerID
+ *        layerID -> 1.kekuatan musuh laut,
+ *                   2. kekuatan musuh udara
+ *                   3. kekuatan musuh darat
+ */
+function requestData(layerID){
+    if(!layerID) return false;
+
+    $.post(baseUrl + '/latihan/api/marker.enemyforces',
+        {
+            "layer_id": layerID,
+            'skenarioId' : '<?php echo $this->skenario->getId();?>'
+        },
+        function(data){
+            var icon;
+            switch( layerID ){
+                case 1 : icon = 'red-ops-AL.png'; break;
+                case 2 : icon = 'red-ops-AU.png'; break;
+                case 3 : icon = 'red-ops-AD.png'; break;
+            }
+            addMarkers( data, layerID, icon );
+        }, "json");
+}
+
+/*
+* < addMarkers >
+* Fn untuk membuat popup marker
+* @param : (obj/array) places <- data dari db (biasanya berisi koordinate & info2 lain)
+* @param : (int) number <- index layer
+* */
+function addMarkers(places, number, icon)
+{
+    var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+        'autoSize': true,
+        'keepInMap' : true,
+        'contentDisplayClass' : 'myPopupContent'
+    });
+    var popupClass = AutoSizeFramedCloud;
+
+    for(var i in places){
+        if(places[i]['detail'] != undefined){
+
+            var baseICON = '';
+            var detail = places[i]['detail'];
+            var detLenght = detail.length;
+            var first = 1;
+            var counter = 1;
+            var limit = 3;
+            var colspan = Math.ceil( detLenght / limit );
+
+            var html = '<table class="popup musuh">'
+                +'<tr>'
+                +'<th align="center" colspan="'+ colspan +'">'
+                + places[i]['nama'].toUpperCase()
+                +'</th>'
+                +'</tr>';
+
+            for(var index = 0; index <= detail.length; index++)
+            {
+                if(detail[index] != undefined){
+                    var now = index;
+                    var value = index;
+                    var data = detail[index];
+                    var tableClass = 'musuh';
+                    //Fungsi makePopupContent(), <-- lihat di custom.js
+                    data.keterangan = data.nama_taktis; //menyesuaikan dengan object di custom.js
+                    delete data.nama_taktis;
+                    html += makePopupContent(first, counter, value, limit, data, tableClass);
+                    if(counter == limit){
+                        counter = 1;
+                    } else {
+                        counter++;
+                    }
+                }
+            }
+            html += '</table>';
+        }
+        var popupContentHTML = html;
+        var realKoordinate = new OpenLayers.LonLat(places[i]['longitude'], places[i]['latitude']);
+        addsMarker(realKoordinate, popupClass, popupContentHTML, true, false, number, icon, false );
+    }
+}
+
+/*
+* < addsMarker >
+* Fn untuk membuat marker pada peta
+* @param : (obj/array) koordinate <- lon & lat
+* @param : (obj) popupClass <- tipe popup openlayer
+* @param : (html tag) popupContentHTML <- isi popup
+* @param : (bool) closeBox <- true / false
+* @param : (bool) overflow <- true / false
+* @param : (int) number <- index layer
+* @param : (string) icon <- path icon
+* @param : (bool) toggle <- true / false
+* */
+function addsMarker(koordinate, popupClass, popupContentHTML, closeBox, overflow, number, icon, toggle)
+{
+    switch(number) {
+        case 1:
+            var feature = new OpenLayers.Feature(laut, koordinate);
+            break;
+        case 2:
+            var feature = new OpenLayers.Feature(udara, koordinate);
+            break;
+        case 3:
+            var feature = new OpenLayers.Feature(darat, koordinate);
+            break;
+    }
+
+    var size = new OpenLayers.Size(21,25);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon(baseUrl + '/images/icons/' + icon, size, offset);
+    feature.data.icon = icon;
+
+    feature.closeBox = closeBox;
+    feature.popupClass = popupClass;
+    feature.data.popupContentHTML = popupContentHTML;
+    feature.data.overflow = (overflow) ? "auto" : "hidden";
+
+    marker = feature.createMarker();
+
+    var markerClick = function (evt) {
+        //edited by tajhul.faijin@sangkuriang.co.id
+        if( toggle === true ){
+            if (this.popup == null) {
+                this.popup = this.createPopup(this.closeBox);
+                map.addPopup(this.popup);
+                this.popup.show();
+            } else {
+                this.popup.toggle();
+            }
+        } else {
+            //cleare all popup on the map
+            while( map.popups.length ) {
+                map.removePopup(map.popups[0]);
+            }
+            this.popup = this.createPopup(this.closeBox);
+            map.addPopup(this.popup);
+            this.popup.show();
+        }
+        currentPopup = this.popup;
+        OpenLayers.Event.stop(evt);
+    };
+    marker.events.register("mousedown", feature, markerClick);
+    switch(number)
+    {
+        case 1:
+            laut.addMarker(marker);
+            break;
+        case 2:
+            udara.addMarker(marker);
+            break;
+        case 3:
+            darat.addMarker(marker);
+            break;
+    }
+}
+</script>

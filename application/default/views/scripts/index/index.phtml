@@ -1,0 +1,8 @@
+<?php
+$identity = Zend_Auth::getInstance()->getStorage()->read();
+?>
+<div class="flat_area grid_16">
+	<div class="block">
+		<p>Selamat Datang, <?php echo $identity->username; ?></p>
+	</div>
+</div>

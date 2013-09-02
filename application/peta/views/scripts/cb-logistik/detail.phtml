@@ -1,0 +1,228 @@
+<div class="flat_area grid_16">
+	<h2>Pengembangan CB Logistik - <?php echo $this->nocb;?></h2>
+
+    <div class="map-top-nav" style="margin-bottom: 20px;">
+        <a href="<?php echo $this->url(array('controller' => 'cbl.pangkalan', 'action'=>'list')); ?>" class="roundall_grey pangkalan_icon mr3 float-left">
+            <span class="ml22">Pangkalan Pendukung</span>
+        </a>
+        <a href="<?php echo $this->url(array('controller' => 'cbl.rumahsakit', 'action'=>'list')); ?>" class="roundall_grey rs_icon mr3 float-left">
+            <span class="ml22">Rumah Sakit Pendukung</span>
+        </a>
+        <a href="<?php echo $this->url(array('controller' => 'cbl.pertamina', 'action'=>'list')); ?>" class="roundall_grey depo_icon mr3 float-left">
+            <span class="ml22">Depo Pendukung</span>
+        </a>
+
+        <a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+            <span class="ml22">Kembali</span>
+        </a>
+    </div>
+
+    <div class="box grid_8 grid_16 round_all contentmap " >
+        <h2 class="box_head grad_colour titlemap">
+            <span>Peta Logistik</span>
+        </h2>
+        <div id="map" style="top: 1px"></div>
+    </div>
+
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<style type="text/css">
+    .list-pendukung{
+        width: 250px;
+    }
+    .list-pendukung tr th{
+        border: 1px solid;
+        background: blue;
+        color: #fff;
+        padding: 5px;
+    }
+    .list-pendukung tr td{
+        padding: 5px;
+    }
+</style>
+
+<script>
+    // global map object
+    var map;
+    var rsPendukung, Lppendukung, depoPendukung;
+    // layers dan geourl ada di script.js
+
+    $(function(){
+        $('#map').css('height', '500px');
+        map = standardMap('map');
+
+        // Marker Pangkalan Pendukung
+        var ll, popupContentHTML;
+        var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+            'autoSize': true
+        });
+        //-- icon --
+        var size = new OpenLayers.Size(25,27); // size icon
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h); //offset icon
+
+        // RS Pendukung
+        rsPendukung = new OpenLayers.Layer.Markers(
+            "Rumah Sakit Pendukung",
+            {isBaseLayer: false, visibility: true}
+        );
+        Lppendukung = new OpenLayers.Layer.Markers(
+            "Pangkalan Pendukung",
+            {isBaseLayer: false, visibility: true}
+        );
+        depoPendukung = new OpenLayers.Layer.Markers(
+            "Depo Pendukung",
+            {isBaseLayer: false, visibility: true}
+        );
+
+        map.addLayers([rsPendukung,Lppendukung,depoPendukung]);
+        map.redrawSwitcherTree(); //<--- untuk memasukan layer baru ke dlm switcher
+
+        //render marker RS pendukung
+        <?php if( !empty($this->rspendukung)):  foreach($this->rspendukung as $key) : ?>
+            ll = new OpenLayers.LonLat(<?php echo $key['x'];?>,<?php echo $key['y'];?>);
+            var html = '<table class="list-pendukung">' +
+                '<tr>' +
+                '<th colspan="2" align="center"><?php echo $key['nama'];?></th>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Kelas</td>' +
+                '<td><?php echo $key['kelas'];?></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Fasilitas</td>' +
+                '<td><?php echo $key['attribute'];?></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Daya Tampung</td>' +
+                '<td><?php echo $key['daya_tampung'];?></td>' +
+                '</tr>' +
+                '</table>';
+
+            popupContentHTML = html;
+            var icon = new OpenLayers.Icon(baseUrl + '/images/icons/cross.png', size, offset); //object icon
+            addMarker(rsPendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true, icon);
+        <?php endforeach; endif; ?>
+
+
+
+        <?php if( !empty($this->ppendukung)): foreach($this->ppendukung as $key) : ?>
+            ll = new OpenLayers.LonLat(<?php echo $key['x'];?>,<?php echo $key['y'];?>);
+
+            var html = '<table class="list-pendukung">' +
+                '<tr>' +
+                '<th colspan="5" align="center">PANGKALAN <?php echo $key['lanal'];?></th>' +
+                '</tr>' +
+                '<tr>' +
+                '<td style="font-weight: bold;">Informasi</td>' +
+                '<td colspan="4"><?php echo $key['keterangan'];?></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td style="font-weight: bold;">Dermaga</td>' +
+                '<td><?php echo $key['dermaga'];?></td>' +
+                '<td width="20px;"></td>' +
+                '<td style="font-weight: bold;">Rumah Sakit</td>' +
+                '<td><?php echo $key['rumah_sakit'];?></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td style="font-weight: bold;">Landasan Udara</td>' +
+                '<td><?php echo $key['labuh_udara'];?></td>' +
+                '<td></td>' +
+                '<td style="font-weight: bold;">Umum</td>' +
+                '<td><?php echo $key['umum'];?></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td style="font-weight: bold;">Pelabuhan</td>' +
+                '<td><?php echo $key['dock'];?></td>' +
+                '<td></td>' +
+                '<td style="font-weight: bold;">Listrik</td>' +
+                '<td><?php echo $key['listrik'];?></td>' +
+                '</tr>' +
+                '<td style="font-weight: bold;">Bengkel</td>' +
+                '<td><?php echo $key['bengkel'];?></td>' +
+                '<td></td>' +
+                '<td style="font-weight: bold;">Kendaraan Bermotor</td>' +
+                '<td><?php echo $key['kendaraan_bermotor'];?></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td style="font-weight: bold;">Rumah</td>' +
+                '<td><?php echo $key['rumah'];?></td>' +
+                '<td></td>' +
+                '<td style="font-weight: bold;">Tanah</td>' +
+                '<td><?php echo $key['tanah'];?></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td style="font-weight: bold;">Mess</td>' +
+                '<td><?php echo $key['mess'];?></td>' +
+                '<td></td>' +
+                '<td style="font-weight: bold;">Perbekalan</td>' +
+                '<td><?php echo $key['perbekalan'];?></td>' +
+                '</tr>' +
+                '</table>';
+
+            popupContentHTML = html;
+
+            popupContentHTML = html;
+            var icon = new OpenLayers.Icon(baseUrl + '/images/icons/pangkalan.png', size, offset); //object icon
+
+            addMarker(Lppendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true, icon);
+        <?php endforeach; endif; ?>
+
+
+        <?php if( !empty($this->depopendukung)):  foreach($this->depopendukung as $key) : ?>
+            ll = new OpenLayers.LonLat(<?php echo $key['x'];?>,<?php echo $key['y'];?>);
+
+            var html = '<table class="list-pendukung">';
+            html += '<tr>';
+            html += '<th colspan="4" align="center"><?php echo strtoupper($key['nama_depo']);?></th>';
+            html += '</tr>';
+
+            html += '<tr>';
+            html += '<td>Jenis</td>';
+            html += '<td>Kapasitas</td>';
+            html += '<td>Current</td>';
+            html += '<td>Debit</td>';
+            html += '</tr>';
+
+            //avtur
+            html += '<tr>';
+            html += '<td>Avtur</td>';
+            html += '<td><?php echo $key['avtur_kap'];?></td>';
+            html += '<td><?php echo $key['avtur_curr'];?></td>';
+            html += '<td><?php echo $key['avtur_debit'];?></td>';
+            html += '</tr>';
+
+            //hsd
+            html += '<tr>';
+            html += '<td>HSD</td>';
+            html += '<td><?php echo $key['hsd_kap'];?></td>';
+            html += '<td><?php echo $key['hsd_curr'];?></td>';
+            html += '<td><?php echo $key['hsd_debit'];?></td>';
+            html += '</tr>';
+
+            //premium
+            html += '<tr>';
+            html += '<td>Premium</td>';
+            html += '<td><?php echo $key['premium_kap'];?></td>';
+            html += '<td><?php echo $key['premium_curr'];?></td>';
+            html += '<td><?php echo $key['premium_debit'];?></td>';
+            html += '</tr>';
+
+            //solar
+            html += '<tr>';
+            html += '<td>Solar</td>';
+            html += '<td><?php echo $key['solar_kap'];?></td>';
+            html += '<td><?php echo $key['solar_curr'];?></td>';
+            html += '<td><?php echo $key['solar_debit'];?></td>';
+            html += '</tr>';
+
+            html += '</table>';
+
+            popupContentHTML = html;
+            var icon = new OpenLayers.Icon(baseUrl + '/images/icons/fuel.png', size, offset); //object icon
+            addMarker(depoPendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true, icon);
+        <?php endforeach; endif; ?>
+    });
+
+
+</script>

@@ -1,0 +1,33 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+
+	<label>Matra</label>
+	<?php echo $f->matra->renderViewHelper(); ?>
+	<?php echo $f->matra->renderErrors(); ?>
+
+	<label>Komando Utama</label>
+	<?php echo $f->idkomando->renderViewHelper(); ?>
+	<?php echo $f->idkomando->renderErrors(); ?>
+
+    <label>Komando Pelaksana</label>
+    <?php echo $f->idparent->renderViewHelper(); ?>
+    <?php echo $f->idparent->renderErrors(); ?>
+
+	<label>Jenis Pasukan</label>
+	<?php echo $f->jenis_pasukan->renderViewHelper(); ?>
+	<?php echo $f->jenis_pasukan->renderErrors(); ?>
+
+	<label>Jenis Kesatuan</label>
+	<?php echo $f->jenis_kesatuan->renderViewHelper(); ?>
+	<?php echo $f->jenis_kesatuan->renderErrors(); ?>
+
+	<label>Nama Kesatuan</label>
+	<?php echo $f->nama_kesatuan->renderViewHelper(); ?>
+	<?php echo $f->nama_kesatuan->renderErrors(); ?>
+
+	<button class="button_colour round_all">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+</form>
+

@@ -1,0 +1,13 @@
+<?php $f = $this->element; ?>
+
+<form enctype="multipart/form-data" method="post">
+	<label>File Excel</label>
+	<p>
+		<input type="file" name="import_file">
+		<?php echo $f->import_file->renderErrors(); ?>
+	</p>
+	
+	<button class="button_colour round_all">
+		<span>Import</span>
+	</button>
+</form>

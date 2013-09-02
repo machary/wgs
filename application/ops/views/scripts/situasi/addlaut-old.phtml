@@ -1,0 +1,295 @@
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+
+    <?php $this->inlineScript()->appendFile( $this->jsUrl( 'view/situasi-add-matra.js' ) ); ?>
+
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>
+
+<style type="text/css">
+    #controlToggle li {
+        list-style: none;
+    }
+    p {
+        width: 512px;
+    }
+
+        /* avoid pink tiles */
+    .olImageLoadError {
+        background-color: transparent !important;
+    }
+</style>
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+    //    Openlayer start here
+    var proxyUrl = "<?php echo $this->baseUrl('peta/proxy/?url='); ?>";
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>
+
+<div class="grid_8">
+    <?php echo $this->form; ?>
+</div>
+
+<div class="grid_8">
+    <!-- preview rute -->
+    <div class="box round_all">
+        <h2 class="box_head grad_colour">Preview Rute</h2>
+        <div class="block">
+            <div id="map" style="top: -1px;"></div>
+        </div>
+    </div>
+</div>
+
+<?php
+//simbol untuk AD
+$jenisSimbol = array(
+	'komando operasional',
+	'kuat log',
+	'marinir',
+	'zeni marinir',
+	'landasan udara',
+	'kapal',
+	'sayap putar',
+	'sayap tetap'
+);
+?>
+
+<script type="text/javascript">
+	var table = '<table id="kekuatan-table" class="simple-table">'
+		+'<tr>'
+		+'<th>Kesatuan</th>'
+		+'<th width="5%">Jumlah</th>'
+		+'<th>Keterangan</th>'
+        +'<th width="10%">Simbol</th>'
+		+'<th width="8%"></th>'
+		+'</tr>'
+		+'</table>'
+		+'<button id="button-tambah-row" type="button">+Tambah</button>';
+	$(table).insertAfter('#negara');
+
+    var convLongitude = '<input id="conv-lon-deg" size="2" style="display:inline">&deg;'
+        +'<input id="conv-lon-min" size="2" style="display:inline">'+"'"
+        +'<input id="conv-lon-sec" size="2" style="display:inline">"'
+        +'<select id="conv-lon-dir"><option>T</option><option>B</option></select>'
+        +'<button id="conv-lon-conv" type="button" style="display:inline;float:none">Convert</button>';
+    $(convLongitude).insertBefore('#longitude');
+
+    var convLatitude = '<input id="conv-lat-deg" size="2" style="display:inline">&deg;'
+        +'<input id="conv-lat-min" size="2" style="display:inline">'+"'"
+        +'<input id="conv-lat-sec" size="2" style="display:inline">"'
+        +'<select id="conv-lat-dir"><option>U</option><option>S</option></select>'
+        +'<button id="conv-lat-conv" type="button" style="display:inline;float:none">Convert</button>';
+    $(convLatitude).insertBefore('#latitude');
+
+	//global variable
+	var optionsUnsurArr = [];
+	var optionsJenis = [];
+	<?php foreach($this->jenis as $jenis): ?>
+		<?php if(in_array($jenis['jenis'], $jenisSimbol)) :?>
+		optionsUnsurArr.push('<?php echo $jenis['jenis']; ?>');
+		optionsJenis.push({
+			'<?php echo $jenis['jenis']; ?>': <?php echo json_encode($this->simTaktis->getAll('jenis', $jenis['jenis'], null, false)); ?>
+		});
+			<?php endif;?>
+		<?php endforeach; ?>
+
+	var optionsUnsur = optionsUnsurArr;
+	var globali = 0;
+	//end global variable
+
+	function tambah_row(id, unsur, jenis, jumlah, keterangan, img) {
+
+		//@author : tajhul faijin
+		//validasi inputan jumlah pada row sebelumnya tidak boleh kosong
+		if( globali > 0 ){
+			var prevIndex = globali - 1;
+			var domValue = $('#kekuatan-table').find('input[name="detail['+ prevIndex +'][jumlah]"]');
+			var prevValue = domValue.val();
+
+			if( prevValue == '' ){
+				alert('Jumlah Tidak boleh kosong!');
+				domValue.focus();
+				return false;
+			}
+		}
+
+		var $tr = $('<tr/>');
+
+		var $hidden = $('<input type="hidden" name="detail['+globali+'][id]" />');
+		if (id) {
+			$hidden.val(id);
+		}
+
+		var $select1 = $('<select name="detail['+globali+'][jenis]" />');
+		// populate options
+		for (var i=0,inum=optionsUnsur.length; i<inum; i++) {
+			var val = optionsUnsur[i];
+			$select1.append('<option value="'+val+'">'+val+'</option>');
+		}
+		if (unsur) {
+			$select1.val(unsur);
+		}
+		$select1.appendTo($tr).wrap('<td>');
+		// sisipkan $hidden
+		$hidden.insertAfter($select1);
+        $('<label>Kesatuan</label>').insertBefore($select1);
+
+		var $select2 = $('<select name="detail['+globali+'][taktis_id]" />');
+		// populate options berdasarkan nilai $select1
+		$select1.bind('change', function(e) {
+			// @TODO bug element select theme adminica
+			$select2.empty();
+			for (var i=0,inum=optionsJenis.length; i<inum; i++) {
+				var options = optionsJenis[i][$select1.val()];
+				if (options) {
+					for (var x=0,xnum=options.length; x<xnum; x++) {
+						var index = options[x]['id'];
+						var val = options[x]['nama'];
+						$select2.append('<option value="'+index+'">'+val+'</option>');
+					}
+				}
+			}
+
+			if ($.uniform.update) {
+				$.uniform.update($select2);
+			}
+
+            $select2.trigger('change');
+		});
+		$select1.trigger('change');
+		if (jenis) {
+			$select2.val(jenis);
+		}
+//		$select2.appendTo($tr).wrap('<td>').uniform();
+
+        $select2.insertAfter($select1);
+        $('<label>Tingkat</label>').insertBefore($select2);
+
+        $select1.uniform();
+        $select2.uniform();
+
+		var $input = $('<input style="width: 55px;" name="detail['+globali+'][jumlah]" />');
+		if (jumlah) {
+			$input.val(jumlah);
+		}
+		$input.appendTo($tr).wrap('<td>');
+
+		var $textarea = $('<textarea style="width: 120px;" name="detail['+globali+'][keterangan]"></textarea>');
+		if (keterangan) {
+			$textarea.val(keterangan);
+		}
+		$textarea.appendTo($tr).wrap('<td>');
+
+		var $img = $('<img style="width: 50px;" />');
+        // populate options berdasarkan nilai $select1
+
+        $select2.bind('change', function(e) {
+            $img.attr('src','');
+            for (var i=0,inum=optionsJenis.length; i<inum; i++) {
+                var options = optionsJenis[i][$select1.val()];
+                if (options) {
+                    for (var x=0,xnum=options.length; x<xnum; x++) {
+                        var index = options[x]['id'];
+                        if (index == $select2.val()) {
+                            $img.attr('src', "<?php echo $this->baseUrl('/'); ?>" + options[x]['filepath']);
+                        }
+                    }
+                }
+            }
+        });
+        $select2.trigger('change');
+        if (img) {
+            $img.attr('src',"<?php echo $this->baseUrl('/'); ?>" + img);
+		}
+        $img.appendTo($tr).wrap('<td>');
+
+		//@author : tajhul faijin
+		//jika bukan row pertama, kasih tombol x untuk menghapus row
+		// FYI : globali = var global yg berisi index yg dimulai dari 0 (nol)
+		if(globali > 0){
+			var $button = $('<button type="button" onclick="hapus_row(this)" />');
+			$button.html('X');
+			$button.appendTo($tr).wrap('<td>');
+		} else {
+			//jika row pertama buatkan cell kosong saja
+			//FYI : agar row table tidak berantakan
+			$('<span>&nbsp;</span>').appendTo($tr).wrap('<td>');
+		}
+
+		$('#kekuatan-table').append($tr);
+		globali++;
+	}
+
+	function hapus_row(el) {
+		$(el).parent().parent().remove();
+	}
+
+	//ready function
+	$(function() {
+		tambah_row(); //create row onload
+
+		//validasi ketika submit
+		$('#form-kekuatan').bind('submit', function(){
+
+			//validasi textbox sederhana dgn menggunakan flag array
+			var valids = []; //array untuk flag
+			$('#form-kekuatan input[type="text"]').each(function(){
+				var value = $(this).val();
+				if(value == ''){
+					valids.push(0); //jika kosong
+				} else {
+					valids.push(1); //jika isi
+				}
+			});
+			//kemudian cek flag array valids,
+			// jika terdapat nilai flag 0 dlm array berarti masih ada yg kosong
+			if( in_array(0, valids) ){
+				alert('Semua teks field harus diisi!');
+				return false;
+			} else {
+				return true;
+			}
+		})
+		$('#button-tambah-row').bind('click', function(e) {
+			tambah_row();
+		});
+
+		// populate saved data
+	<?php //foreach ($this->model->all() as $e) : ?>
+		//tambah_row(<?php
+//                echo json_encode($e->id).',';
+//                echo json_encode($e->unsur).',';
+//                echo json_encode($e->jenis).',';
+//                echo json_encode($e->jumlah);
+	?>);
+	<?php //endforeach; ?>
+	});
+
+    //conversi DMS ke DD
+    $(function(){
+        var convertDms = function (pid, idlonlat) {
+            var $ipt = $('#'+idlonlat),
+                deg = parseInt($('#conv-'+pid+'-deg').val(), 10),
+                min = parseInt($('#conv-'+pid+'-min').val(), 10),
+                sec = parseInt($('#conv-'+pid+'-sec').val(), 10),
+                dir = $('#conv-'+pid+'-dir').val(),
+                result;
+
+            if (!isNaN(deg) && !isNaN(min) && !isNaN(sec)) {
+                result = deg + (min*60 + sec)/3600;
+                if (dir == 'S' || dir == 'T') {
+                    result = -1 * result;
+                }
+                $ipt.val(result);
+                $ipt.trigger('change');
+            }
+            $ipt.focus();
+        };
+        $('#conv-lon-conv').bind('click', function(e) {
+            convertDms('lon', 'longitude');
+        });
+        $('#conv-lat-conv').bind('click', function(e) {
+            convertDms('lat', 'latitude');
+        });
+    });
+</script>

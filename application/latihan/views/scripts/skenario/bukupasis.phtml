@@ -1,0 +1,54 @@
+<div class="flat_area grid_16">
+    <h2>Daftar Skenario Latihan</h2>
+    <!--    <div class="map-top-nav">-->
+    <!--		<a href="--><?php //echo $this->url(array('action'=>'add')); ?><!--" class="roundall_grey add_icon float-left">-->
+    <!--			<span class="ml22">Skenario Baru</span>-->
+    <!--		</a>-->
+    <!--	</div>-->
+
+    <div class="block">
+        <table id="table-dtables" class="display">
+            <thead>
+            <tr>
+                <th width="15%">Waktu Pembuatan</th>
+                <th width="30%">Nomor Skenario</th>
+                <th></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    <?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+    $(function(){
+        var oTable = $('#table-dtables').dataTable({
+            "bJQueryUI": true,
+            "sScrollX": "",
+            "bSortClasses": false,
+            "aaSorting": [[0,'asc']],
+            "bAutoWidth": true,
+            "bInfo": true,
+            "bFilter": true,
+            "sScrollY": "100%",
+            "sScrollX": "100%",
+            "bScrollCollapse": true,
+            "sPaginationType": "full_numbers",
+            "bProcessing" : true,
+            "bServerSide" : true,
+            "sAjaxSource" : '<?php echo $this->url(array('action'=>'dataapibuku')); ?>',
+            "fnServerData" : function(sSource, aoData, fnCallback) {
+                jQuery.getJSON(sSource, aoData, function(json) {
+                    fnCallback(json);
+                });
+            },
+            'aoColumns' : [
+                {bSearchable: false},
+                null,
+                {bSortable: false, bSearchable: false, sWidth: '200px'}
+            ]
+        });
+
+        new Filterer(oTable);
+    });
+</script>

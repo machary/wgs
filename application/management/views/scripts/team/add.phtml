@@ -1,0 +1,142 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Daftar Tim</h2>
+    <div class="map-top-nav">
+        <p>
+            <label for="team_name">Nama Tim</label>
+            <input type="text" id="team_name"></br>
+            <label for="skenario">Skenario Latihan</label>
+            <select name="skenario" id="skenario">
+                <option value="">[PILIH]</option>
+                <?php foreach($this->data as $data): ?>
+                <option value="<?php echo $data['id']; ?>"><?php echo $data['nomor']; ?></option>
+                <?php endforeach ?>
+            </select>
+        </p>
+    </div>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+            <table id="table_team" class="display">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>NRP</th>
+                    <th>Nama</th>
+                    <th>Jabatan</th>
+                </tr>
+                </thead>
+            </table>
+            <form action="<?php echo $this->baseUrl('management/team/addteam');?>" method="post">
+                <input type="hidden" name="id_siswa" id="id_siswa" />
+                <input type="hidden" name="team_name_value" id="team_name_value" />
+                <input type="hidden" name="skenario_value" id="skenario_value" />
+                <input type="hidden" name="self" value="other"  />
+                <input type="hidden" name="status" id="status">
+                <button>
+                    <span>Simpan</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var checkedArr = [];
+    var ceklis = [];
+
+    var htmlFilter = '<select id="feed-filter">'
+        +'<option value="" selected="selected">[Pilih]</option>'
+        +'<option value="1">NRP</option>'
+        +'<option value="2">Nama</option>'
+        +'<option value="3">Jabatan</option>'
+        +'</select>';
+
+    var oTable = $('#table_team').dataTable( {
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "aoColumns":[
+            {bSortable:false},
+            null,
+            null,
+            null
+        ],
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : baseUrl + '/management/team/dataapiadd',
+        "fnServerData" : function(sSource, aoData, fnCallback)
+        {
+            //filter category content
+            if(jQuery('#feed-filter').length)
+            {
+                filter = jQuery('#feed-filter').val()
+
+                aoData.push({
+                    "name": "filter",
+                    "value":  filter
+                });
+            }
+
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json)
+            });
+
+            $('.custom-rows').parent().css('vertical-align','middle');
+        }
+
+    })//.makeEditable()
+
+    $('table').delegate(':checkbox', 'click', function()
+    {
+        if($(this).is(':checked'))
+        {
+            checkedArr.push($(this).val());
+            ceklis.push('T');
+        }
+        else
+        {
+            checkedArr.push($(this).val());
+            ceklis.push('F');
+        }
+        $('#id_siswa').val(checkedArr.join(','));
+        $('#status').val(ceklis.join(','));
+    });
+
+    $('#skenario').change(function(){
+        if($('#team_name').val() == '')
+        {
+            alert('Nama Tim Harus di Isi');
+            $('#skenario').val('');
+        }
+        else
+        {
+            $('#team_name_value').val($('#team_name').val());
+            $('#skenario_value').val($('#skenario').val());
+        }
+    });
+
+    $('#table_team_filter').css('width', '360px');
+    var elmntSearch = $("#table_team_filter").find("input:text");
+    $(htmlFilter).insertBefore(elmntSearch);
+
+    function selectedValue(selectObj)
+    {
+        var idx = selectObj.selectedIndex;
+        var which = selectObj.options[idx].value;
+        document.getElementById('filter_value').value = which;
+    }
+</script>

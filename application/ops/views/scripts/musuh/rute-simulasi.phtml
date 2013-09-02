@@ -1,0 +1,124 @@
+<?php $this->headStyle()->captureStart(); ?>
+#animator-toolbar button {
+	float:none;
+	display: inline-block;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>$this->jenis.'.index', 'id'=>null, 'skenario_id'=>$this->model->getSkenarioId())); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour">Simulasi Rute Operasi : <?php echo $this->model->getRow()->nama; ?></h2>
+	
+	<div id="map2"></div>
+	
+	<div class="block" id="animator-toolbar">
+		<div class="float-right">Jarak Tempuh : <span id="jarak-cb">0</span> <?php echo $this->satuan['jarak']; ?></div>
+        <div class="float-right mr40">Waktu Tempuh : <span id="time-notice">0</span></div>
+        <div class="float-right mr40">Asumsi 1 detik = <input id="second2hour" value="1" size="1"> jam </div>
+		<div class="grid_16 float-left">
+            <button id="button-start" type="button" class="tipsytooltip" original-title="Jalankan">
+                <img src="<?php echo $this->imgUrl('icons/play.png'); ?>" style=" margin: -6px 0;" />
+            </button>
+            <button id="button-pause" type="button" class="tipsytooltip" original-title="Jeda">
+                <img src="<?php echo $this->imgUrl('icons/pause.png'); ?>" style=" margin: -6px 0;" />
+            </button>
+            <button id="button-reset" type="button" class="tipsytooltip" original-title="Atur Ulang">
+                <img src="<?php echo $this->imgUrl('icons/refresh.png'); ?>" style=" margin: -6px 0;" />
+            </button>
+            <div id="time-slider" class="grid_14 float-right"></div>
+		</div>
+	</div>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-operasional.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-animator.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-statistik.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/ops-intel.js')); ?>
+<script>
+
+var animator,
+	stats,
+	resetFlag = true;
+
+$(function() {
+	"use strict";
+	var map,
+		layerVector,
+		tempTitik, 
+		tempFormasi,
+		$asumsi,
+		latumLayer, format;
+		
+	// inisiasi map
+	$asumsi = $('#second2hour').css('display', 'inline');
+	$('#map2').css('height', '500px');
+	map = standardMap('map2');
+	layerVector = new OpenLayers.Layer.Vector('Rute', {
+		displayInLayerSwitcher:false
+	});
+
+    //layer kekuatan musuh
+    //@author : tajhul.faijin
+    var layerIntel = new OpenLayers.Layer.Markers('Kekuatan Musuh', {
+   		visibility : false
+   	});
+
+	map.addLayers([layerVector, layerIntel]);
+    map.redrawSwitcherTree();
+
+    //event check/uncheck layerSwitcher
+    map.events.register('changelayer', null, function(e) {
+        if( layerIntel.getVisibility() ){
+            var $url = "<?php echo $this->siteUrl('peta/intelijen/marker.intel');?>";
+            //render intel point
+            intelPoints( layerIntel, $url ); // detailnya lihat di ops-intel.js
+        }
+    });
+
+	// refresh features after zooming
+	map.events.register('zoomend', map, function (e) {
+		animator.redraw();
+	});
+	
+	// animasi menggunakan multi-formasi untuk reuseability
+	animator = new Animator_Multi_Formasi(layerVector, $('#time-slider'), $('#time-notice'));
+	stats = new Statistik_Cb();
+	tempTitik = <?php echo json_encode($this->model->getTitik()); ?>;
+	tempFormasi = <?php echo json_encode($this->model->getFormasi()); ?>;
+	animator.addItem(tempFormasi, tempTitik);
+	stats.addFormasi(tempFormasi, tempTitik);
+	
+	// tampilkan jarak
+	$('#jarak-cb').html(stats.<?php echo $this->satuan['function']; ?>.toFixed(3));
+
+    //tipsy
+    $('.tipsytooltip').tipsy();
+	
+	// inisiasi tombol
+	$asumsi.bind('change', function(e) {
+		resetFlag = true;
+	});
+	$('#button-start').bind('click', function(e) {
+		if (resetFlag) {
+			animator.generateState(parseInt($asumsi.val(), 10), '<?php echo $this->satuan['kecepatan']; ?>'); // dalam km/h
+			resetFlag = false;
+		}
+		animator.startAnimation();
+	});
+	$('#button-pause').bind('click', function(e) {
+		animator.stopAnimation();
+	});
+	$('#button-reset').bind('click', function(e) {
+		animator.resetAnimation();
+	});
+
+
+	
+});
+</script>

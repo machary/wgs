@@ -1,0 +1,29 @@
+<?php
+$aPangkalan = $this->fasbek->getPangkalan()->toFormArray();
+?>
+<?php $this->printGoBackUrl($this->url(array('action'=>'index', 'id'=>null))); ?>
+
+<div class="box grid_12 round_all">
+	<h2 class="box_head grad_colour">Ubah Fasilitas Perbekalan</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<p>Nama pangkalan: <?php echo $aPangkalan['nama']; ?></p>
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	// populate existing weapons
+	<?php foreach ($this->fasbek->getFasbeks() as $b) : ?>
+		add_row('template-row', [<?php echo sprintf("'%s','%s','%s','%s','%s','%s'", 
+			$b['nama_item'], $b['jenis_item'], $b['puan_item'], 
+			$b['jumlah_unit'], $b['keterangan'], $b['idfasbek']
+		); ?>]);
+	<?php endforeach; ?>
+});
+</script>

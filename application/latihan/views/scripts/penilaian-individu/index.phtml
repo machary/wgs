@@ -1,0 +1,22 @@
+<div class="flat_area grid_16">
+
+	<!-- box header label -->
+	<h2>Penilaian Partisipasi Perorangan</h2>
+
+		<?php foreach ($this->kogas as $idTeam => $team) : ?>
+            <h3 style="margin-bottom: 10px;margin-top: 20px;"><?php echo $team['team_name']; ?></h3>
+                <div class="map-top-nav" style="margin-bottom: 10px;">
+                    <?php foreach ($team['kogas'] as $idJab => $namaJab): ?>
+                        <a href="<?php echo $this->url(array('action'=>'penilaian', 'team_id'=>$idTeam, 'kogas'=>$idJab)); ?>" class="roundall_grey add_icon mr3">
+                            <span class="ml22"><?php echo $namaJab; ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+		<?php endforeach; ?>
+
+	<!-- container -->
+	<div class="block">
+		<!-- what to write here? -->
+	</div>
+	
+</div>

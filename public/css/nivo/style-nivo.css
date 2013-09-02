@@ -1,0 +1,85 @@
+/*=================================*/
+/* Nivo Slider Demo
+/* November 2010
+/* By: Gilbert Pellegrom
+/* http://dev7studios.com
+/* Edited By tajhul.faijin@sangkuriang.co.id
+/*=================================*/
+
+/*============================*/
+/*=== Custom Slider Styles ===*/
+/*============================*/
+.slider-wrapper {
+    height: 400px;
+    width: 980px;
+    padding: 5px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+}
+
+#slider {
+    height: 400px;
+    width: 980px;
+}
+
+#slider img {
+	/*position:absolute;*/
+	top:0px;
+	left:0px;
+    width: 200px;
+	display:none;
+    border: 1px solid #303030;
+}
+#slider a {
+	border:0;
+	display:block;
+}
+
+.nivo-controlNav {
+    display: none !important;
+	/*position:absolute;*/
+	left:368px;
+	bottom:0px;
+    opacity: 0.9;
+    background: #666666;
+    z-index: 98;
+}
+.nivo-controlNav a {
+	display:block;
+	width:22px;
+	height:22px;
+	background:url(images/bullets.png) no-repeat;
+	text-indent:-9999px;
+	border:0;
+	margin-right:3px;
+	float:left;
+}
+.nivo-controlNav a.active {
+	background-position:0 -22px;
+}
+
+.nivo-directionNav a {
+	display:block;
+	width:30px;
+	height:30px;
+	background:url(images/arrows.png) no-repeat;
+	text-indent:-9999px;
+	border: 0;
+}
+a.nivo-nextNav {
+	background-position:-30px 0;
+	right:15px;
+}
+a.nivo-prevNav {
+	left:15px;
+}
+
+.nivo-caption {
+    display: none !important;
+    text-shadow:none;
+    font-family: Helvetica, Arial, sans-serif;
+}
+.nivo-caption a { 
+    color:#efe9d1;
+    text-decoration:underline;
+}

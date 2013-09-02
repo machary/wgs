@@ -1,0 +1,318 @@
+<div class="flat_area grid_16">
+	<h2>Logistik - Pangkalan Pendukung - <?php echo $this->cbid->get('no_cb'); ?></h2>
+    <div class="map-top-nav">
+		<a href="<?php echo $this->url(array('action'=>'list')); ?>" class="roundall_grey add_icon float-left">
+			<span class="ml22">Pengkalan Pendukung</span>
+		</a>
+
+        <a href="<?php echo $this->url(array('controller'=>'cb.logistik','action'=>'detail','cbid'=>$this->cbid->getId())); ?>" class="roundall_grey add_icon float-right">
+            <span class="ml22">Kembali</span>
+        </a>
+	</div>
+
+	<div id="map-wrapper" class="block">
+        <div class="map-data">
+            <div class="box no-margin">
+                <h2 id="marker-caption" class="box_head grad_colour">Klik dan Tempatkan informasi disini<span></span></h2>
+                <a href="#" class="grabber">&nbsp;</a>
+                <a href="#" class="toggle">&nbsp;</a>
+                <div class="toggle_container">
+                    <ul class="block content_accordion">
+                        <li>
+                            <a href="#" class="handle">&nbsp;</a>
+                            <h3 class="bar">Accordion 1</h3>
+                            <div class="content">
+                                <p><div id="tampung-data"></div></p>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#" class="handle">&nbsp;</a>
+                            <h3 class="bar">Accordion 2</h3>
+                            <div class="content">
+                                <p><div id="info-cc"></div></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+		<div id="map"></div>
+        <div id="wrapper">
+            <div id="location" style="float:right"></div>
+            <div id="scale" style="float:left"></div>
+            <div id="coordclick" style="width:400px;margin:auto">Clicked Coordinate : <input size="40"></div>
+        </div>
+	</div>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+
+// global map object
+
+//var map;
+// map layers
+
+//var tiled, kodam, tni,willan,lanal,wilkod,bandara,pelabuhan,logistik,rs,ikan,musuh;
+//var geoUrl = "http://10.1.1.111:8080/geoserver/wms";
+
+$(function(){
+//	$('#tampung-data').css('border', '1px solid blue');
+
+        /* == Initializing Map */
+        var format = 'image/png';
+
+        var options = {
+            controls: [],
+            maxResolution:0.0780,
+            projection: "EPSG:4326",
+            units: 'degrees',
+            restrictedExtent: new OpenLayers.Bounds(95.115729755272, -12.012413207701, 140.70672975527, 7.4095867922987)
+        };
+
+        map = new OpenLayers.Map('map', options);
+        /* == End of Initializing Map */
+
+        /* == Setup map layers */
+        tiled = new OpenLayers.Layer.WMS(
+            "Provinsi", geoUrl,
+            {
+                layers: 'BaseSeskoal',
+                STYLES: '',
+                format: format
+            },
+            {isBaseLayer: true, displayInLayerSwitcher:false}
+        );
+
+        kodam = new OpenLayers.Layer.WMS(
+            "Yonif AD", geoUrl,
+            {
+                layers: 'seskoal:yonif',
+                STYLES: '',
+                format: format,
+                transparent:true
+            },
+            {isBaseLayer:false,visibility: false}
+        );
+
+        tni = new OpenLayers.Layer.WMS( "Radar",
+            geoUrl, {
+                transparent : true,
+                layers: 'radar',
+                format: 'image/png'},{isBaseLayer: false, visibility: false}
+        );
+
+        willan = new OpenLayers.Layer.WMS( "Wilayah LANTAMAL",
+            geoUrl, {
+                transparent : true,
+                layers: 'wil_lantamal',
+                format: 'image/png'},{isBaseLayer: false, visibility: false}
+        );
+
+        lanal = new OpenLayers.Layer.WMS( "Pangkalan AL",
+            geoUrl, {
+                transparent : true,
+                layers: 'pst_lanal',
+                format: 'image/png'},{isBaseLayer: false, visibility: false}
+        );
+
+        wilkod = new OpenLayers.Layer.WMS( "Wilayah KODAM",
+            geoUrl, {
+                transparent : true,
+                layers: 'wil_kodam',
+                format: 'image/png'},{isBaseLayer: false, visibility: false}
+        );
+        bandara = new OpenLayers.Layer.WMS( "Bandara",
+            geoUrl, {
+                transparent : true,
+                layers: 'bandara',
+                format: 'image/png'},{isBaseLayer: false, visibility: false}
+        );
+
+	/* == Fitur Tampilan Pangkalan Pendukung */
+	var Lppendukung = new OpenLayers.Layer.Markers(
+		"Pangkalan Pendukung",
+		{isBaseLayer: false, visibility: true}
+	);
+	map.addLayers([Lppendukung]);
+
+	var ll, popupContentHTML;
+	var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+		'autoSize': true
+	});
+	<?php foreach($this->ppendukung as $key) : ?>
+		<?php if ($key['x'] && $key['y']) :?>
+		ll = new OpenLayers.LonLat(<?php echo $key['x'] ?>,<?php echo $key['y'] ?>);
+		popupContentHTML = '<p><?php echo $key['lanal'] ?></p>';
+		addMarker(Lppendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true);
+		<?php endif; ?>
+	<?php endforeach; ?>
+
+	/* == End of Fitur Tampilan Pangkalan Pendukung */
+
+
+        map.addLayers([tiled,wilkod,willan,tni,kodam,lanal,bandara]);
+
+        tiled.transitionEffect = "resize";
+        map.setCenter(new OpenLayers.LonLat(118.0001, -2.4), 1);
+        /* == End of Setup map layers */
+
+        /* == Setting Default Controls */
+        var zp = new OpenLayers.Control.ZoomPanel();
+        map.addControl(zp);
+        zp.moveTo(new OpenLayers.Pixel(10, 10));
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        map.addControl(new OpenLayers.Control.Scale($('#scale').get(0)));
+        map.addControl(new OpenLayers.Control.MousePosition({element: $('#location').get(0),formatOutput: formatLonlats}));
+        /* == End of Setting Default Controls */
+
+        /* == Fitur Zoom Area + Drag Pan */
+        // override NavToolbar untuk mendisable scroll
+        var CustomNavToolbar = OpenLayers.Class(OpenLayers.Control.NavToolbar, {
+            initialize: function(options) {
+                OpenLayers.Control.Panel.prototype.initialize.apply(this, [options]);
+                this.addControls([
+                    new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}), // disable scroll di sini
+                    new OpenLayers.Control.ZoomBox()
+                ]);
+            }
+        });
+        var ctc = new CustomNavToolbar();
+        map.addControl(ctc);
+        ctc.moveTo(new OpenLayers.Pixel(5, 70));
+        /* == End of Fitur Zoom Area + Drag Pan */
+
+        /* == Fitur Navigator Map */
+        var ov = new OpenLayers.Control.OverviewMap({maximized: false});
+        map.addControl(ov);
+        ov.maxRatio = ov.ovmap.getResolution()/map.getResolutionForZoom(map.numZoomLevels);
+        ov.minRatio = ov.ovmap.getResolution()/map.getResolutionForZoom(0);
+        /* == End of Fitur Navigator Map */
+
+        /* == Fitur Hitung Jarak */
+        var pointA = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(map.getCenter().lon, map.getCenter().lat),
+            null,
+            {externalGraphic: imgUrl+"icons/small/grey/Marker.png", graphicYOffset: -16, pointRadius: 10}
+        );
+        var pointB = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(map.getCenter().lon, map.getCenter().lat),
+            null,
+            {externalGraphic: imgUrl+"icons/small/grey/Marker.png", graphicYOffset: -16, pointRadius: 10}
+        );
+        var layerJarak = new OpenLayers.Layer.Vector('Hitung Jarak', {
+            displayInLayerSwitcher:false
+        });
+        var layerGaris = new OpenLayers.Layer.Vector('Garis Penghubung Titik Jarak', {
+            displayInLayerSwitcher:false
+        });
+        layerJarak.setVisibility(false);
+        layerGaris.setVisibility(false);
+        map.addLayers([layerGaris, layerJarak]);
+
+        var controlLayerJarakDrag = new OpenLayers.Control.DragFeature(layerJarak, {
+            onComplete: function(feat, pixel) { // ketika selesai drag
+                var line = new OpenLayers.Geometry.LineString([pointA.geometry, pointB.geometry]);
+                var distance = line.getGeodesicLength(new OpenLayers.Projection(options.projection));
+                // gambar garis
+                var lineFeature = new OpenLayers.Feature.Vector(line, null, {
+                    strokeOpacity: 0.5,
+                    strokeWidth: 3
+                });
+                // remove old line
+                layerGaris.removeAllFeatures();
+                layerGaris.addFeatures([lineFeature]);
+                var text = Math.round(distance*100)/100 + ' meter'; // desimal 2 digit koma
+                if (distance > 1000) {
+                    text = Math.round(distance)/1000 + ' kilometer'; // desimal 3 digit koma
+                }
+                $('#toggle-hitung-jarak').next('span').html('Jarak: '+text);
+            }
+        });
+
+        map.addControl(controlLayerJarakDrag);
+        controlLayerJarakDrag.activate();
+        // event klik tombol
+        $('#toggle-hitung-jarak').bind('click', function(e) {
+            layerJarak.setVisibility(!layerJarak.getVisibility());
+            layerGaris.setVisibility(layerJarak.getVisibility());
+
+            if (layerJarak.getVisibility()) {
+                // refresh posisi marker
+                pointA.geometry.x = map.getCenter().lon;
+                pointA.geometry.y = map.getCenter().lat;
+                pointB.geometry.x = map.getCenter().lon;
+                pointB.geometry.y = map.getCenter().lat;
+                layerJarak.addFeatures([pointA, pointB]);
+            } else {
+                // bersihkan layer
+                layerGaris.removeAllFeatures();
+                layerJarak.removeAllFeatures();
+                $(this).next('span').html('');
+            }
+        })
+            .css('display', 'inline')
+            .css('float', 'none');
+        /* == End of Fitur Hitung Jarak */
+
+        /* == Fitur Klik Dapatkan Koordinat */
+        map.events.register('click', map, function(e) {
+            var lonlat = map.getLonLatFromViewPortPx(e.xy);
+            var text = lonlat.lon + ', ' + lonlat.lat;
+            $('#coordclick').find('input').val(text).select();
+        });
+        /* == End of Fitur Klik Dapatkan Koordinat */
+
+        /* == Fitur Klik Dapatkan Informasi */
+        map.events.register('click', map, function(e) {
+            var lonlat = map.getLonLatFromViewPortPx(e.xy);
+
+            if (willan.getVisibility()) {
+                $('#tampung-data').html('<img src="<?php echo $this->imgUrl('loading1.gif'); ?>">');
+
+                $.get('<?php echo $this->siteUrl('cms/map/get.info.lanal'); ?>', {
+                    lon: lonlat.lon,
+                    lat: lonlat.lat
+                }, function(data, status, xhr) {
+                    $('#tampung-data').html(data);
+                }, 'html');
+            }
+        });
+        /* == End of Fitur Klik Dapatkan Informasi */
+
+		/* == get point's information */
+		map.events.register('click', map, function(e) {
+			var lonlat = map.getLonLatFromViewPortPx(e.xy);
+
+			if (lanal.getVisibility()) {
+				$('#tampung-data').html('<img src="<?php echo $this->imgUrl('loading1.gif'); ?>">');
+
+				$.get('<?php echo $this->siteUrl('cms/map/get.info.lanal.point'); ?>', {
+					lon: lonlat.lon,
+					lat: lonlat.lat
+				}, function(data, status, xhr) {
+					$('#tampung-data').html(data);
+				}, 'html');
+
+				$.getJSON('<?php echo $this->url(array('modul'=>'peta','controller'=>'cbl.pangkalan','action'=>'zazaza','cbid'=>$this->cbid->getId())); ?>',{
+					lon: lonlat.lon,
+					lat: lonlat.lat
+				}, function(data){
+//					console.log(data.ss);
+//					alert('ssss');
+				});
+
+			}
+		});
+		/* == End of et point's information */
+
+    function formatLonlats(lonLat) {
+        var lat = lonLat.lat;
+        var long = lonLat.lon;
+        var ns = OpenLayers.Util.getFormattedLonLat(lat);
+        var ew = OpenLayers.Util.getFormattedLonLat(long,'lon');
+        return ns + ', ' + ew + ' (' + (Math.round(lat * 10000) / 10000) + ', ' + (Math.round(long * 10000) / 10000) + ')';
+    }
+
+});
+</script>

@@ -1,0 +1,52 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>" class="weaponry">
+	<table>
+		<thead>
+			<tr>
+				<th>Nama</th>
+				<th>Jenis</th>
+				<th>Kemampuan</th>
+				<th>Jumlah</th>
+				<th>Keterangan</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="template-row hidden">
+				<!-- hardcoded fields -->
+				<td><input type="text" name="nama_item[]" value="" /></td>
+				<td><input type="text" name="jenis_item[]" value="" /></td>
+				<td><input type="text" name="puan_item[]" value="" /></td>
+				<td><input type="text" name="jumlah_unit[]" value="" /></td>
+				<td><input type="text" name="keterangan[]" value="" /></td>
+				<td><input type="hidden" name="idfasbek[]" value="" /></td>
+				<td><button onclick="remove_row(this)" type="button">X</button></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<button onclick="add_row('template-row', ['', '', '', '', '', ''])" type="button">+Tambah</button>
+	
+	<button class="button_colour round_all">
+		<span>Simpan</span>
+	</button>
+</form>
+
+<script type="text/javascript">
+
+function remove_row(button) {
+	$(button).parent().parent().remove();
+}
+
+function add_row(cls, values) {
+	var $origin = $('.'+cls).first();
+	var $dup = $origin.clone();
+	$dup.removeClass('hidden');
+	$dup.find('input').each(function(i, el) {
+		el.value = values[i];
+	});
+	$origin.parent().append($dup);
+	$dup.find('input').first().focus();
+}
+
+</script>

@@ -1,0 +1,22 @@
+<?php $f = $this->element; ?>
+
+<form method="post" action="<?php echo $f->getAction(); ?>" enctype="<?php echo $f->getEnctype(); ?>">
+
+	<?php $keterangan = $f->keterangan; ?>
+	<label><?php echo $keterangan->getLabel(); ?></label>
+	<div class="input_group">
+		<input type="file" name="filepath">
+		<?php echo $keterangan->renderErrors(); ?>
+	</div>
+
+	<?php $id = $f->id_pangkalan; ?>
+	<div class="input_group">
+		<?php echo $id->renderViewHelper(); ?>
+	</div>
+
+	<button class="button_colour round_all">
+		<span><?php echo $f->submit->getLabel(); ?></span>
+	</button>
+	
+</form>
+

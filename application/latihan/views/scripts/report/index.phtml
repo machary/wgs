@@ -1,0 +1,44 @@
+<div class="flat_area grid_16">
+	<h2>Rekap Penilaian</h2>
+	<div class="block">
+		<table class="display simple-table">
+			<thead>
+			<tr>
+				<th class="ps">Produk Staf</th>
+				<?php foreach($this->team as $id_team => $team): ?>
+				<th class="<?php echo $team; ?>"><?php echo $team; ?></th>
+				<?php endforeach ?>
+			</tr>
+			</thead>
+			<tbody>
+			<?php $tamp='';$x=0;foreach($this->data as $data): ?>
+				<?php if($tamp != $data['id_product_staff']): ?>
+				<tr>
+					<td class="ps"><?php echo $data['nama_product_staff']; ?></td>
+					<?php foreach($this->team as $id_team => $team): ?>
+					<td class="<?php echo $team; ?>">
+						<?php if( $data['id_team'] == $id_team):?>
+						<?php if($this->active[$x]['id_team'] == $data['id_team']): ?>
+							<?php if($this->active[$x]['is_active'] != 0 || $this->active[$x]['is_active'] != null): ?>
+								<a href="<?php echo $this->url(array('action'=>'edit', 'id'=>$data['id'])); ?>">
+									<?php echo $data['nilai']; ?>
+								</a>
+								<?php else: ?>
+								<?php echo $data['nilai']; ?>
+								<?php endif ?>
+							<?php else: ?>
+							<?php echo $data['nilai']; ?>
+							<?php endif ?>
+						<?php else: ?>
+						<?php echo '-'; ?>
+						<?php endif; ?>
+					</td>
+					<?php endforeach ?>
+				</tr>
+					<?php $tamp = $data['id_product_staff']; ?>
+					<?php endif ?>
+				<?php $x++; endforeach ?>
+			</tbody>
+		</table>
+	</div>
+</div>

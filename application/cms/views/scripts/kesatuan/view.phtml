@@ -1,0 +1,64 @@
+<?php $this->printGoBackUrl($this->url(array('action'=>'index', 'id'=>null))); ?>
+
+<div class="flat_area grid_16">
+    <h2>YONIF</h2>
+    <div id="map-wrapper" class="block">
+        <div class="map-data">
+            <div class="box no-margin">
+                <h2 class="box_head grad_colour">Data Daerah Peta Yang Di Klik</h2>
+                <a href="#" class="grabber">&nbsp;</a>
+                <a href="#" class="toggle">&nbsp;</a>
+                <div class="toggle_container">
+                    <ul class="block content_accordion">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="map"></div>
+        <div id="wrapper">
+            <div id="location" style="float:right"></div>
+            <div id="scale" style="float:left"></div>
+            <div id="coordclick" style="width:400px;margin:auto">Clicked Coordinate : <input size="40"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+var map, yonif;
+var dataYonif = JSON.parse('<?php echo json_encode($this->dataYonif); ?>');
+$(function(){
+    map = standardMap('map');
+
+    yonif = new OpenLayers.Layer.Markers("Yonif");
+
+    map.addLayer(yonif);
+    map.redrawSwitcherTree();
+
+    /* == Fitur Klik Dapatkan Informasi */
+    map.events.register('click', map, function(e) {
+        var lonlat = map.getLonLatFromViewPortPx(e.xy);
+        var willan = map.layers[3]; // lihat script.js untuk listnyna
+
+        if (willan.getVisibility()) {
+            $('#tampung-data').html('<img src="<?php echo $this->imgUrl('loading1.gif'); ?>">');
+
+            $.get('<?php echo $this->siteUrl('cms/map/get.info.lanal'); ?>', {
+                lon: lonlat.lon,
+                lat: lonlat.lat
+            }, function(data, status, xhr) {
+                $('#tampung-data').html(data);
+            }, 'html');
+        }
+    });
+
+    var koordinate = new OpenLayers.LonLat(dataYonif.longitude, dataYonif.latitude);
+    var feature = new OpenLayers.Feature(yonif, koordinate);
+
+    var size = new OpenLayers.Size(21,25);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon(baseUrl + '/images/icons/red_circle.png', size, offset);
+    feature.data.icon = icon;
+    marker = feature.createMarker();
+    yonif.addMarker(marker);
+})
+</script>

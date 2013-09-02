@@ -1,0 +1,36 @@
+<?php //if (Zend_Auth::getInstance()->hasIdentity()) : ?>
+<?php
+$hasIdentity = Zend_Auth::getInstance()->hasIdentity();
+if( $hasIdentity ){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+}
+?>
+<div id="topbar" class="clearfix">
+
+    <a href="<?php echo $this->siteUrl();?>" style="margin-left: 10px;">
+        <span>
+            <img src="<?php echo $this->imgUrl( 'logo-wgs-oyu.png' );?>" alt="">
+        </span>
+    </a>
+
+    <?php if($hasIdentity):?>
+    <div class="user_box round_all">
+        <img src="<?php echo $this->imgUrl('user_icon.png'); ?>" width="55" alt="Profile Pic" />
+        <h2><?php echo $identity->role; ?></h2>
+        <h3><a class="text_shadow" href="#"><?php echo $identity->username; ?></a></h3>
+        <ul>
+            <li><a href="<?php echo $this->url(array(
+                'module' => 'peta',
+                'controller' => 'telegram',
+                'action' => 'index',
+            )); ?>">Telegram (<span id="counterTelegram">0</span>)</a><span class="divider">|</span></li>
+            <li><a href="<?php echo $this->url(array(
+                'module' => 'default',
+                'controller' => 'index',
+                'action' => 'logout',
+            )); ?>">Logout</a></li>
+        </ul>
+    </div><!-- #user_box -->
+    <?php endif; ?>
+</div><!-- #topbar -->
+<?php //endif; ?>

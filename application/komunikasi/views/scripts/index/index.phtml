@@ -1,0 +1,54 @@
+<div class="flat_area grid_16">
+
+	<div class="flat_area grid_16">
+		<h2>Daftar Ruang Diskusi</h2>
+		<button class="skin_colour round_all" onclick="window.open('<?php echo $this->siteUrl('komunikasi/index/create') ?>', '_blank');">
+			<img src="<?php echo $this->imgUrl('icons/small/white/Google Buzz.png'); ?>"/>
+			<span>Buat Ruang Diskusi</span>
+		</button>
+	</div>
+	<div class="flat grid_16 round_all">
+        <table class="display table">
+            <thead>
+                <tr>
+                    <th width="25%" align="center">Nama Ruangan</th>
+                    <th width="20%" align="center">Pembuat Ruangan</th>
+                    <th width="10%" align="center">Status Ruangan</th>
+                    <th width="10%"  align="center">Jumlah Peserta</th>
+                    <th width="25%" align="center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if(count($this->roomList)): ?>
+                    <?php foreach($this->roomList as $room): ?>
+                    <tr>
+                        <td><?php echo $room['room_name']; ?></td>
+                        <td><?php echo $room['room_creator']; ?></td>
+                        <td><?php echo $room['status']; ?></td>
+                        <td>
+							<?php echo (isset($room['room_info']['response']['participantCount']) ) ? $room['room_info']['response']['participantCount'] : '0'; ?>
+						</td>
+                        <td>
+							<button onclick="window.open('<?php echo $this->siteUrl('komunikasi/index/join/meetingid/' . $room['room_id'] . '/role/attendee'); ?>', '_blank')"
+									style="clear:none !important;" class="skin_colour round_all">
+								<img src="<?php echo $this->imgUrl('icons/small/white/Walking%20Man.png'); ?>" />
+								<span>Bergabung</span>
+							</button style="clear:right;">
+							<button onclick="window.open('<?php echo $this->siteUrl('komunikasi/index/join/meetingid/' . $room['room_id'] . '/role/moderator'); ?>','_blank')"
+									style="clear:none !important; margin-left: 10px;" class="skin_colour round_all">
+								<img src="<?php echo $this->imgUrl('icons/small/white/Admin%20User.png'); ?>" />
+								<span>Moderator</span>
+							</button>
+                            <button onclick="window.open('<?php echo $this->siteUrl('komunikasi/index/end/meetingid/' . $room['room_id']); ?>', '_self')"
+                                    style="clear:none !important; margin-left: 10px;" class="skin_colour round_all">
+                                <img src="<?php echo $this->imgUrl('icons/small/white/Trashcan.png'); ?>" />
+                                <span>Tutup</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php endif;?>
+            </tbody>
+        </table>
+	</div>
+</div>

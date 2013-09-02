@@ -1,0 +1,28 @@
+<div class="map-top-nav">
+    <a href="<?php echo $this->url(array('action'=>'list')); ?>" class="roundall_grey back_icon float-right">
+        <span class="ml22">Kembali</span>
+    </a>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Tambah Depo Pendukung : <?php echo $this->nocb; ?></h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php
+            $this->form->setAction($this->url());
+            $this->form->getElement('id_cb_logistik')
+                    ->setValue( $this->cbid->getId() )
+                    ->setAttrib('readonly','readonly')
+                    ->setLabel('CB Id <small>&nbsp;*Readonly</small>')
+            ;
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<div class="box grid_8 round_all">
+    <h2 class="box_head grad_colour">Preview Map</h2>
+    <div id="map" style="top:-1px"></div>
+</div>
+<?php echo $this->render('cbl-pertamina/cms-script.phtml');?>

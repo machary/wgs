@@ -1,0 +1,104 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Login</h2>
+	<p>
+		<a class="roundall_grey add_icon" href="javascript:void(0);">
+            <span id="new-user" class="ml22">Tambah Login</span>
+        </a>
+	</p>
+	<div class="block">
+		<table class="display simple-table">
+			<thead>
+				<tr>
+                    <th>Jabatan</th>
+                    <th>Username</th>
+                    <th>Nama</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php if ($this->items) foreach ($this->items as $i => $item) : ?>
+					<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                        <td><?php echo $item->name; ?></td>
+                        <td><?php echo $item->username; ?></td>
+                        <td><?php echo $item->nama; ?></td>
+						<td>
+							<a id="edit-user" href="<?php echo $this->url(array('action'=>'edit', 'id'=>$item->id)); ?>">Ubah</a> |
+							<a href="<?php echo $this->url(array('action'=>'del', 'id'=>$item->id)); ?>" onclick="return confirm('Konfirmasi Hapus Data')">Hapus</a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+</div>
+<!-- dialog form new user -->
+<div id="dialog-add-user" class="hidden box">
+    <div class="block">
+        <?php echo $this->form; ?>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(function() {
+    // inisiasi dialog
+        $newUser = $('#dialog-add-user');
+        $newUser.dialog({
+            autoOpen: false,
+            modal: true,
+            title: 'Tambah User Baru',
+            width: 400,
+            height: 600
+        });
+
+        // inisiasi tombol add titik
+        $('#new-user').bind('click', function(e) {
+            // hapus class error dan error message
+            $newUser.dialog('open');
+	     $('form')[0].reset();
+            $('#username').focus();
+            $('label.error').parent('div').remove();
+            $('div.input_group').find('input.error').removeClass('error');
+        });
+
+        $("form input").blur(function(){
+            $("form").validate().element($(this));
+        });
+
+        $("form select").blur(function(){
+            $("form").validate().element($(this));
+        });
+
+        $("form").validate({
+            rules: {
+                username: "required",
+                password: "required",
+                role_id:  "required",
+                nrp:  "required",
+                nama:  "required",
+                pangkat:  "required"
+            },
+            messages:
+            {
+                username: "Username harus diisi",
+                password: "Password harus diisi",
+                role_id:  "Role harus dipilih",
+                nrp:  "Nrp harus diisi",
+                nama:  "Nama harus diisi",
+                pangkat:  "Pangkat harus diisi"
+            },
+            errorPlacement: function(error,element) {
+                var tampung = element.parent('div.input_group').append(error);
+            },
+            wrapper: "div",
+            debug:true,
+            submitHandler:  function(form){
+                form.submit();
+                form.reset();
+            }
+        });
+    });
+
+</script>
+

@@ -1,0 +1,148 @@
+<div class="map-top-nav grid_16">
+    <a href="<?php echo $this->url(array('action'=>'list')); ?>" class="roundall_grey add_icon float-left">
+        <span class="ml22">Rumah Sakit Umum Pendukung</span>
+    </a>
+
+    <a href="<?php echo $this->url(array('controller'=>'cb-logistik','action'=>'detail','cbid'=>$this->cbid->getId())); ?>" class="roundall_grey back_icon float-right">
+        <span class="ml22">Kembali</span>
+    </a>
+</div>
+
+<div class="box grid_8 grid_16 round_all contentmap " >
+    <h2 class="box_head grad_colour titlemap">
+        <span>Rumah Sakit Pendukung</span>
+    </h2>
+    <div id="map" style="top: -1px"></div>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<style type="text/css">
+    .list-pendukung{
+        width: 250px;
+    }
+    .list-pendukung tr th{
+        border: 1px solid;
+        background: blue;
+        color: #fff;
+        padding: 5px;
+    }
+    .list-pendukung tr td{
+        padding: 5px;
+    }
+</style>
+
+<script>
+
+    // global map object
+    var map,titik_referensi;
+    var rsPendukung;
+    // layers dan geourl ada di script.js
+
+    $(function(){
+        $('#map').css('height', '500px');
+        map = standardMap('map');
+
+        // Marker Pangkalan Pendukung
+        var ll, popupContentHTML;
+        var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+            'autoSize': true
+        });
+        //-- icon --
+        var size = new OpenLayers.Size(25,27); // size icon
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h); //offset icon
+
+        // RS Pendukung
+        rsPendukung = new OpenLayers.Layer.Markers(
+            "Rumah Sakit Pendukung",
+            {isBaseLayer: false, visibility: true}
+        );
+
+        titik_referensi = new OpenLayers.Layer.Markers("Titik Referensi");
+        titik_referensi.setVisibility(false);
+
+        map.addLayers([rsPendukung, titik_referensi]);
+        map.redrawSwitcherTree(); //<--- untuk memasukan layer baru ke dlm switcher
+
+        //render marker RS pendukung
+        <?php foreach($this->rspendukung as $key) : ?>
+            ll = new OpenLayers.LonLat(<?php echo $key['x'];?>,<?php echo $key['y'];?>);
+            var html = '<table class="list-pendukung">' +
+                    '<tr>' +
+                    '<th colspan="2" align="center"><?php echo $key['nama'];?></th>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Kelas</d>' +
+                    '<td><?php echo $key['kelas'];?></d>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Fasilitas</d>' +
+                    '<td><?php echo $key['attribute'];?></d>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Daya Tampung</d>' +
+                    '<td><?php echo $key['daya_tampung'];?></d>' +
+                    '</tr>' +
+                    '</table>';
+
+            popupContentHTML = html;
+            var icon = new OpenLayers.Icon(baseUrl + '/images/icons/cross.png', size, offset); //object icon
+            addMarker(rsPendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true, icon);
+        <?php endforeach; ?>
+        changeMarkers();
+    });
+
+    function changeMarkers()
+    {
+        map.events.register('changelayer', null, function(evt){
+            if(evt.layer.name == 'Titik Referensi' && titik_referensi.visibility == true){
+                parseData(3, 'referensi', '/peta/api/referensi', 0);
+            }
+        });
+    }
+
+    function parseData(id_divisi, jenis, url, matra)
+    {
+        $.post(baseUrl + url,
+            {
+                "id_divisi": id_divisi
+            },
+            function(data){
+                if(jenis == 'referensi'){
+                    addReferensi(data);
+                }
+            }, "json");
+    }
+
+    function addReferensi(data)
+    {
+        AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+            'autoSize': true
+        });
+        popupClass = AutoSizeFramedCloud;
+
+        for(var i in data)
+        {
+            popupContentHTML = '<table style="width: 250px;">'
+                +'<tr>'
+                +'<th>'
+                + data[i]['keterangan']
+                +'</th>'
+                +'</tr>'
+                +'</table>';
+
+            var iconUrl = baseUrl + '/images/info.png';
+
+            if(data[i]['longitude'] != undefined && data[i]['latitude'] != undefined)
+            {
+                var realKoordinate = new OpenLayers.LonLat(data[i]['longitude'], data[i]['latitude']);
+
+                var size = new OpenLayers.Size(21,25);
+                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+                var icon = new OpenLayers.Icon(iconUrl, size, offset);
+
+                addMarker(titik_referensi, realKoordinate, popupClass, popupContentHTML, true, false, icon);
+            }
+        }
+    }
+</script>
+

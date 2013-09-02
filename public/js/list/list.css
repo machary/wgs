@@ -1,0 +1,41 @@
+/*
+ *  SliderNav - A Simple Content Slider with a Navigation Bar
+ *  Copyright 2010 Monjurul Dolon, http://mdolon.com/
+ *  Released under the MIT, BSD, and GPL Licenses.
+ *  More information: http://devgrow.com/slidernav
+ */
+.list_list {  min-height: 250px; display: block; position: relative; background: #fff; overflow: hidden; }
+.list_list ul { list-style: none; }
+.list-content { float: left; width: 99.9%; display: block; overflow-y: scroll; min-height: 250px; border-right:1px solid #aaa;}
+.list-content ul { float: left; width: 100%; display: block; position: relative; }
+.list-content ul li { float: left; width: 100%; }
+.list-content ul li span { padding: 5px 10px; display: block; border-bottom: 1px solid #f3f3f3; text-transform: capitalize; color: #3b9bff; font-weight: bold; cursor: pointer;}
+.list-content ul li span:hover { background: #f3faff; border-color: #d5ebf9; color: #2290ff;}
+.list-content ul li span.active, .list-content ul li span.active:hover { padding: 5px 10px; display: block; text-transform: capitalize; color: #fff; font-weight: bold; cursor: pointer;}
+.list-content .title { padding: 5px 0; text-indent: 10px; background: #bbb;  width: 98%; float: left; font-weight: bold; text-transform: uppercase; border-top:1px solid #aaa; border-bottom:1px solid #aaa;color: #555; text-shadow: 0 1px 0 #FFFFFF;}
+.list-content .selected .title { background: #666; color:white; text-shadow: 0 1px 0 #000; }
+.list_list #debug { position: absolute; bottom: 0; left: 0; padding: 5px; background: #000; color: #fff; }
+.list_list .arrow { font-size: 0px; line-height: 0%; width: 0px; border-bottom: 8px solid #fff; border-left: 5px solid #333; border-right: 5px solid #333; position: relative; top: 5px; display:none;}
+.list_list .down { border-bottom: none; border-top: 8px solid #fff; top: 15px; }
+.list_list .slide-up, .list_list .slide-down { height: 20px; background: #333; text-align: center; float: right; width: 100%; position: relative; }
+
+.slide-up, .slide-down{
+	border-bottom:1px solid #aaa;
+	border-top:1px solid #aaa;
+	border-left:1px solid #fff;
+	border-right:1px solid #aaa;
+}
+
+.slide-up{
+	margin-top:-1px;
+	padding-bottom:1px}
+
+
+.slide-down{
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+}

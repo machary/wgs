@@ -1,0 +1,179 @@
+<div style="margin-bottom: 10px; padding-top: 10px; overflow: hidden;">
+<?php $this->printGoBackUrl($this->url(array('action'=>'index'))); ?>
+</div>
+
+<div class="flat_area grid_16">
+	<h2>KRI - <?php echo $this->datakri->nama_kri; ?><?php echo ($this->datakri->singkatan_kri != '') ? ' ('. $this->datakri->singkatan_kri. ') ' : ''; ?>
+    </h2>
+
+    <?php if(!empty($this->datakri->gambar)):?>
+    <div class="block" style="padding: 10px;">
+        <img src="<?php echo $this->siteUrl('upload/images/kri/' . $this->datakri->gambar ); ?>" alt="">
+     </div>
+    <?php endif;?>
+	<div class="block" style="padding: 10px;">
+		<?php
+			$infoArr = array(
+				'no_lamb_kri', 'jenis', 'type', 'negara_asal', 'tahun_buat',
+				'tahun_aktif', 'material_bakap', 'panjang_loa', 'panjang_lbp',
+				'panjang_lwl', 'lebar', 'tinggi', 'draft', 'berat', 'kecepatan_ekon',
+				'kecepatan_jljh', 'kecepatan_max', 'jarak_jljh', 'endurance',
+				'kapasitas_tangki_bb', 'kapasitas_tangki_ml',
+				'kapasitas_tangki_at', 'keterangan'
+			);
+
+			$labelArr = array(
+				'no_lamb_kri' => 'No. Lambung',
+				'jenis' => 'Jenis',
+				'type' => 'Type',
+				'negara_asal' => 'Negara Asal',
+				'tahun_buat' => 'Tahun Pembuatan',
+				'tahun_aktif' => 'Tahun Aktif TNI AL',
+				'material_bakap' => 'Material Bakap',
+				'panjang_loa' => 'Panjang LOA (M)',
+				'panjang_lbp' => 'Panjang LBP (M)',
+				'panjang_lwl' => 'Panjang LWL (M)',
+				'lebar' => 'Lebar (M)',
+				'tinggi' => 'Tinggi (M)',
+				'draft' => 'Draft (M)',
+				'berat' => 'Berat (Ton)',
+				'kecepatan_ekon' => 'Kecepatan Ekon (Knots)',
+				'kecepatan_jljh' => 'Kecepatan JLJH (Knots)',
+				'kecepatan_max' => 'Kecepatan Max (Knots)',
+				'jarak_jljh' => 'Jarak JLJH (NM)',
+				'endurance' => 'Endurance (Hari)',
+				'kapasitas_tangki_bb' => 'Kapasitas Tangki BB',
+				'kapasitas_tangki_ml' => 'Kapasitas Tangki ML',
+				'kapasitas_tangki_at' => 'Kapasitas Tangki AT',
+				'keterangan' => 'Keterangan'
+			);
+		?>
+		<?php $i = 1; ?>
+		<div class="grid_4">
+		<?php foreach($infoArr as $info ): ?>
+			<?php foreach( $this->datakri as $field => $value ): ?>
+				<?php if( $field == $info AND $value ): ?>
+					<strong>
+						<?php echo ucfirst($labelArr[$field]); ?>
+					</strong>
+					<p><?php echo $value; ?></p>
+				<?php endif; ?>
+			<?php endforeach; ?>
+			<?php if($i % 4 == 0): ?>
+				</div>
+				<div class="grid_4">
+			<?php endif; ?>
+			<?php $i++; ?>
+		<?php endforeach; ?>
+		</div>
+
+	</div>
+
+	<div class="block">
+		<div class="grid_7">
+            <?php
+            $dataKRIMotor = $this->datakrimotor->toArray();
+            $dataKRIListrik = $this->datakrilistrik->toArray();
+            ?>
+            <?php if( empty($dataKRIMotor) ):?>
+                <p style="margin-top: 10px;">
+                    <a href="<?php echo $this->url(array('action'=>'add.motor')); ?>" class="roundall_grey add_icon">
+                        <span class="ml22">Data Sistem Pendorong Motor Pokok Baru</span>
+                    </a>
+                </p>
+            <?php else:?>
+                <table class="simple-table first">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Sistem Pendorong Motor Pokok</th>
+                            <th rowspan="2">Jumlah</th>
+                        </tr>
+                        <tr class="second">
+                            <th>Nomor</th>
+                            <th>Merk Type</th>
+                            <th>Daya</th>
+                            <th>Rpm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach( $this->datakrimotor as $value ): ?>
+                            <tr>
+                                <td align="center"><?php echo $value->nomor; ?></td>
+                                <td><?php echo $value->merk_type; ?></td>
+                                <td align="right"><?php echo $value->daya; ?></td>
+                                <td align="right"><?php echo $value->rpm; ?></td>
+                                <td align="right"><?php echo $value->jml; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif;?>
+		</div>
+		<div class="grid_9">
+        <?php if( empty($dataKRIListrik) ):?>
+            <p style="margin-top: 10px;text-align: right">
+                <a href="<?php echo $this->url(array('action'=>'add.listrik')); ?>" class="roundall_grey add_icon">
+                    <span class="ml22">Data Sistem Pendorong Motor Listrik Baru</span>
+                </a>
+            </p>
+        <?php else:?>
+			<table class="simple-table">
+				<thead>
+					<tr>
+						<th colspan="5">Sistem Pendorong Motor Listrik (Diesel Generator)</th>
+						<th rowspan="2" colspan="2" width="15%"">Jumlah Propeller</th>
+					</tr>
+					<tr>
+						<th rowspan="2">Nomor</th>
+						<th rowspan="2">Merk Type</th>
+						<th colspan="2">Daya</th>
+						<th rowspan="2">Rpm</th>
+					</tr>
+					<tr>
+						<th>KVA</th>
+						<th>KW</th>
+						<th>AS</th>
+						<th>Daun Per Propeller</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach( $this->datakrilistrik as $value ): ?>
+						<tr>
+							<td align="center"><?php echo $value->nomor; ?></td>
+							<td><?php echo $value->merk_type; ?></td>
+							<td align="right"><?php echo $value->daya_kva; ?></td>
+							<td align="right"><?php echo $value->daya_kw; ?></td>
+							<td align="right"><?php echo $value->rpm; ?></td>
+							<td align="right"><?php echo $value->propeler_as; ?></td>
+							<td align="right"><?php echo $value->propeler_daun; ?></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+        <?php endif;?>
+		</div>
+	</div>
+</div>
+
+<style type="text/css">
+	table.simple-table tr td, table.simple-table tr th {
+		font-size: 12px;
+	}
+
+	table.simple-table.first tr.second th {
+		padding: 23px;
+	}
+
+	table.simple-table thead tr th {
+		padding: 5px;
+		border: 1px solid #000;
+		font-size: 13px;
+		vertical-align: middle;
+	}
+	table.simple-table thead{
+		border: 1px solid #000;
+	}
+	table.simple-table tbody tr td{
+		padding: 5px;
+	}
+</style>

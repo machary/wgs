@@ -1,0 +1,160 @@
+<?php $this->headStyle()->captureStart(); ?>
+#animator-toolbar button {
+	float:none;
+	display: inline-block;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+
+<div class="flat_area grid_16">
+    <h2>Detail CB Operasional</h2>
+	<a href="<?php echo $this->url(array('action'=>'perbandingan-panglima', 'controller'=>$this->kogas)); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+
+<div class="box grid_16 round_all">
+    <h2 class="box_head grad_colour">
+        CB Panglima Perbandingan
+    </h2>
+
+    <div id="map-cb" style="margin-bottom: 20px;"></div>
+
+    <?php foreach($this->dataPanglima as $id => $dataPanglima): ?>
+        <div class="box grid_8 round_all" style="margin-bottom: 20px; margin-top: 20px;">
+            <h2 class="box_head grad_colour">
+                CB Panglima - <?php echo $dataPanglima['cb']->nomor;?>
+            </h2>
+            <?php foreach($dataPanglima as $jenis => $dataJenis): ?>
+                <?php if(isset($dataJenis['satuan'])): ?>
+                    <div class="block">
+                        <h3><?php echo ucfirst($jenis);?></h3>
+                        <p>Total jarak tempuh: <span class="jarak-cb" id="jarak-cb-<?php echo $jenis.'-'.$id; ?>">0</span> <?php echo $dataJenis['satuan']->jarak; ?></p>
+                        <p>Total jumlah: <span id="kapal-cb-<?php echo $jenis.'-'.$id; ?>">0</span></p>
+                        <p>Detail: <span id="detail-kapal-cb-<?php echo $jenis.'-'.$id; ?>"></span></p>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endforeach; ?>
+
+    <?php foreach($this->data as $id => $data): ?>
+        <div class="box grid_8 round_all" style="margin-bottom: 20px; margin-top: 20px;float: right;">
+            <h2 class="box_head grad_colour">
+                CB - <?php echo $data['cb']->nomor;?>
+            </h2>
+            <?php foreach($data as $jenis => $dataJenis): ?>
+                <?php if(isset($dataJenis['satuan'])): ?>
+                    <div class="block">
+                        <h3><?php echo ucfirst($jenis);?></h3>
+                        <p>Total jarak tempuh: <span class="jarak-cb" id="jarak-cb-<?php echo $jenis.'-'.$id; ?>">0</span> <?php echo $dataJenis['satuan']->jarak; ?></p>
+                        <p>Total jumlah: <span id="kapal-cb-<?php echo $jenis.'-'.$id; ?>">0</span></p>
+                        <p>Detail: <span id="detail-kapal-cb-<?php echo $jenis.'-'.$id; ?>"></span></p>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endforeach; ?>
+
+    <div class="block" id="animator-toolbar" style="clear: both;">
+        <button id="button-start" type="button">Start</button>
+        <button id="button-pause" type="button">Pause</button>
+        <button id="button-reset" type="button">Reset</button>
+        Waktu asumsi 1 detik = <input id="second2hour" value="1"> jam
+
+        <div id="time-slider"></div>
+        State: <span id="time-notice">0</span>
+    </div>
+
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-operasional.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rutep-animator.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-statistik.js')); ?>
+<script type="text/javascript">
+	$(function() {
+		"use strict";
+		var mapid = 'map-cb',
+			map, 
+			stats,
+			animator,
+			layerVector,
+			$asumsi = $('#second2hour').css('display', 'inline'),
+			resetFlag = true,
+			tempTitik, tempFormasi, tempRudal;
+		
+		$('#'+mapid).css('height', '500px');
+		map = standardMap(mapid);
+		layerVector = new OpenLayers.Layer.Vector('Rute', {
+			displayInLayerSwitcher:false
+		});
+		map.addLayer(layerVector);
+		// redraw feature setelah zoom
+		map.events.register('zoomend', map, function (e) {
+			animator.redraw();
+		});
+
+		stats = new Statistik_Cb();
+		animator = new Animator_Multi_Formasi(layerVector);
+
+        <?php foreach($this->dataPanglima as $id => $dataPanglima): ?>
+            <?php foreach($dataPanglima as $jenis => $dataJenis): ?>
+                <?php if(isset($dataJenis['satuan'])): ?>
+                    <?php if(isset($dataJenis['items'])): ?>
+                        <?php foreach($dataJenis['items'] as $item): ?>
+                        tempTitik = <?php echo json_encode($item->getTitik()); ?>;
+                        tempFormasi = <?php echo json_encode($item->getFormasi()); ?>;
+                        tempRudal = <?php echo json_encode($item->getRudal()); ?>;
+
+                        stats.addFormasi(tempFormasi, tempTitik);
+                        animator.addPanglima(tempFormasi, tempTitik, tempRudal);
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    $('#jarak-cb-<?php echo $jenis.'-'.$id;?>').html(stats.<?php echo $dataJenis['satuan']->function;?>.toFixed(3));
+                    $('#kapal-cb-<?php echo $jenis.'-'.$id;?>').html(stats.totalKapal);
+                    $('#detail-kapal-cb-<?php echo $jenis.'-'.$id;?>').html(stats.detailKapalToString());
+                <?php endif; ?>
+            <?php endforeach; ?>
+        <?php endforeach; ?>
+
+        <?php foreach($this->data as $id => $data): ?>
+            <?php foreach($data as $jenis => $dataJenis): ?>
+                <?php if(isset($dataJenis['satuan'])): ?>
+                    <?php if(isset($dataJenis['items'])): ?>
+                        <?php foreach($dataJenis['items'] as $item): ?>
+                        tempTitik = <?php echo json_encode($item->getTitik()); ?>;
+                        tempFormasi = <?php echo json_encode($item->getFormasi()); ?>;
+                        tempRudal = <?php echo json_encode($item->getRudal()); ?>;
+
+                        stats.addFormasi(tempFormasi, tempTitik);
+                        animator.addItem(tempFormasi, tempTitik, tempRudal);
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    $('#jarak-cb-<?php echo $jenis.'-'.$id;?>').html(stats.<?php echo $dataJenis['satuan']->function;?>.toFixed(3));
+                    $('#kapal-cb-<?php echo $jenis.'-'.$id;?>').html(stats.totalKapal);
+                    $('#detail-kapal-cb-<?php echo $jenis.'-'.$id;?>').html(stats.detailKapalToString());
+                <?php endif; ?>
+		    <?php endforeach; ?>
+		<?php endforeach; ?>
+		// statistik
+
+        // inisiasi tombol
+        $asumsi.bind('change', function (e) {
+            resetFlag = true;
+        });
+        $('#button-start').bind('click', function (e) {
+            if (resetFlag) {
+                animator.generateState(parseInt($asumsi.val(), 10), '<?php echo $this->satuan['kecepatan']; ?>');
+                resetFlag = false;
+            }
+            animator.startAnimation();
+        });
+        $('#button-pause').bind('click', function (e) {
+            animator.stopAnimation();
+        });
+        $('#button-reset').bind('click', function (e) {
+            animator.resetAnimation();
+        });
+	});
+</script>

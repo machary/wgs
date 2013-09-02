@@ -1,0 +1,77 @@
+<?php
+//$identity = Zend_Auth::getInstance()->getStorage()->read();
+?>
+<div class="flat_area grid_16">
+	<h2>Daftar Produk Staff
+	</h2>
+	<p>
+		<?php if (App_Auth::isAllowed('cms', 'produk.staff', 'add')) : ?>
+<!--            --><?php //if($this->lock != 1): ?>
+                <a href="<?php echo $this->url(array('action'=>'add')); ?>" class="roundall_grey add_icon">
+                    <span class="ml22">Produk Staff Baru</span>
+                </a>
+<!--            --><?php //endif ?>
+		<?php endif;?>
+    </p>
+	
+	<div class="block">
+		<table id="table-dtables" class="display">
+			<thead>
+				<tr>
+					<th>Nama </th>
+					<th width="140px">Waktu Upload</th>
+					<th>Langkah</th>
+					<th>Kode Skenario</th>
+					<th>User</th>
+					<th width="15%"></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+
+	<script type="text/javascript">
+	<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+
+
+
+	$(function(){
+
+		var aoCol = [
+			null,
+			{bSearchable: false},
+			null,
+			null,
+			null,
+			{bSortable: false, bSearchable: false}
+		];
+
+		var oTable = $('#table-dtables').dataTable({
+			"bJQueryUI": true,
+			"sScrollX": "",
+			"bSortClasses": false,
+			"aaSorting": [[1,'desc']],
+			"bAutoWidth": true,
+			"bInfo": true,
+			"bFilter": true,
+			"sScrollY": "100%",
+			"sScrollX": "100%",
+			"bScrollCollapse": true,
+			"sPaginationType": "full_numbers",
+			"bProcessing" : true,
+			"bServerSide" : true,
+			"sAjaxSource" : '<?php echo $this->url(array('action'=>'dataapi')); ?>',
+			"fnServerData" : function(sSource, aoData, fnCallback) {
+				// @optional filter category content
+				jQuery.getJSON(sSource, aoData, function(json) {
+					fnCallback(json);
+				});
+			},
+			'aoColumns' : aoCol
+		});
+
+
+		new Filterer(oTable);
+	});
+	</script>

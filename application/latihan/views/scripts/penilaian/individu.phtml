@@ -1,0 +1,77 @@
+<div class="flat_area grid_16">
+    <h2>Daftar Penilaian</h2>
+    <div class="block">
+        <form method="post" action="<?php echo $this->url(array('controller' => 'penilaian','action'=>'saveindividu')); ?>">
+            <?php $x=0; foreach($this->team as $team): ?>
+            <p>
+                <label>Nama Kogas       : </label><?php echo $this->model[$x]['nama_jabatan']; ?></br>
+                <label>Skenario Latihan : </label><?php echo $this->model[$x]['nomor']; ?></br>
+                <label>Nama Team        : </label><?php echo $team['team_name']; ?>
+            </p>
+            <table class="display simple-table">
+                <thead>
+                <tr>
+                    <th>NRP</th>
+                    <th>Nama</th>
+                    <th>Nilai</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($this->model as $data): ?>
+                    <?php if($team['id'] == $data['id']): ?>
+                    <tr>
+                        <td><?php echo $data['nrp']; ?></td>
+                        <td><?php echo $data['nama']; ?></td>
+                        <td>
+                            <p>
+                                <label for="<?php echo $data['id'].'_'.$data['log_id']; ?>">Nilai :</label>
+                                <input type="text" class="slider-input"
+                                       name="<?php echo $data['id'].'_'.$data['log_id']; ?>"
+                                       id="<?php echo $data['id'].'_'.$data['log_id']; ?>"
+                                       style="border:0; color:#f6931f; font-weight:bold;" />
+                            </p>
+                            <div class="slider"></div>
+                        </td>
+                    </tr>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+            <?php $x++; endforeach ?>
+            <button class="button_colour round_all">
+                <span>Simpan</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function(){
+
+        $('.slider-input').keyup(function(){
+            thisElmVal = $(this).val();
+            if(thisElmVal > 100){
+                alert('asdfasdf')
+            }
+            else
+            {
+                $(this).parent().parent().find('.slider').slider('value', thisElmVal);
+            }
+        });
+
+        $( ".slider" ).slider({
+            range:"min",
+            value:0,
+            min: 0,
+            max: 100,
+            step: 1,
+            slide: function( event, ui ) {
+                $(this).parent('td').find(':input').val(ui.value);
+            }
+        });
+        //$( "#amount" ).val( $( ".slider" ).slider( "value" ) );
+
+    });
+
+</script>

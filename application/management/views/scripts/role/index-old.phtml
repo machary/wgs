@@ -1,0 +1,30 @@
+<div class="flat_area grid_16">
+	<h2>Daftar Role</h2>
+    <div class="map-top-nav">
+		<a class="roundall_grey add_icon mr3 float-left" href="<?php echo $this->url(array('controller'=>'role','action'=>'add')); ?>">
+            <span class="ml22">Role Baru</span>
+        </a>
+	</div>
+	<div class="block">
+		<table class="display simple-table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php if ($this->items) foreach ($this->items as $i => $item) : ?>
+					<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+						<td><?php echo $item->getName(); ?></td>
+						<td>
+							<a href="<?php echo $this->url(array('action'=>'edit', 'id'=>$item->getId())); ?>">Ubah</a> |
+							<a href="<?php echo $this->url(array('action'=>'del', 'id'=>$item->getId())); ?>" onclick="return confirm('Anda yakin?')">Hapus</a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+</div>
+

@@ -1,0 +1,31 @@
+<div class="flat_area grid_16">
+	<!-- box header label -->
+	<h2>Pembuatan RO</h2>
+</div>
+
+<form method="post">
+<?php foreach ($this->model->getOptions() as $c => $options) : ?>
+	<div class="box grid_3 round_all">
+		<h2 class="box_head grad_colour"><?php echo ucfirst($c); ?></h2>
+	
+		<div class="block" style="padding-bottom: 20px;">
+            <?php if(count($options)): ?>
+            <?php $colName = $c.'-rename'; ?>
+            <?php $ReName = $this->model->getName(); ?>
+                <label>Nama Operasi</label>
+                <input style="margin-bottom: 30px;" name="<?php echo $c; ?>-rename" type="text" value="<?php echo $ReName[$colName]; ?>"/>
+            <?php endif; ?>
+            <?php foreach ($options as $row) : ?>
+                <input name="<?php echo $c; ?>" type="radio" value="<?php echo $row->id; ?>"
+                    <?php if ($row->id == $this->model->getRow()->$c) echo 'checked="checked"'; ?>>
+                <?php echo $row->nomor; ?>
+                <br>
+            <?php endforeach; ?>
+		</div>
+	</div>
+<?php endforeach; ?>
+
+	<button class="button_colour round_all">
+		<span>Simpan</span>
+	</button>
+</form>

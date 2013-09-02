@@ -1,0 +1,102 @@
+<?php $this->headStyle()->captureStart(); ?>
+#animator-toolbar button {
+	float:none;
+	display: inline-block;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+
+<div class="flat_area grid_16">
+    <h2>Detail CB Operasional</h2>
+	<a href="<?php echo $this->url(array('action'=>'udara.perbandingan', 'cb_id'=>null)); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<?php $cb = $this->cb; ?>
+<?php $items = Peta_Model_RuteUdaraOperasional::allObjects($cb->id); ?>
+
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour">
+		CB <?php echo $cb->no_cb_operasional; ?>
+	</h2>
+		
+	<div id="map-cb-1"></div>
+	
+	<div class="block">
+		<p>Total jarak tempuh: <span id="jarak-cb-1">0</span> kilometer</p>
+		<p>Total jumlah: <span id="kapal-cb-1">0</span></p>
+		<p>Detail: <span id="detail-kapal-cb-1"></span></p>
+	</div>
+	
+	<div class="block" id="animator-toolbar">
+		<button id="button-start" type="button">Start</button>
+		<button id="button-pause" type="button">Pause</button>
+		<button id="button-reset" type="button">Reset</button>
+		Waktu asumsi 1 detik = <input id="second2hour" value="1"> jam
+		
+		<div id="time-slider"></div>
+		State: <span id="time-notice">0</span>
+	</div>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-operasional.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-animator.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-statistik.js')); ?>
+<script>
+	$(function() {
+		"use strict";
+		var id = 1,
+			mapid = 'map-cb-1',
+			map, 
+			stats,
+			animator,
+			layerVector,
+			$asumsi = $('#second2hour').css('display', 'inline'),
+			resetFlag = true,
+			tempTitik, tempFormasi;
+		
+		$('#'+mapid).css('height', '500px');
+		map = standardMap(mapid),
+		layerVector = new OpenLayers.Layer.Vector('Rute', {
+			displayInLayerSwitcher:false
+		});
+		map.addLayer(layerVector);
+		// redraw feature setelah zoom
+		map.events.register('zoomend', map, function (e) {
+			animator.redraw();
+		});
+		
+		stats = new Statistik_Cb();
+		animator = new Animator_Multi_Formasi(layerVector);
+		<?php foreach ($items as $item) : ?>
+			tempTitik = <?php echo json_encode($item->getTitik()); ?>;
+			tempFormasi = <?php echo json_encode($item->getFormasi()); ?>;
+			stats.addFormasi(tempFormasi, tempTitik);
+			animator.addItem(tempFormasi, tempTitik);
+		<?php endforeach; ?>
+		
+		// statistik
+		$('#jarak-cb-'+id).html(stats.totalJarakInKm().toFixed(3));
+		$('#kapal-cb-'+id).html(stats.totalKapal);
+		$('#detail-kapal-cb-'+id).html(stats.detailKapalToString());
+		
+		// inisiasi tombol
+		$asumsi.bind('change', function (e) {
+			resetFlag = true;
+		});
+		$('#button-start').bind('click', function (e) {
+			if (resetFlag) {
+				animator.generateState(parseInt($asumsi.val(), 10), 'kmph');
+				resetFlag = false;
+			}
+			animator.startAnimation();
+		});
+		$('#button-pause').bind('click', function (e) {
+			animator.stopAnimation();
+		});
+		$('#button-reset').bind('click', function (e) {
+			animator.resetAnimation();
+		});
+	});
+</script>

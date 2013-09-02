@@ -1,0 +1,113 @@
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'index', 'controller' => 'kogas-panglima')); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<div class="flat_area grid_16">
+    <h2>Perbandingan CB <?php echo ucfirst($this->kogas); ?></h2>
+	<div class="alert alert_green" style="clear:both">
+		Silakan klik pada rute operasional yang ingin dilihat detailnya
+	</div>
+</div>
+
+<form method="post" action="<?php echo $this->url(array( 'controller'=>'kogas-panglima', 'action'=>'list'));?>">
+    <div class="box grid_8 round_all">
+        <h2 class="box_head grad_colour">CB Panglima</h2>
+        <div class="toggle_container">
+            <div class="block">
+                <div class="input_group">
+                <?php foreach ($this->cbPanglimaList as $i => $cb) : ?>
+                    <input name="cb_pilihan" type="radio" value="<?php echo $cb->id; ?>">
+                    <?php echo $cb->nomor; ?>
+                    <?php if (isset($this->ruteClass['udara'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'udara.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Udara
+                        </a>
+                    <?php endif; ?>
+                    <?php if (isset($this->ruteClass['laut'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'laut.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Laut
+                        </a>
+                    <?php endif; ?>
+                    <?php if (isset($this->ruteClass['marinir'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'marinir.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Marinir
+                        </a>
+                    <?php endif; ?>
+                    <?php if (isset($this->ruteClass['darat'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'darat.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Darat
+                        </a>
+                    <?php endif; ?>
+                    <?php if (isset($this->ruteClass['linud'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'linud.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Linud
+                        </a>
+                    <?php endif; ?>
+                    <br>
+                <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box grid_8 round_all">
+        <h2 class="box_head grad_colour">CB Staff</h2>
+        <div class="toggle_container">
+            <div class="block">
+                <div class="input_group">
+                <?php foreach ($this->cbNotPanglimaList as $i => $cb) : ?>
+                    <input name="cbnotp_pilihan[]" type="checkbox" value="<?php echo $cb->id; ?>">
+                    <?php echo $cb->nomor; ?>
+                    <?php if (isset($this->ruteClass['udara'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'udara.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Udara
+                        </a>
+                    <?php endif; ?>
+                    <?php if (isset($this->ruteClass['laut'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'laut.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Laut
+                        </a>
+                    <?php endif; ?>
+                    <?php if (isset($this->ruteClass['marinir'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'marinir.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Marinir
+                        </a>
+                    <?php endif; ?>
+                    <?php if (isset($this->ruteClass['darat'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'darat.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Darat
+                        </a>
+                    <?php endif; ?>
+                    <?php if (isset($this->ruteClass['linud'])) : ?>
+                        -
+                        <a href="<?php echo $this->url(array('action'=>'linud.perbandingan.detail', 'cb_id'=>$cb->id)); ?>">
+                            Rute Linud
+                        </a>
+                    <?php endif; ?>
+                    <br>
+                <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block grid_16">
+        <input name="kogas" type="hidden" value="<?php echo strtolower($this->kogas); ?>" />
+        <input name="cbcrudclass" type="hidden" value="<?php echo ($this->cbClassName); ?>" />
+        <textarea name="ruteclass" style="display: none;"><?php echo $this->ruteclass; ?></textarea>
+        <textarea name="satuan" style="display: none;"><?php echo $this->satuan; ?></textarea>
+        <button class="button_colour round_all">
+            <span>Tampilkan Simulasi</span>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,115 @@
+<?php $this->headStyle()->captureStart(); ?>
+#jenis-pohon {
+float: left;
+width: 22%;
+}
+
+#jenis-pohon li {
+border: none;
+padding: 0;
+}
+
+#jenis-pohon li a {
+color: black;
+}
+
+#table-dtables_wrapper {
+float: right;
+width: 77%;
+}
+
+#table-dtables_processing {
+float: none;
+width: 80px;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+<div class="flat_area grid_16">
+    <h2>Daftar Help</h2>
+    <div class="map-top-nav">
+        <a href="<?php echo $this->url(array('action'=>'add')); ?>" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Upload Dokumen</span>
+        </a>
+        <a href="<?php echo $this->url(array('action'=>'jenis')); ?>" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Setting Direktori</span>
+        </a>
+    </div>
+
+    <div class="block">
+        <div id="jenis-pohon" class="tree"></div>
+        <table id="table-dtables" class="display">
+            <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Deskripsi</th>
+                <th></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    <?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+    <?php $this->inlineScript()->appendFile($this->jsUrl('jstree/jquery.jstree.js')); ?>
+
+    $(function(){
+        var oTable = $('#table-dtables').dataTable({
+            "bJQueryUI": true,
+            "sScrollX": "",
+            "bSortClasses": false,
+            "aaSorting": [[0,'asc']],
+            "bAutoWidth": true,
+            "bInfo": true,
+            "bFilter": true,
+            "sScrollY": "100%",
+            "sScrollX": "100%",
+            "bScrollCollapse": true,
+            "sPaginationType": "full_numbers",
+            "bProcessing" : true,
+            "bServerSide" : true,
+            "sAjaxSource" : '<?php echo $this->url(array('action'=>'dataapi')); ?>',
+            "fnServerData" : function(sSource, aoData, fnCallback) {
+                // @optional filter category content
+                jQuery.getJSON(sSource, aoData, function(json) {
+                    fnCallback(json);
+                });
+            },
+            'aoColumns' : [
+                null,null,
+                {bSortable: false, bSearchable: false}]
+        });
+
+        new Filterer(oTable);
+
+        // pohon jenis referensi
+        // initial data
+        var data = <?php echo json_encode($this->jenis->toJson()); ?>;
+        // inisiasi tree
+        gpohon = $('#jenis-pohon')
+            .jstree({
+                //'core' : {},
+                'plugins': ['themes', 'json_data', 'ui'],
+                'json_data': {
+                    'data': data
+                },
+                'ui': {
+                    'select_limit': 1
+                }
+            })
+            .bind('select_node.jstree', function(e, data) {
+                oTable.fnDraw();
+            })
+        ;
+        $('#jenis-pohon').click(function(e) {
+            var suspect = $(e.target).parents()[1]; // sangat bergantung dari DOM
+            if (suspect.id == 'jenis-pohon') {
+                var selected = gpohon.jstree('get_selected');
+                if (selected.length) {
+                    gpohon.jstree('deselect_all');
+                    oTable.fnDraw();
+                }
+            }
+        });
+
+    });
+</script>

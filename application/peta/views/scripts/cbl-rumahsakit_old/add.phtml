@@ -1,0 +1,21 @@
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Tambah Rumahsakit Pendukung</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+<div class="box grid_8 round_all">
+    <h2 class="box_head grad_colour">Preview Map</h2>
+    <div id="map"></div>
+</div>
+
+
+<div class="flat_area grid_16">
+	<p><a href="<?php echo $this->url(array('action'=>'list')); ?>">Kembali</a></p>
+</div>
+<?php echo $this->render('cbl-rumahsakit/cms-script.phtml');?>

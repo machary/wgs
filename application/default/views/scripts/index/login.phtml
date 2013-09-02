@@ -1,0 +1,96 @@
+<?php
+$this->headTitle('Olah Yudha | Seskoal');
+
+$this->headLink()
+    ->appendStylesheet($this->cssUrl('all.css'))
+    ->appendStylesheet($this->cssUrl('custom-style.css'))
+    ->appendStylesheet($this->cssUrl('header_top.css'))
+    ->appendStylesheet($this->cssUrl('theme/theme_blue.css'))
+    ->appendStylesheet($this->cssUrl('theme/bg_wood.css'))
+    ->appendStylesheet($this->cssUrl('ie6.css'), 'screen', 'IE6')
+    ->appendStylesheet($this->cssUrl('ie.css'), 'screen', 'IE')
+    ->appendStylesheet($this->cssUrl('validationEngine.jquery.css'))
+    ->appendStylesheet($this->cssUrl('OpenLayers/theme/default/style.css'))
+;
+?>
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+
+    <!-- iPhone, iPad and Android specific settings -->
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1;">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Create an icon and splash screen for iPhone and iPad -->
+    <!-- todo:icon + splash screen buat iphone dan ipad -->
+    <link rel="apple-touch-icon" href="<?php echo $this->imgUrl('iOS_icon.png'); ?>"/>
+    <link rel="apple-touch-startup-image" href="<?php echo $this->imgUrl('iOS_startup.png'); ?>"/>
+
+    <link rel="shortcut icon" href="<?php echo $this->imgUrl('favicon.ico'); ?>" type="image/gif" />
+    <link rel="icon" href="<?php echo $this->imgUrl('favicon.ico'); ?>" type="image/gif" />
+
+    <?php echo $this->headTitle(); ?>
+    <?php echo $this->headLink(); ?>
+    <?php echo $this->headStyle(); ?>
+    <?php echo $this->headScript(); ?>
+
+</head>
+
+<body>
+
+<?php if ($this->alert) : ?>
+<div class="alert alert_red">
+    <img width="24" height="24" src="<?php echo $this->imgUrl('icons/small/white/Alert%202.png'); ?>">
+    <?php echo $this->alert; ?>
+</div>
+    <?php endif; ?>
+
+<div id="login_box" class="round_all clearfix">
+    <a href="<?php echo $this->siteUrl();?>" style="margin-left: 10px;">
+               <span>
+                   <img src="<?php echo $this->imgUrl( 'logo-wgs-oyu.png' );?>" alt="">
+               </span>
+    </a>
+    <div class="main_container clearfix ui-sortable" style="">
+        <div class="box no_titlebar" style="opacity: 1;">
+            <form method="post">
+                <div id="header_login" class="roundall_grey">
+                    <h4>Masukkan Detail Login Anda</h4>
+                </div>
+                <fieldset class="label_side">
+                    <label for="username"><strong>Username</strong><span>Case Sensitive</span></label>
+                    <div>
+                        <input type="text" class="required text" id="username" name="username">
+                    </div>
+                </fieldset>
+
+                <fieldset class="label_side">
+                    <label for="password"><strong>Password</strong><span><span>Caps Lock On?</span></label>
+                    <div>
+                        <input type="password" class="required text" id="password" name="password"">
+                    </div>
+                </fieldset>
+
+                <fieldset class="label_side">
+                    <button class="button_colour round_all">
+                        <img width="24" height="24" alt="Locked 2" src="<?php echo $this->imgUrl('icons/small/white/Locked%202.png'); ?>">
+                        <span>Login</span>
+                    </button>
+                </fieldset>
+                <fieldset class="label_side" style="padding: 5px 8px">
+                    <a href="<?php echo $this->siteUrl()?>"> .:: Beranda </a>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById("username").focus();
+</script>
+
+</body>
+</html>

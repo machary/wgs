@@ -1,0 +1,181 @@
+<?php if($this->identity->role_id == 9): ?>
+<?php $this->headStyle()->captureStart(); ?>
+#jenis-pohon {
+float: left;
+width: 22%;
+}
+
+#jenis-pohon li {
+border: none;
+padding: 0;
+}
+
+#jenis-pohon li a {
+color: black;
+}
+
+#table-dtables_wrapper {
+float: right;
+width: 77%;
+}
+
+#table-dtables_processing {
+float: none;
+width: 80px;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+<?php endif ?>
+<div class="flat_area grid_16">
+	<h2>Data Telegram Draft</h2>
+    <div class="map-top-nav">
+		<a href="<?php echo $this->url(array('action'=>'add')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Telegram Baru</span>
+		</a>
+		<a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Inbox</span>
+		</a>
+		<a href="<?php echo $this->url(array('action'=>'outbox')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Outbox</span>
+		</a>
+		<a style="background-color: #dddddd;" href="<?php echo $this->url(array('action'=>'draft')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Draft</span>
+		</a>
+        <?php if($this->identity->role_id == 9): ?>
+        <a href="<?php echo $this->url(array('action'=>'folder')); ?>" class="roundall_grey add_icon float-left mr3">
+            <span class="ml22">Pengaturan Folder</span>
+        </a>
+        <?php endif ?>
+    </div>
+
+	<div class="toggle_container" style="display: block; ">
+		<div class="block">
+            <?php if($this->identity->role_id == 9): ?>
+            <div id="jenis-pohon" class="tree"></div>
+            <?php endif ?>
+			<table id="table-dtables" class="display">
+				<thead>
+					<tr>
+                        <th>Datetime</th>
+                        <th>Nomor Telegram</th>
+<!--                        <th>Pengirim</th>-->
+						<th>Kepada</th>
+						<th>Tembusan</th>
+<!--						<th>Kerahasiaan</th>-->
+<!--						<th>Urgensi</th>-->
+<!--						<th>Isi Berita</th>-->
+<!--						<th>Status</th>-->
+                        <th width="140"></th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('jstree/jquery.jstree.js')); ?>
+var oTable, gpohon,selected;
+$(function(){
+    var oTable = $('#table-dtables').dataTable({
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[1,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : '<?php echo $this->url(array('action'=>'dataapi')); ?>',
+        "fnServerData" : function(sSource, aoData, fnCallback) {
+			aoData.push({
+				"name": 'outbox',
+				"value": true
+			},{
+				"name": 'draft',
+				"value": true
+			});
+
+            if (gpohon) {
+                //var selected = gpohon.jstree('get_selected');
+                if (selected != undefined) {
+                    console.log(selected);
+                    aoData.push({
+                        'name': 'jenis',
+                        //'value': selected[0].textContent.trim()
+                        'value': selected.args[2].currentTarget.id
+                    });
+                }
+            }
+
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json);
+            });
+        },
+//        'aoColumns' : [{bSearchable: false},null,null,null,null,{bSearchable: false},{bSearchable: false}]
+        'aoColumns' : [{bSearchable: false},null,null,null,{bSearchable: false, bSortable: false}]
+    });
+	new Filterer(oTable);
+
+    // pohon jenis referensi
+    // initial data
+    var data = <?php echo json_encode($this->folder->toJson()); ?>;
+    var testLink = '<ul>';
+    $.each(data, function(i, item) {
+        var self = this;
+        //console.log(self);
+        testLink += '<li id="root'+i+'"><a href="#" id="'+self.id+'">'+self.data+'</a>';
+        if (typeof(self.children) === 'object') {
+            testLink += '<ul>';
+            $.each(self.children, function(i, item) {
+                var me = this;
+                testLink += '<li><a href="#" id="'+this.id+'">'+this.data+'</a>';
+                if(typeof(me.children) === 'object'){
+                    testLink += '<ul>';
+                    $.each(me.children,function(j, subitem){
+                        testLink += '<li><a href="#" id="'+this.id+'">'+this.data+'</a></li>';
+                    });
+                    testLink += '</ul>';
+                }
+                testLink += '</li>';
+            });
+            testLink += '</ul>';
+        }
+        testLink += '</li>';
+    });
+    testLink += '</ul>';
+
+
+    // inisiasi tree
+    gpohon = $('#jenis-pohon')
+        .jstree({
+            'plugins': ['themes', 'html_data', 'ui'],
+            'html_data': {
+                'data': testLink
+            },
+            'ui': {
+                'select_limit': 1
+            }
+        })
+        .bind('select_node.jstree', function(e, data) {
+            selected = data;
+            //console.log(data.args[2].currentTarget.id);
+            oTable.fnDraw();
+        })
+    ;
+    $('#jenis-pohon').click(function(e) {
+        var suspect = $(e.target).parents()[1]; // sangat bergantung dari DOM
+        if (suspect.id == 'jenis-pohon') {
+            var selected = gpohon.jstree('get_selected');
+            if (selected.length) {
+                gpohon.jstree('deselect_all');
+                oTable.fnDraw();
+            }
+        }
+    });
+});
+</script>

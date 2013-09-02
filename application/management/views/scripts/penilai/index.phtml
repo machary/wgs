@@ -1,0 +1,82 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Daftar Penilai</h2>
+    <div class="map-top-nav">
+        <a href="<?php echo $this->url(array('action'=>'add')); ?>" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Tambah</span>
+        </a>
+    </div>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+            <table id="table_team" class="display">
+                <thead>
+                <tr>
+                    <th>Nama Penilai</th>
+                    <th>Skenario Latihan</th>
+                    <th>Jabatan Yang Dinilai</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var checkedArr = [];
+    var ceklis = [];
+
+    $(function(){
+        var oTable = $('#table_team').dataTable( {
+            "bJQueryUI": true,
+            "sScrollX": "",
+            "bSortClasses": false,
+            "aaSorting": [[0,'asc']],
+            "bAutoWidth": true,
+            "bInfo": true,
+            "aoColumns":[
+                null,
+                null,
+                null,
+                null
+            ],
+            "sScrollY": "100%",
+            "sScrollX": "100%",
+            "bScrollCollapse": true,
+            "sPaginationType": "full_numbers",
+            "bProcessing" : true,
+            "bServerSide" : true,
+            "sAjaxSource" : baseUrl + '/management/penilai/dataapi',
+            "fnServerData" : function(sSource, aoData, fnCallback)
+            {
+                //filter category content
+                if(jQuery('#feed-filter').length)
+                {
+                    filter = jQuery('#feed-filter').val();
+
+                    aoData.push({
+                        "name": "feed-filter",
+                        "value":  filter
+                    });
+                }
+
+                jQuery.getJSON(sSource, aoData, function(json) {
+                    //if(aaData != 'undefined')
+                    //{
+                    fnCallback(json)
+                    //}
+                });
+
+                $('.custom-rows').parent().css('vertical-align','middle');
+            }
+
+        })//.makeEditable()
+    });
+</script>

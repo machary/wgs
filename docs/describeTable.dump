@@ -1,0 +1,435 @@
+Array
+(
+    [BOMB_ID] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_ID
+            [COLUMN_POSITION] => 1
+            [DATA_TYPE] => int4
+            [DEFAULT] => nextval(('master.M_BOMB_BOMB_ID_seq'::text)::regclass)
+            [NULLABLE] => 
+            [LENGTH] => 4
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 1
+            [PRIMARY_POSITION] => 1
+            [IDENTITY] => 1
+        )
+
+    [BOMB_TYPE] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_TYPE
+            [COLUMN_POSITION] => 2
+            [DATA_TYPE] => int4
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 4
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [COUNTRY_ID] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => COUNTRY_ID
+            [COLUMN_POSITION] => 3
+            [DATA_TYPE] => int4
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 4
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_NAME] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_NAME
+            [COLUMN_POSITION] => 4
+            [DATA_TYPE] => varchar
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 100
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_AMMO_QTY] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_AMMO_QTY
+            [COLUMN_POSITION] => 5
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_WARHEAD_WEIGHT] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_WARHEAD_WEIGHT
+            [COLUMN_POSITION] => 6
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_TT_SURF] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_TT_SURF
+            [COLUMN_POSITION] => 7
+            [DATA_TYPE] => bool
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 1
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_TT_SUB] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_TT_SUB
+            [COLUMN_POSITION] => 8
+            [DATA_TYPE] => bool
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 1
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_TT_LAND] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_TT_LAND
+            [COLUMN_POSITION] => 9
+            [DATA_TYPE] => bool
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 1
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_RANGE_MIN] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_RANGE_MIN
+            [COLUMN_POSITION] => 10
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_RANGE_MAX] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_RANGE_MAX
+            [COLUMN_POSITION] => 11
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_PROB_OF_HIT] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_PROB_OF_HIT
+            [COLUMN_POSITION] => 12
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_LETHALITY] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_LETHALITY
+            [COLUMN_POSITION] => 13
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_POINT_1_RANGE] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_POINT_1_RANGE
+            [COLUMN_POSITION] => 14
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_POINT_1_PROB] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_POINT_1_PROB
+            [COLUMN_POSITION] => 15
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_POINT_2_RANGE] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_POINT_2_RANGE
+            [COLUMN_POSITION] => 16
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_POINT_2_PROB] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_POINT_2_PROB
+            [COLUMN_POSITION] => 17
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_POINT_3_RANGE] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_POINT_3_RANGE
+            [COLUMN_POSITION] => 18
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_POINT_3_PROB] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_POINT_3_PROB
+            [COLUMN_POSITION] => 19
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_POINT_4_RANGE] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_POINT_4_RANGE
+            [COLUMN_POSITION] => 20
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [BOMB_POINT_4_PROB] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => BOMB_POINT_4_PROB
+            [COLUMN_POSITION] => 21
+            [DATA_TYPE] => float8
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 8
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [DATATYPE] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => DATATYPE
+            [COLUMN_POSITION] => 22
+            [DATA_TYPE] => int4
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 4
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [DESCRIPTION] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => DESCRIPTION
+            [COLUMN_POSITION] => 23
+            [DATA_TYPE] => text
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => -1
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+    [TYPE_DESC] => Array
+        (
+            [SCHEMA_NAME] => master
+            [TABLE_NAME] => M_BOMB
+            [COLUMN_NAME] => TYPE_DESC
+            [COLUMN_POSITION] => 24
+            [DATA_TYPE] => varchar
+            [DEFAULT] => 
+            [NULLABLE] => 1
+            [LENGTH] => 100
+            [SCALE] => 
+            [PRECISION] => 
+            [UNSIGNED] => 
+            [PRIMARY] => 
+            [PRIMARY_POSITION] => 
+            [IDENTITY] => 
+        )
+
+)

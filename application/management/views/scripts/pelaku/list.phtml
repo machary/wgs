@@ -1,0 +1,41 @@
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'index', 'id'=>null)); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+<div class="flat_area grid_16">
+
+	<h2>Nama Team: <?php echo $this->team[0]['team_name']; ?></h2>
+
+    <?php $kogas = $this->kogas; ?>
+        <?php foreach($kogas as $kog => $name): ?>
+            <?php if ($this->itemModel->getAllPlusRoleByTeamKogas($this->teamID, $kog) != null): ?>
+                <h3 style="margin-bottom: -10px;margin-top: 20px;"><?php echo strtoupper($name); ?></h3>
+                <div class="block">
+                    <table class="display simple-table">
+                        <thead>
+                        <tr>
+                            <th>Jabatan</th>
+                            <th>Nama</th>
+                            <th>Username</th>
+                            <th>NRP</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                         <?php foreach ($this->itemModel->getAllPlusRoleByTeamKogas( $this->teamID, $kog) as $i => $item) : ?>
+                            <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                <td><?php echo $item['name']; ?></td>
+                                <td><?php echo $item['nama']; ?></td>
+                                <td><?php echo $item['username']; ?></td>
+                                <td><?php echo $item['nrp']; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+</div>
+

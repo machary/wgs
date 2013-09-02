@@ -1,0 +1,39 @@
+<div class="flat_area grid_16">
+	<h2>Kekuatan Sendiri - Laut - Skenario <?php echo $this->skenario->get('nomor'); ?></h2>
+</div>
+
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+	
+<div class="flat_area grid_16">
+	<div class="block">
+		<table class="display simple-table">
+			<thead>
+				<tr>
+					<th>Kotama</th>
+					<th>Kekuatan</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php $kotama = array('Koarmatim', 'Koarmabar', 'Kolinlamil', 'Penerbal', 'Kormar'); ?>
+				<?php foreach ($kotama as $k) : ?>
+					<?php $id = $this->model->getId($k); ?>
+					<tr>
+						<td>
+							<a href="<?php echo $this->url(array('action'=>'laut.edit','kotama'=>$k, 'id'=>$id)); ?>">
+								<?php echo App_Helper::fieldToName($k); ?>
+							</a>
+						</td>
+						<td>
+							<?php echo isset($this->kekuatan[$k]) ? implode(', ', $this->kekuatan[$k]) : '-'; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+	
+</div>

@@ -1,0 +1,274 @@
+<?php $this->headStyle()->captureStart(); ?>
+#animator-toolbar button {
+float:none;
+display: inline-block;
+}
+
+<?php $this->headStyle()->captureEnd(); ?>
+
+
+<div class="box grid_8 round_all contentmap" >
+	<h2 class="box_head grad_colour titlemap" >Simulasi RO</h2>
+	<div id="map2"></div>
+
+	<div class="block" id="animator-toolbar">
+		<button id="button-start" type="button">Start</button>
+		<button id="button-pause" type="button">Pause</button>
+		<button id="button-reset" type="button">Reset</button>
+		Waktu asumsi 1 detik = <input id="second2hour" value="1"> jam
+
+		<div id="time-slider"></div>
+		State: <span id="time-notice">0</span>
+	</div>
+
+</div>
+
+<div class="box grid_8 round_all controlmap" >
+	<h2 class="box_head grad_colour">Control Simulasi</h2>
+	<div class="block">
+
+		<?php if ($this->cbsel['kogasud']!=null):  ?>
+		<label>kogasud</label>
+<!--		Start at: <input disabled="disabled" class="rotext" type="text" id="a_kogasud" style="border:0; color:#f6931f; font-weight:bold;" />-->
+<!--		<div id="s_kogasud" style="height: 8px;"></div>-->
+		<button id="button-start-kogasud" type="button">Start</button>
+		<div id="time-slider-kogasud"></div>
+		State: <span id="time-notice-kogasud">0</span>
+		</br>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabla']!=null):  ?>
+		<label>kogasgabla</label>
+<!--		Start at: <input disabled="disabled" class="rotext" type="text" id="a_kogasgabla" style="border:0; color:#f6931f; font-weight:bold;" />-->
+<!--		<div id="s_kogasgabla" style="height: 8px;"></div>-->
+		<button id="button-start-kogasgabla" type="button">Start</button>
+		<div id="time-slider-kogasgabla"></div>
+		State: <span id="time-notice-kogasgabla">0</span>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabfib']!=null):  ?>
+		<label>kogasgabfib</label>
+<!--		Start at: <input disabled="disabled" class="rotext" type="text" id="a_kogasgabfib" style="border:0; color:#f6931f; font-weight:bold;" />-->
+<!--		<div id="s_kogasgabfib" style="height: 8px;"></div>-->
+		<button id="button-start-kogasgabfib" type="button">Start</button>
+		<div id="time-slider-kogasgabfib"></div>
+		State: <span id="time-notice-kogasgabfib">0</span>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabrat']!=null):  ?>
+		<label>kogasgabrat</label>
+<!--		Start at: <input disabled="disabled" class="rotext" type="text" id="a_kogasgabrat" style="border:0; color:#f6931f; font-weight:bold;" />-->
+<!--		<div id="s_kogasgabrat" style="height: 8px;"></div>-->
+		<button id="button-start-kogasgabrat" type="button">Start</button>
+		<div id="time-slider-kogasgabrat"></div>
+		State: <span id="time-notice-kogasgabrat">0</span>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabratmin']!=null):  ?>
+		<label>kogasgabratmin</label>
+<!--		Start at: <input disabled="disabled" class="rotext" type="text" id="a_kogasgabratmin" style="border:0; color:#f6931f; font-weight:bold;" />-->
+<!--		<div id="s_kogasgabratmin" style="height: 8px;"></div>-->
+		<button id="button-start-kogasgabratmin" type="button">Start</button>
+		<div id="time-slider-kogasgabratmin"></div>
+		State: <span id="time-notice-kogasgabratmin">0</span>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgablinud']!=null):  ?>
+		<label>kogasgablinud</label>
+<!--		Start at: <input disabled="disabled" class="rotext" type="text" id="a_kogasgablinud" style="border:0; color:#f6931f; font-weight:bold;" />-->
+<!--		<div id="s_kogasgablinud" style="height: 8px;"></div>-->
+		<button id="button-start-kogasgablinud" type="button">Start</button>
+		<div id="time-slider-kogasgablinud"></div>
+		State: <span id="time-notice-kogasgablinud">0</span>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabhantai']!=null):  ?>
+		<label>kogasgabhantai</label>
+<!--		Start at: <input disabled="disabled" class="rotext" type="text" id="a_kogasgabhantai" style="border:0; color:#f6931f; font-weight:bold;" />-->
+<!--		<div id="s_kogasgabhantai" style="height: 8px;"></div>-->
+		<button id="button-start-kogasgabhantai" type="button">Start</button>
+		<div id="time-slider-kogasgabhantai"></div>
+		State: <span id="time-notice-kogasgabhantai">0</span>
+		<?php endif;?>
+
+<!--		<pre>-->
+<!--			--><?php //print_r($this->cbsel);?>
+<!--		</pre>-->
+
+	</div>
+
+
+
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-operasional.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-animator.js')); ?>
+<script>
+
+//variabel animator
+var animator,
+	an_kogasud_ud,
+	an_kogasgabla_la,
+	an_kogasgabla_la,
+	an_kogasud_la,
+	an_kogasud_la,
+	an_kogasud_la,
+	an_kogasud_la,
+	an_kogasud_la,
+	an_kogasud_la,
+	an_kogasud_la,
+	an_kogasud_la,
+	an_kogasud_la,
+	an_kogasud_la,
+	resetFlag1 = true;
+
+$(function () {
+	var map,
+		layerVector,
+		$asumsi = $('#second2hour'),
+		tempTitik, tempFormasi;
+
+	$asumsi.css('display', 'inline');
+	// inisiasi map
+	$('#map2').css('height', '500px');
+	map = standardMap('map2');
+	layerVector = new OpenLayers.Layer.Vector('Rute', {
+		displayInLayerSwitcher:false
+	});
+	map.addLayer(layerVector);
+	// refresh features after zooming
+	map.events.register('zoomend', map, function (e) {
+		animator.redraw();
+	});
+
+	// inisiasi data
+
+	<?php foreach ($this->cbrut as $kogas) :?>
+
+		<?php foreach ($kogas['items'] as $item) : ?>
+			animator = new Animator_Multi_Formasi(layerVector, $('#time-slider'), $('#time-notice'));
+			tempTitik = <?php echo json_encode($item->getTitik()); ?>;
+			tempFormasi = <?php echo json_encode($item->getFormasi()); ?>;
+			animator.addItem(tempFormasi, tempTitik);
+		<?php endforeach; ?>
+
+	<?php endforeach;?>
+
+	// inisiasi tombol
+	$asumsi.bind('change', function (e) {
+		resetFlag1 = true;
+//		resetFlag2 = true;
+//		resetFlag3 = true;
+//		resetFlag4 = true;
+//		resetFlag5 = true;
+//		resetFlag6 = true;
+//		resetFlag7 = true;
+	});
+
+	$('#button-start').bind('click', function (e) {
+		if (resetFlag1) {
+			animator.generateState(parseInt($asumsi.val(), 10), '<?php echo $this->satuan['kecepatan']; ?>');
+			resetFlag1 = false;
+		}
+		animator.startAnimation();
+	});
+	$('#button-pause').bind('click', function (e) {
+		animator.stopAnimation();
+	});
+	$('#button-reset').bind('click', function (e) {
+		animator.resetAnimation();
+	});
+
+	minmaxMap(map);
+	$('.controlmap').show('slow');
+
+	//about slider
+
+	<?php if ($this->cbsel['kogasud']!=null):  ?>
+//	$( "#s_kogasud" ).slider({
+//		value:0,
+//		min: 0,
+//		max: 500,
+//				step: 50,
+//		slide: function( event, ui ) {
+//			$( "#a_kogasud" ).val( ui.value );
+//		}
+//	});
+	<?php endif; ?>
+
+	<?php if ($this->cbsel['kogasgabla']!=null):  ?>
+//	$( "#s_kogasgabla" ).slider({
+//		value:0,
+//		min: 0,
+//		max: 500,
+//				step: 50,
+//		slide: function( event, ui ) {
+//			$( "#a_kogasgabla" ).val( ui.value );
+//		}
+//	});
+	<?php endif; ?>
+
+	<?php if ($this->cbsel['kogasgabfib']!=null):  ?>
+//	$( "#s_kogasgabfib" ).slider({
+//		value:0,
+//		min: 0,
+//		max: 500,
+//				step: 50,
+//		slide: function( event, ui ) {
+//			$( "#a_kogasgabfib" ).val( ui.value );
+//		}
+//	});
+	<?php endif; ?>
+
+	<?php if ($this->cbsel['kogasgabrat']!=null):  ?>
+//	$( "#s_kogasgabrat" ).slider({
+//		value:0,
+//		min: 0,
+//		max: 500,
+//				step: 50,
+//		slide: function( event, ui ) {
+//			$( "#a_kogasgabrat" ).val( ui.value );
+//		}
+//	});
+	<?php endif; ?>
+
+	<?php if ($this->cbsel['kogasgabratmin']!=null):  ?>
+//	$( "#s_kogasgabratmin" ).slider({
+//		value:0,
+//		min: 0,
+//		max: 500,
+//				step: 50,
+//		slide: function( event, ui ) {
+//			$( "#a_kogasgabratmin" ).val( ui.value );
+//		}
+//	});
+	<?php endif; ?>
+
+	<?php if ($this->cbsel['kogasgablinud']!=null):  ?>
+//	$( "#s_kogasgablinud" ).slider({
+//		value:0,
+//		min: 0,
+//		max: 500,
+//				step: 50,
+//		slide: function( event, ui ) {
+//			$( "#a_kogasgablinud" ).val( ui.value );
+//		}
+//	});
+	<?php endif; ?>
+
+	<?php if ($this->cbsel['kogasgabhantai']!=null):  ?>
+//	$( "#s_kogasgabhantai" ).slider({
+//		value:0,
+//		min: 0,
+//		max: 500,
+//				step: 50,
+//		slide: function( event, ui ) {
+//			$( "#a_kogasgabhantai" ).val( ui.value );
+//		}
+//	});
+	<?php endif; ?>
+
+});
+
+</script>

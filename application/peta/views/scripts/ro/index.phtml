@@ -1,0 +1,224 @@
+<div class="box grid_8 round_all contentmap" >
+	<h2 class="box_head grad_colour titlemap" >Simulasi RO <?php echo $this->cbsel['kogasgabla'];?></h2>
+	<div id="map2"></div>
+</div>
+
+<div class="box grid_8 round_all controlmap" >
+	<h2 class="box_head grad_colour">Simulasi RO</h2>
+	<div class="block">
+		Waktu asumsi 1 detik = <input id="second2hour" value="1"> jam
+		<button id="button-simulasi" type="button">Simulasi</button>
+		<button id="button-simulasi2" type="button">Simulasi2</button>
+
+
+		<input type="text" id="amounst" style="border:0; color:#f6931f; font-weight:bold;" />
+		<div id="sliderz" style="height: 8px;"></div>
+		</br>
+		<input type="text" id="amounts" style="border:0; color:#f6931f; font-weight:bold;" />
+		<div id="slider-rangez" style="height: 8px;"></div>
+		<input type="text" id="amountz" style="border:0; color:#f6931f; font-weight:bold;" />
+		<div id="slider-range-max" style="height: 8px;"></div>
+
+		<?php if ($this->cbsel['kogasud']!=null):  ?>
+		<label>kogasud</label>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabla']!=null):  ?>
+		<label>kogasgabla</label>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabfib']!=null):  ?>
+		<label>kogasgabfib</label>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabrat']!=null):  ?>
+		<label>kogasgabrat</label>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabratmin']!=null):  ?>
+		<label>kogasgabratmin</label>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgablinud']!=null):  ?>
+		<label>kogasgablinud</label>
+		<?php endif;?>
+
+		<?php if ($this->cbsel['kogasgabhantai']!=null):  ?>
+		<label>kogasgabhantai</label>
+		<?php endif;?>
+
+	</div>
+
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-operasional.js')); ?>
+<script>
+	/**
+	 * Class Kumpulan_Formasi
+	 * berisi sekumpulan Formasi *U don't say*
+	 * @author Kanwil
+	 *
+	 * @uses OpenLayers.js, script.js, rute-operasional.js::Formasi
+	 */
+	function Kumpulan_Formasi(layer) {
+		this.layer = layer;
+		this.data = [];
+
+		// atribut lain
+		this.isMoving = false;
+	}
+
+	Kumpulan_Formasi.prototype = {
+		/**
+		 * Menambah pasangan formasi-rute
+		 * @param formation Array of {x,y,simbol_taktis}
+		 * @param points Array of {nama,longitude,latitude,kecepatan}
+		 * @params $asumsi JQuery element yang menyimpan waktu asumsi
+		 */
+		addFormasi: function(formation, points, $asumsi) {
+			// formasi dan titik harus ada
+			if (formation.length < 1 || points.length < 1) {
+				return;
+			}
+			// create line string
+			var tempPoints = []; // menampung titik untuk diberikan ke linestring
+			for (var i=0; i<points.length; i++) {
+				tempPoints.push(new OpenLayers.Geometry.Point(points[i].longitude, points[i].latitude));
+			}
+			var featureRute = new OpenLayers.Feature.Vector(
+				new OpenLayers.Geometry.LineString(tempPoints),
+				null,
+				{
+					strokeOpacity: 0.5,
+					strokeWidth: 3
+				}
+			);
+			this.layer.addFeatures([featureRute]);
+			// add to layer
+			this.data.push({
+				formation: new Formasi(formation, this.layer, $asumsi),
+				points: points,
+				line: featureRute
+			});
+		},
+
+		/**
+		 * Menggerakkan semua rute
+		 */
+		moveAll: function() {
+			if (this.isMoving) return;
+			this.isMoving = true;
+			var self = this;
+
+			for (var i=0; i<this.data.length; i++) {
+				if (this.data[i].points.length > 1) {
+					this.data[i].formation.moveAlongWithSpeed(this.data[i].points, function() {
+						self.checkIsMoving();
+					});
+				}
+			}
+		},
+
+		/**
+		 * Mengecek apakah masih ada yang bergerak
+		 * Jika tidak ada, this.isMoving = false
+		 * @return Boolean
+		 */
+		checkIsMoving: function() {
+			for (var i=0; i<this.data.length; i++) {
+				if (this.data[i].formation.isMoving) return true;
+			}
+			this.isMoving = false;
+			return false;
+		}
+
+	}
+
+	var gkumpulan, gdua;
+
+	$(function() {
+
+
+
+		$('#second2hour').css('display', 'inline');
+		// inisiasi map
+		$('#map2').css('height', '500px');
+		var map = standardMap('map2');
+
+		minmaxMap(map);
+		$('.controlmap').show('slow');
+
+		var layerVector = new OpenLayers.Layer.Vector('Rute', {
+			displayInLayerSwitcher:false
+		});
+		map.addLayer(layerVector);
+
+		// inisiasi data
+		var $asumsi = $('#second2hour');
+		gkumpulan = new Kumpulan_Formasi(layerVector);
+		<?php foreach ($this->items as $item) : ?>
+		var tempTitik = <?php echo json_encode($item->getTitik()); ?>;
+		var tempFormasi = <?php echo json_encode($item->getFormasi()); ?>;
+		gkumpulan.addFormasi(tempFormasi, tempTitik, $asumsi);
+		<?php endforeach; ?>
+
+		gdua = new Kumpulan_Formasi(layerVector);
+		<?php foreach ($this->items2 as $item) : ?>
+		var tempTitik = <?php echo json_encode($item->getTitik()); ?>;
+		var tempFormasi = <?php echo json_encode($item->getFormasi()); ?>;
+		gdua.addFormasi(tempFormasi, tempTitik, $asumsi);
+		<?php endforeach; ?>
+
+
+
+		// inisiasi tombol
+		$('#button-simulasi').bind('click', function(e) {
+			gkumpulan.moveAll();
+		});
+		// inisiasi tombol
+		$('#button-simulasi2').bind('click', function(e) {
+			gdua.moveAll();
+		});
+
+		//about slider
+		$( "#sliderz" ).slider({
+			value:100,
+			min: 0,
+			max: 500,
+//				step: 50,
+			slide: function( event, ui ) {
+				$( "#amounst" ).val( "$" + ui.value );
+			}
+		});
+		$( "#amounst" ).val( "$" + $( "#sliderz" ).slider( "value" ) );
+
+
+		$( "#slider-rangez" ).slider({
+			range: true,
+			min: 0,
+			max: 5000,
+			values:  [100,400],
+			slide: function( event, ui ) {
+				xaa = ui.values[ 0 ]+300;
+				$( "#amounts" ).val( "$" + ui.values[ 0 ] + " - $" + xaa );
+			}
+		});
+		$( "#amounts" ).val( "$" + $( "#slider-rangez" ).slider( "values", 0 ) +
+			" - $" + $( "#slider-rangez" ).slider( "values", 1 ) );
+
+		$( "#slider-range-max" ).slider({
+			range: "max",
+			min: 0,
+			max: 10000,
+			value: 200,
+			step: 100,
+			slide: function( event, ui ) {
+				$( "#amountz" ).val( ui.value );
+			}
+		});
+		$( "#amountz" ).val( $( "#slider-range-max" ).slider( "value" ) );
+
+
+	});
+</script>

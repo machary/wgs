@@ -1,0 +1,157 @@
+<?php
+	$jenisSimbol = array(
+		'sayap putar',
+		'sayap tetap'
+	);
+?>
+
+<div class="flat_area grid_8" style="margin-bottom: 5px;">
+	<a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<div class="box grid_8 round_all" style="clear: both;">
+	<h2 class="box_head grad_colour"><?php echo $this->caption;?> Kekuatan Sendiri - Udara</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<script>
+	var optionsUnsur = []; // masih hardcoded
+	var optionsJenis = [];
+
+	<?php foreach($this->simTaktis->jenisSimbol() as $jenis): ?>
+		<?php if(in_array($jenis['jenis'], $jenisSimbol)): ?>
+			optionsUnsur.push('<?php echo $jenis['jenis'];?>');
+			optionsJenis.push({ '<?php echo $jenis['jenis'];?>' : <?php echo json_encode( $this->simTaktis->getAll( 'jenis', $jenis['jenis'], false)) ?> });
+		<?php endif; ?>
+	<?php endforeach;?>
+
+	var globali = 0;
+
+	function tambah_row(id, unsur, jenis, jumlah, keterangan) {
+		/*
+		<tr>
+		  input hidden id[]
+		  td select unsur[]
+		  td select jenis[]
+		  td jumlah[]
+		  td button hapus_row(this)
+		</tr>
+		*/
+		var $tr = $('<tr/>');
+
+		var $hidden = $('<input type="hidden" name="data['+globali+'][id]" />');
+		if (id) {
+			$hidden.val(id);
+		}
+
+		var $select1 = $('<select name="data['+globali+'][unsur]" />');
+		$select1.append('<option value="">Pilih Unsur</option>');
+
+		// populate options
+		for (var i=0,inum=optionsUnsur.length; i<inum; i++) {
+			var val = optionsUnsur[i];
+			$select1.append('<option value="'+val+'">'+val.ucfirst()+'</option>');
+		}
+		if (unsur) {
+			$select1.val(unsur);
+		}
+		$select1.appendTo($tr).wrap('<td>').uniform();
+		// sisipkan $hidden
+		$hidden.insertAfter($select1);
+
+		var $select2 = $('<select name="data['+globali+'][jenis]" />');
+		// populate options berdasarkan nilai $select1
+		$select1.bind('change', function(e) {
+			// @TODO bug element select theme adminica
+			$select2.empty();
+			$select2.append('<option value="">Pilih Jenis Unsur</option>');
+			for (var i=0,inum=optionsJenis.length; i<inum; i++) {
+				var options = optionsJenis[i][$select1.val()];
+				if (options) {
+					for (var x=0,xnum=options.length; x<xnum; x++) {
+						var index = options[x]['id'];
+						var val = options[x]['nama'];
+						$select2.append('<option value="'+index+'">'+val+'</option>');
+					}
+				}
+			}
+		});
+		$select1.trigger('change');
+		if (jenis) {
+			$select2.val(jenis);
+		}
+		$select2.appendTo($tr).wrap('<td>').uniform();
+
+		var $input = $('<input style="width: 55px;" name="data['+globali+'][jumlah]" />');
+		if (jumlah) {
+			$input.val(jumlah);
+		}
+		$input.appendTo($tr).wrap('<td>');
+
+        var $textarea = $('<textarea style="width: 120px;" name="data['+globali+'][keterangan]"></textarea>');
+        if (keterangan) {
+            $textarea.val(keterangan);
+        }
+        $textarea.appendTo($tr).wrap('<td>');
+
+		var $button = $('<button type="button" onclick="hapus_row(this)" />');
+		$button.html('X');
+		$button.appendTo($tr).wrap('<td>');
+
+		$('#kekuatan-table').append($tr);
+		globali++;
+	}
+
+	function hapus_row(el) {
+		$(el).parent().parent().remove();
+	}
+
+	$(function() {
+		$('#button-tambah-row').bind('click', function(e) {
+			tambah_row();
+		});
+		// populate saved data
+	<?php if(count($this->modelDetail->all())): ?>
+		<?php foreach ($this->modelDetail->all() as $e) : ?>
+		tambah_row(<?php
+			echo json_encode($e->id).',';
+			echo json_encode($e->jenis).',';
+            echo json_encode($e->taktis_id).',';
+            echo json_encode($e->jumlah).',';
+			echo json_encode($e->keterangan);
+			?>);
+		<?php endforeach; ?>
+
+	<?php endif; ?>
+	});
+
+	String.prototype.ucfirst = function () {
+
+		// Split the string into words if string contains multiple words.
+		var x = this.split(/\s+/g);
+
+		for (var i = 0; i < x.length; i++) {
+
+			// Splits the word into two parts. One part being the first letter,
+			// second being the rest of the word.
+			var parts = x[i].match(/(\w)(\w*)/);
+
+			// Put it back together but uppercase the first letter and
+			// lowercase the rest of the word.
+			x[i] = parts[1].toUpperCase() + parts[2].toLowerCase();
+		}
+
+		// Rejoin the string and return.
+		return x.join(' ');
+	};
+
+</script>

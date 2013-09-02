@@ -1,0 +1,187 @@
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<?php if (!isset($this->cb)) : ?>
+<div class="flat_area grid_16" style="margin-top: 10px;">
+    <div class="alert alert_navy">
+        Belum ada CB yang dipilih
+    </div>
+</div>
+<?php else : ?>
+
+<?php $startTime = (int)$this->cb->get('waktu_mulai'); ?>
+<?php $endTime = (int)$this->cb->get('waktu_selesai'); ?>
+
+<?php $this->headStyle()->captureStart(); ?>
+#second2hour {
+	display:inline;
+}
+
+#animator-toolbar button {
+	float:none;
+	display: inline-block;
+}
+
+.mini-slider {
+	display: inline-block;
+	width: 350px;
+}
+
+.inblock {
+	display: inline-block;
+    position: relative;
+    z-index: 100;
+    top: -5px;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour">Rencana Operasi Dengan Musuh Berdasarkan CB : <?php echo $this->cb->get('nomor'); ?></h2>
+
+	<div id="map2"></div>
+
+	<div class="block" id="animator-toolbar">
+        <div id="time-slider" class="slider"></div>
+
+        <div class="float-right mr40">Waktu Tempuh : <span id="time-notice">H<?php echo (int)($startTime / 24); ?> J<?php echo ($startTime % 24); ?></span></div>
+        <div class="float-right mr40">Asumsi 1 detik = <input id="second2hour" value="1" size="1"> jam </div>
+        <div class="grid_4 float-left">
+            <button id="button-start" type="button" class="tipsytooltip" original-title="Jalankan">
+                <img src="<?php echo $this->imgUrl('icons/play.png'); ?>" style=" margin: -6px 0;" />
+            </button>
+            <button id="button-pause" type="button" class="tipsytooltip" original-title="Jeda">
+                <img src="<?php echo $this->imgUrl('icons/pause.png'); ?>" style=" margin: -6px 0;" />
+            </button>
+            <button id="button-reset" type="button" class="tipsytooltip" original-title="Atur Ulang">
+                <img src="<?php echo $this->imgUrl('icons/refresh.png'); ?>" style=" margin: -6px 0;" />
+            </button>
+            <div id="time-slider" class="grid_13 float-right"></div>
+        </div>
+
+        <div class="ml-10">
+            <?php $i=0; ?>
+            <?php foreach ($this->data as $medan => $list) : ?>
+                <?php if(count($list)): ?>
+                    <div class="float-left" style="margin-bottom: 10px; clear: both;">
+                        <span class="medan" ><?php echo ucfirst($medan); ?></span>
+                        <?php foreach ($list as $item) : ?>
+                        <?php $item->cssId = $i++; /* hack:smuggle a temporary property */?>
+                        <div class="float-left" style="width:700px;margin-bottom: 20px;position: relative;" >
+                            <div class="rute-label"><?php echo $item->getRow()->nama; ?> </div>
+                            <div id="mini-slider-<?php echo $item->cssId; ?>" durasi="<?php echo $item->getRow()->durasi; ?>" class="slider mini-slider float-left"></div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+
+		<form method="post" id="form-save" style="overflow: hidden;" class="grid_16">
+			<button>Simpan</button>
+		</form>
+	</div>
+</div>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rute-operasional.js')); ?>
+<?php $this->inlineScript()->appendFile($this->jsUrl('view/rowm-animator.js')); ?>
+
+<script>
+
+var animator;
+
+$(function () {
+	var map,
+		tempTitik,
+		tempFormasi,
+		tempRudal,
+		$childSlider;
+
+	// inisiasi map
+	$('#map2').css('height', '500px');
+	map = standardMap('map2');
+
+	animator = new Animator_Ro({
+		map: map,
+		$slider: $('#time-slider'),
+		$status: $('#time-notice'),
+		$assume: $('#second2hour'),
+		maxStartTime: <?php echo (int)$endTime; ?>,
+		minStartTime: <?php echo (int)$startTime; ?>,
+		rangeTime: <?php echo abs((int)$startTime - (int)$endTime); ?>
+	});
+
+	<?php foreach ($this->data as $medan => $list) : ?>
+        <?php foreach ($list as $item) : ?>
+			tempTitik = <?php echo json_encode($item->getTitik()); ?>;
+			tempFormasi = <?php echo json_encode($item->getFormasi()); ?>;
+			tempRudal = <?php echo json_encode($item->getRudal()); ?>;
+			// inject data
+            $childSlider = $('#mini-slider-<?php echo $item->cssId; ?>')
+               .data('id', '<?php echo $item->getRow()->id; ?>')
+               .data('class', '<?php echo get_class($item); ?>')
+               .data('table', '<?php echo $item->getRow()->getTable()->info('name'); ?>');
+
+            // initial slider value
+            <?php if (isset($this->saved[get_class($item)][$item->getRow()->id])) : ?>
+               var $value = <?php echo ($this->saved[get_class($item)][$item->getRow()->id] - $startTime); ?>;
+            <?php else: ?>
+               var $value = 0;
+            <?php endif; ?>
+
+            animator.addItem(tempFormasi, tempTitik, tempRudal, '<?php echo $item->speedUnit(); ?>', $childSlider, '<?php echo $item->getRow()->durasi;?>', $value);
+
+		<?php endforeach; ?>
+	<?php endforeach; ?>
+
+    <?php foreach ($this->musuh as $medan => $list) : ?>
+           <?php foreach ($list as $item) : ?>
+   			tempTitik = <?php echo json_encode($item->getTitik()); ?>;
+   			tempFormasi = <?php echo json_encode($item->getFormasi()); ?>;
+
+            animator.addMusuh(tempFormasi, tempTitik, '<?php echo $item->speedUnit(); ?>');
+   		<?php endforeach; ?>
+   	<?php endforeach; ?>
+
+	// activate buttons
+	$('#button-start').bind('click', function (e) {
+		animator.startAnimation();
+	});
+	$('#button-pause').bind('click', function (e) {
+		animator.stopAnimation();
+	});
+	$('#button-reset').bind('click', function (e) {
+		animator.resetAnimation();
+	});
+
+	// form onsubmit
+	$('#form-save').bind('submit', function (e) {
+		var i, l,
+			$slider,
+			$input = $('<textarea name="json" style="display:none">'),
+			json = [];
+
+		// iterate through each route
+		for (i = 0, l = animator.data.length; i < l; i++) {
+			$slider = animator.data[i].$slider;
+			json.push({
+				'id': $slider.data('id'),
+				'class_name': $slider.data('class'),
+				'table': $slider.data('table'),
+				'value': $slider.slider('option', 'value') + <?php echo (int)$startTime; ?>
+			});
+		}
+		$input.val(JSON.stringify(json));
+		$(this).append($input);
+
+		// e.preventDefault(); // debug
+	});
+
+});
+
+</script>
+
+<?php endif; ?>

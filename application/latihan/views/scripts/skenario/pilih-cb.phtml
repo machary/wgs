@@ -1,0 +1,74 @@
+<?php
+$GLOBALS['thisModel'] = $this->model;
+$GLOBALS['thisChoices'] = $this->choices;
+
+function printChoice($kogas) 
+{
+	global $thisModel, $thisChoices;
+	
+	$chosen = $thisModel->chosen($kogas);
+	$choices = $thisChoices[$kogas];
+	?>
+	<div class="input_group">
+	<?php foreach ($choices as $c) : ?>
+		<input type="radio" name="cb[<?php echo $kogas; ?>]" value="<?php echo $c->id; ?>" <?php if ($chosen == $c->id) echo 'checked="checked"'; ?>>
+		<a href="#"><?php echo $c->no_cb_operasional; ?></a>
+		<br>
+	<?php endforeach; ?>
+	</div>
+	<?php
+}
+?>
+
+<div class="flat_area grid_16">
+	<h2>Menentukan CB Terpilih</h2>
+</div>
+
+<form method="post">
+	<div class="box grid_8 round_all">
+		<h2 class="box_head grad_colour">Kogasgabla</h2>
+		<div class="block">
+			<?php printChoice('kogasgabla'); ?>
+		</div>
+	</div>
+	<div class="box grid_8 round_all">
+		<h2 class="box_head grad_colour">Kogasgabfib</h2>
+		<div class="block">
+			
+		</div>
+	</div>
+	<div class="box grid_8 round_all">
+		<h2 class="box_head grad_colour">Kogasgabrat</h2>
+		<div class="block">
+			
+		</div>
+	</div>
+	<div class="box grid_8 round_all">
+		<h2 class="box_head grad_colour">Kogasgabratmin</h2>
+		<div class="block">
+			
+		</div>
+	</div>
+	<div class="box grid_8 round_all">
+		<h2 class="box_head grad_colour">Kogasgablinud</h2>
+		<div class="block">
+			
+		</div>
+	</div>
+	<div class="box grid_8 round_all">
+		<h2 class="box_head grad_colour">Kogasgabhantai</h2>
+		<div class="block">
+			
+		</div>
+	</div>
+	<div class="box grid_8 round_all">
+		<h2 class="box_head grad_colour">Kogasud</h2>
+		<div class="block">
+			
+		</div>
+	</div>
+
+	<button class="button_colour round_all" style="float:none">
+		<span>Simpan</span>
+	</button>
+</form>

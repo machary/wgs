@@ -1,0 +1,90 @@
+<?php $row = $this->model->toArray(); ?>
+
+<form id="kdarat-musuh-form" method="post" action="<?php echo $this->url(array('controller'=>'kekuatan.lawan','action'=>'darat.edit')); ?>">
+	<label>Nama Lokasi</label>
+	<input name="nama" value="<?php echo @$row['nama']; ?>">
+
+	<label>Negara</label>
+	<input name="negara" value="<?php echo @$row['negara']; ?>">
+
+    <label>Longitude
+        <input id="conv-lon-deg" size="2" style="display:inline">&deg;
+        <input id="conv-lon-min" size="2" style="display:inline">'
+        <input id="conv-lon-sec" size="2" style="display:inline">"
+        <select id="conv-lon-dir"><option>T</option><option>B</option></select>
+        <button id="conv-lon-conv" type="button" style="display:inline;float:none">Convert</button>
+    </label>
+    <input id="dtitik-lon" name="longitude" value="<?php echo @$row['longitude']; ?>">
+
+    <label>Latitude
+        <input id="conv-lat-deg" size="2" style="display:inline">&deg;
+        <input id="conv-lat-min" size="2" style="display:inline">'
+        <input id="conv-lat-sec" size="2" style="display:inline">"
+        <select id="conv-lat-dir"><option>U</option><option>S</option></select>
+        <button id="conv-lat-conv" type="button" style="display:inline;float:none">Convert</button>
+    </label>
+<!--    <input id="dtitik-lat">-->
+    <input id="dtitik-lat" name="latitude" value="<?php echo @$row['latitude']; ?>">
+
+	<input type="submit" value="Simpan" />
+</form>
+
+<script>
+
+	$('#kdarat-musuh-form').ajaxForm({
+
+		dataType: 'json',
+		success: function(data) {
+
+			$('#kdarat_lawan').click();
+			bersihkan(data,1);
+
+		}
+
+	});
+
+    // event pada input lon lat
+   	var onCoordChange = function (e) {
+   		var lon = parseFloat($('#dtitik-lon').val()),
+   			lat = parseFloat($('#dtitik-lat').val()),
+   			lonlat;
+
+   		if (!isNaN(lon) && !isNaN(lat)) {
+   			lonlat = new OpenLayers.LonLat(lon, lat);
+   			// tampilkan marker
+   			helperLayer.removeMarker(helperMarker);
+   			helperMarker = new OpenLayers.Marker(lonlat, helperIcon);
+   			helperLayer.addMarker(helperMarker);
+   		}
+   	};
+   	$('#dtitik-lon').bind('change', onCoordChange);
+   	$('#dtitik-lat').bind('change', onCoordChange);
+
+    // event konversi DMS ke derajat
+   	var convertDms = function (pid) {
+   		var $ipt = $('#dtitik-'+pid),
+   			deg = parseInt($('#conv-'+pid+'-deg').val(), 10),
+   			min = parseInt($('#conv-'+pid+'-min').val(), 10),
+   			sec = parseInt($('#conv-'+pid+'-sec').val(), 10),
+   			dir = $('#conv-'+pid+'-dir').val(),
+   			result;
+
+   		if (!isNaN(deg) && !isNaN(min) && !isNaN(sec)) {
+   			result = deg + (min*60 + sec)/3600;
+   			if (dir == 'B' || dir == 'S') {
+   				result = -1 * result;
+   			}
+   			$ipt.val(result);
+   			$ipt.trigger('change');
+   		}
+   		$ipt.focus();
+   	};
+
+    $('#conv-lon-conv').bind('click', function(e) {
+   		convertDms('lon');
+   	});
+   	$('#conv-lat-conv').bind('click', function(e) {
+   		convertDms('lat');
+   	});
+
+</script>

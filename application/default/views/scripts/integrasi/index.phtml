@@ -1,0 +1,81 @@
+<style type="text/css">
+    #tbl-api {}
+    #tbl-api tr:hover {
+/*        background: #212d73;
+        color: #fff;*/
+    }
+    .selected-menu{
+        border: 1px solid #212d73;
+    }
+    .selected-menu span{
+        color: #212d73;
+    }
+</style>
+
+<?php
+//array menu
+$restAPI = array(
+    //label = Teks untuk nama menu
+    //apiID = fungsi rest api yg ada di controller
+    0 => array(
+        'label' => 'Cuaca Indonesia',
+        'apiID' => 'cuacaID',
+    ),
+    1 => array(
+        'label' => 'Cuaca Dunia',
+        'apiID' => 'cuacaGlobal',
+    ),
+    2 => array(
+        'label' => 'Prakiraan Gelombang',
+        'apiID' => 'prakGel',
+    ),
+    3 => array(
+        'label' => 'Informasi Gempa Terkini',
+        'apiID' => 'earlyEarthquake',
+    ),
+);
+?>
+
+<div id="content" class="flat_area grid_16" style="height: auto;">
+    <h2> Informasi BMKG :
+        <?php
+        foreach($restAPI as $menu):
+            echo isset($this->apiID) && $this->apiID == $menu['apiID'] ? $menu['label'] : '';
+        endforeach;
+        ?>
+    </h2>
+
+
+    <?php if( isset($this->apiID) && !is_null($this->apiID) ):?>
+    <div class="grid_16" id="container">
+        <img src="<?php echo $this->imgUrl('loading1.gif')?>" alt="">
+    </div>
+    <?php endif;?>
+</div>
+
+<script type="text/javascript">
+$(function(){
+<?php if( isset($this->apiID) && !is_null($this->apiID) ):?>
+	/*
+	* ambil data api dari controller
+	*/
+    $.ajax({
+        url      : baseUrl + '/integrasi/api/id/<?php echo $this->apiID;?>',
+        type     : 'GET',
+        success  : function(data){
+            var data2 = String(data).replace(/\\/g, '');
+            var edited = data2.replace(/^"|"$/g,'');
+            $( '#container' ).html( edited );
+        },
+        statusCode: {
+            404: function(){
+                alert('Error: API NOT FOUND - Please report to developer');
+            },
+            500: function(){
+                alert('Error: API CODE ERROR - Please report to developer');
+            }
+        }
+    });
+<?php endif;?>
+});
+</script>

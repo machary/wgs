@@ -1,0 +1,37 @@
+<div class="flat_area grid_16">
+	<h2>Penilaian: Daftar Rute Udara Operasional untuk CB <?php echo $this->cb->nomor; ?></h2>
+	<div class="map-top-nav">
+<!--		<a class="roundall_grey add_icon mr3" href="--><?php //echo $this->url(array('action'=>$this->jenis.'.edit')); ?><!--">-->
+<!--			<span class="ml22">Rute Baru</span>-->
+<!--		</a>-->
+<!--		<a class="roundall_grey add_icon mr3" href="--><?php //echo $this->url(array('action'=>$this->jenis.'.simulasi.semua')); ?><!--">-->
+<!--			<span class="ml22">Simulasi Semua Rute</span>-->
+<!--		</a>-->
+		<a href="<?php echo $this->url(array('action'=>'penilaian', 'cb_id'=>null)); ?>" class="roundall_grey back_icon float-right">
+			<span class="ml22">Kembali</span>
+		</a>
+	</div>
+	<div class="block grid_10">
+		<table class="display simple-table">
+			<thead>
+				<tr>
+					<th>Nama</th>
+					<th width="10%">Nilai</th>
+					<th width="20%"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php if ($this->items) foreach ($this->items as $i => $item) : ?>
+					<tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+						<td><?php echo $item->nama; ?></td>
+						<td align="right"><?php echo $this->modelNilai->getScore( $this->cb->id, $item->id, $this->jenis, 'nilai'); ?></td>
+						<td>
+							<a href="<?php echo $this->url(array('action'=>$this->jenis.'.nilai.simulasi', 'id'=>$item->id)); ?>">Nilai</a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+</div>
+

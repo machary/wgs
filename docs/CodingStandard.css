@@ -1,0 +1,44 @@
+/*
+Contoh source code referensi coding standard CSS
+
+Ikuti CSS Wordpress:
+http://codex.wordpress.org/CSS_Coding_Standards
+*/
+
+/* contoh inline comment */
+/*
+contoh
+blok komen
+*/
+
+/* 1 selector per line */
+#selector-1,
+#selector-2,
+#selector-3 {
+    background: #fff;
+    color: #000;
+}
+
+/* use lowercase and separate words with hyphens when naming selectors */
+/* ^- artinya nama class dan id di HTML */
+#comment-form {
+	/* not #commentForm, not #comment_form */
+    margin: 0;
+}
+
+/* 
+All properties and values should be lowercase, 
+except for font names and vendor-specific properties.  
+
+Aturan yang ini optional aja:
+"Properties should be organized alphabetically inside each block (with exceptions noted below)"
+*/
+#selector-1 {
+    font-size: 1em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}

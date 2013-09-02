@@ -1,0 +1,54 @@
+<div class="flat_area grid_16">
+	<h2>Kekuatan Sendiri - Udara - Skenario <?php echo $this->skenario->get('nomor'); ?></h2>
+	<p>
+		<?php if (App_Auth::isAllowed('latihan', 'kekuatan.sendiri', 'add')) : ?>
+		<a href="<?php echo $this->url(array('action'=>'udara-edit')); ?>" class="roundall_grey add_icon">
+			<span class="ml22">Pangkalan Udara Baru</span>
+		</a>
+		<?php endif;?>
+        <a href="<?php echo $this->siteUrl('latihan/kekuatan.sendiri/index/skenario_id/' . $this->skenario_id );?>" class="roundall_grey back_icon float-right">
+			<span class="ml22">Kembali</span>
+		</a>
+	</p>
+
+    <div class="block grid_16">
+		<table id="table-dtables" class="display">
+			<thead>
+			<tr>
+				<th width="15%">Nama Kogas</th>
+				<th width="15%">Pangkalan Udara</th>
+				<th width="60%">Kekuatan Udara</th>
+				<th width="10%"></th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		var oTable = $('#table-dtables').dataTable({
+			"bJQueryUI": true,
+			"sScrollX": "",
+			"bSortClasses": false,
+			"aaSorting": [[0,'asc']],
+			"bAutoWidth": true,
+			"bInfo": true,
+			"bFilter": true,
+			"sScrollY": "100%",
+			"sScrollX": "100%",
+			"bScrollCollapse": true,
+			"sPaginationType": "full_numbers",
+			"bProcessing" : true,
+			"bServerSide" : true,
+			"sAjaxSource" : '<?php echo $this->url(); ?>',
+			"fnServerData" : function(sSource, aoData, fnCallback) {
+				// @optional filter category content
+				jQuery.getJSON(sSource, aoData, function(json) {
+					fnCallback(json);
+				});
+			},
+			'aoColumns' : [null,null,null,{bSortable: false}]
+		});//.makeEditable();
+	});
+</script>

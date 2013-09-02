@@ -1,0 +1,72 @@
+<div class="flat_area grid_16">
+
+    <div class="map-top-nav">
+        <a href="<?php echo $this->url(array('controller'=>'penilaian.individu','action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+            <span class="ml22">Kembali</span>
+        </a>
+    </div>
+
+    <!-- box header label -->
+    <h2>Penilaian Partisipasi Perorangan</h2>
+
+    <form action="<?php echo $this->url();?>" method="POST">
+        <div class="grid_16 box clearfix no_titlebar" style="opacity: 1;">
+            <div class="indented_button_bar clearfix">
+                <h3 style="margin-bottom: 0;margin-top: 13px; margin-left: 10px; float: left;"><?php echo ucfirst($this->kogas);?></h3>
+                <a target="_blank" href="<?php echo $this->url(array('action' => 'print')); ?>" class="skin_colour green send_right on_dark text_only has_text" style="clear: none;float: right;  margin: 5px; margin-left: 0;">
+                    <span>Print</span>
+                </a>
+                <button class="light on_dark text_only has_text" style="clear: none; float: right; margin: 5px; margin-left: 0;">
+                    <span>Simpan</span>
+                </button>
+            </div>
+        </div>
+        <div class="box grid_16 no_titlebar">
+            <div class="block">
+                <input id="item_index" name="item_index" type="hidden" value="<?php echo count($this->pelaku); ?>" />
+                <table id="table-cb" class="display simple-table">
+                    <thead>
+                    <tr>
+                        <th width="5%">No.</th>
+                        <th width="40%">Nama Pasis</th>
+                        <th width="15%">Pangkat</th>
+                        <th width="10%">NRP</th>
+                        <th width="10%">Nilai</th>
+                        <th width="20%">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <?php if(!empty($this->pelaku)): ?>
+                            <?php $i = 1; ?>
+                            <?php foreach($this->pelaku as $pelaku): ?>
+                                <tr class="<?php echo ($i%2) ? 'even' : 'odd'; ?>">
+                                    <td>
+                                        <?php echo $i.'.'; ?>
+                                        <input id="id<?php echo $i; ?>" name="id<?php echo $i; ?>" type="hidden" value="<?php echo $pelaku['id']; ?>" />
+                                    </td>
+                                    <td><?php echo $pelaku['nama']; ?></td>
+                                    <td><?php echo $pelaku['pangkat']; ?></td>
+                                    <td><?php echo $pelaku['nrp'] ? $pelaku['nrp'] : ''; ?></td>
+                                    <td style="text-align: center;">
+                                        <input style="margin: 0 auto;" size="3" class="nilai-input" value="<?php echo $pelaku['nilai'];?>" id="nilai<?php echo $i; ?>" name="nilai<?php echo $i; ?>" type="text" />
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <input style="margin: 0 auto;" size="40" value="<?php echo $pelaku['keterangan'];?>" id="keterangan<?php echo $i; ?>" name="keterangan<?php echo $i; ?>" type="text" />
+                                    </td>
+                                </tr>
+                            <?php $i++; endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>

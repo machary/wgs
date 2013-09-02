@@ -1,0 +1,192 @@
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour"><?php echo $this->element->getLegend() ?></h2>
+	<div class="toggle_container">
+		<div class="block grid_7">
+			<form
+				<?php foreach($this->element->getAttribs() as $attribute => $value): ?>
+				<?php echo $attribute.'="'.$value.'"'; ?>
+				<?php endforeach; ?>
+				>
+				<?php $dumb;  ?>
+				<?php foreach($this->element->getElements() as $e): ?>
+				<label for="<?php echo $e->getName(); ?>">
+					<?php echo $e->getAttrib('label-name'); ?>
+					<?php if($e->isRequired()):?><strong style="color: #ff0000;">&#42;</strong><?php endif; ?>
+				</label>
+				<?php echo $e; ?>
+				<?php
+
+				if( $e->getAttrib('title') )
+				{
+					$dumb = $e->getAttrib('title');
+				}
+				?>
+				<?php endforeach;?>
+				<div class="separator">&nbsp;</div>
+				<button class="button_colour round_all">
+					<img width="24" height="24" src="<?php echo $this->imgUrl('icons/small/white/Bended%20Arrow%20Right.png')?>" alt="Bended Arrow Right"/>
+					<span>Submit</span>
+				</button>
+				<?php echo $this->currentModule; ?>
+			</form>
+		</div>
+		<div class="block grid_8">
+			<div id="map" style="top:-1px;"></div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	var wgs84 = new OpenLayers.Projection("EPSG:4326");
+    var geoUrl = PETA_DASAR.geoUrl;
+	var format = 'image/png';
+	var map, drawControls;
+	var prevmarkers = new OpenLayers.Layer.Markers( "Posisi Kekuatan" );
+
+	var options = {
+		controls: [],
+		//maxExtent: bounds,
+		maxResolution: 0.0780,
+		projection: wgs84,
+		units: 'degrees',
+		restrictedExtent: new OpenLayers.Bounds(95.115729755272, -12.012413207701, 140.70672975527, 7.4095867922987)
+	};
+
+	map = new OpenLayers.Map('map', options);
+
+	var baseLayer = new OpenLayers.Layer.WMS(
+		"Base Layer", geoUrl,
+		{
+            layers: 'dangkal,wil_provinsi,kompas,sungai'
+		},{
+			isBaseLayer:true
+		});
+
+	map.addLayers([baseLayer,prevmarkers]);
+	map.addControl(new OpenLayers.Control.LayerSwitcher());
+	map.addControl(new OpenLayers.Control.MousePosition());
+
+	/* == Fitur (Control)Zoom Area + Drag Pan */
+	// override NavToolbar untuk mendisable scroll
+	var CustomNavToolbar = OpenLayers.Class(OpenLayers.Control.NavToolbar, {
+		initialize: function(options) {
+			OpenLayers.Control.Panel.prototype.initialize.apply(this, [options]);
+			this.addControls([
+				new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}), // disable scroll di sini
+				new OpenLayers.Control.ZoomBox()
+			]);
+		}
+	});
+
+	var ctc = new CustomNavToolbar();
+	map.addControl(ctc);
+	ctc.moveTo(new OpenLayers.Pixel(5, 70));
+	/* == End of Fitur Zoom Area + Drag Pan */
+
+	map.setCenter(new OpenLayers.LonLat(118.0001, -2.4), 1);
+
+	//navigator
+	ov = new OpenLayers.Control.OverviewMap({maximized:false});
+	map.addControl(ov);
+	ov.ovmap.getResolution()/map.getResolutionForZoom(map.numZoomLevels);
+	ov.minRatio = ov.ovmap.getResolution()/map.getResolutionForZoom(0);
+
+	var koordinat;
+	var lonlatArr = [];
+	var x = 0;
+	map.events.register('click', map, function(e) {
+		var coordinate = map.getLonLatFromViewPortPx( e.xy );
+		var lon = coordinate.lon;
+		var lat = coordinate.lat;
+
+		document.getElementById('longitude').value = lon;
+		document.getElementById('latitude').value = lat;
+
+		previewMarker(lon, lat);
+		OpenLayers.Event.stop(e);
+
+	});
+
+	/*
+* <previewMarker> : preview marker
+* @param : lon lat
+* */
+	function previewMarker(lon, lat){
+		map.layers[1].clearMarkers();
+		prevmarkers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(lon, lat)));
+	}
+
+	/*
+* < addMarkers >
+* Fn untuk membuat popup marker
+* @param : (obj/array) places <- data dari db (biasanya berisi koordinate & info2 lain)
+* @param : (int) number <- index layer
+* */
+	function addMarkers( data ){
+		markerlayer = new OpenLayers.Layer.Markers("Markers");
+		map.addLayer(markerlayer);
+
+		var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+			"autoSize": true,
+			"minSize": new OpenLayers.Size(30, 5),
+			"maxSize": new OpenLayers.Size(500, 300),
+			"keepInMap": true,
+			"closeOnMove" : true
+		});
+		var popupClass = AutoSizeFramedCloud;
+
+		for(var i in data)
+		{
+			var popupContentHTML = '<a href="javascript:void(0)">'
+				+data[i]['name']
+				+'</a>'
+				+'<br/>'
+				+'<span>'
+				+data[i]['quantity'] + '&nbsp; Anggota'
+				+'</span>'
+				+'<br/>';
+			var koordinate = new OpenLayers.LonLat( data[i]['lon'] , data[i]['lat']);
+			drawMarker(koordinate, popupClass, popupContentHTML, true, false);
+		}
+	}
+
+	/*
+* < drawMarker >
+* Fn untuk membuat marker pada peta
+* @param : (obj/array) koordinate <- lon & lat
+* @param : (obj) popupClass <- tipe popup openlayer
+* @param : (html tag) popupContentHTML <- isi popup
+* @param : (bool) closeBox <- true / false
+* @param : (bool) overflow <- true / false
+* */
+	function drawMarker(koordinate, popupClass, popupContentHTML, closeBox, overflow){
+		var feature = new OpenLayers.Feature(marker, koordinate);
+
+		feature.closeBox = closeBox;
+		feature.popupClass = popupClass;
+		feature.data.popupContentHTML = popupContentHTML;
+		feature.data.overflow = (overflow) ? "auto" : "hidden";
+
+		//custom icon marker
+		var size = new OpenLayers.Size(21, 25);
+		//create marker
+		var marker = feature.createMarker();
+
+		//create popup marker
+		var markerClick = function (e) {
+			if (this.popup == null) {
+				this.popup = this.createPopup(this.closeBox);
+				map.addPopup(this.popup);
+				this.popup.show();
+			} else {
+				this.popup.toggle();
+			}
+			currentPopup = this.popup;
+			OpenLayers.Event.stop(e);
+		};
+		marker.events.register("mousedown", feature, markerClick);
+
+		markerlayer.addMarker(marker);
+	}
+</script>

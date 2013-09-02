@@ -1,0 +1,272 @@
+<style type="text/css">
+    #controlToggle li {
+        list-style: none;
+    }
+    p {
+        width: 512px;
+    }
+
+        /* avoid pink tiles */
+    .olImageLoadError {
+        background-color: transparent !important;
+    }
+</style>
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+    //    Openlayer start here
+    var proxyUrl = "<?php echo $this->baseUrl('peta/proxy/?url='); ?>";
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>
+
+<div class="grid_16">
+    <div class="map-top-nav">
+        <a href="<?php echo $this->siteUrl('latihan/kekuatan.sendiri/laut/skenario_id/' . $this->skenario->getId());?>" class="roundall_grey back_icon float-right">
+        <span class="ml22">Kembali</span>
+        </a>
+    </div>
+</div>
+    <?php //print_r( $this->data );?>
+<div class="box grid_8 round_all" style="clear: both;">
+    <h2 class="box_head grad_colour">Form Sendiri Laut</h2>
+    <div class="toggle_container">
+        <div class="block">
+            <form method="post">
+                <label for="lokasi">Nama Kogas</label>
+                <input type="text" name="nama" id="lokasi" value="<?php echo $this->data['nama'];?>">
+
+                <?php $kotama = array('Koarmatim', 'Koarmabar', 'Kolinlamil', 'Penerbal', 'Kormar'); ?>
+                <label for="lokasi">Kotama</label>
+                <select name="kotama" id="kotama">
+                    <?php foreach($kotama as $key => $val):?>
+                        <option <?php echo !empty($this->data) && $this->data['kotama'] == strtolower($val) ? 'selected="selected"' : ''?> value="<?php echo strtolower( $val )?>"><?php echo $val?></option>
+                    <?php endforeach;?>
+                </select>
+
+                <label for="longitude">Longitude</label>
+                <input id="conv-lon-deg" size="2" style="display:inline">&deg;
+                <input id="conv-lon-min" size="2" style="display:inline">'
+                <input id="conv-lon-sec" size="2" style="display:inline">"
+                <select id="conv-lon-dir"><option>T</option><option>B</option></select>
+                <button id="conv-lon-conv" type="button" style="display:inline;float:none">Convert</button>
+                <input type="text" name="longitude" id="longitude" value="<?php echo $this->data['longitude'];?>">
+
+                <label for="latitude">Latitude</label>
+                <input id="conv-lat-deg" size="2" style="display:inline">&deg;
+                <input id="conv-lat-min" size="2" style="display:inline">'
+                <input id="conv-lat-sec" size="2" style="display:inline">"
+                <select id="conv-lat-dir"><option>U</option><option>S</option></select>
+                <button id="conv-lat-conv" type="button" style="display:inline;float:none">Convert</button>
+                <input type="text" name="latitude" id="latitude" value="<?php echo $this->data['latitude'];?>">
+
+                <table id="kekuatan-table" class="simple-table">
+                    <tr>
+                        <th>Kesatuan</th>
+                        <th>Tingkat Kesatuan</th>
+                        <th width="5%">Jumlah</th>
+                        <th>Keterangan</th>
+                        <th width="8%"></th>
+                    </tr>
+                </table>
+                <button id="button-tambah-row" type="button">+Tambah</button>
+                <button class="button_colour round_all">
+                    <span>Simpan</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php echo $this->render('partials/map-cms-kekuatan.phtml');?>
+<?php
+//simbol untuk AL
+$jenisSimbol = array(
+    'komando operasional',
+ 			'kuat log',
+ 			'marinir',
+ 			'landasan udara',
+ 			'kapal',
+ 			'sayap putar',
+ 			'sayap tetap'
+);
+?>
+<script>
+    var optionsUnsurArr = [];
+    var optionsJenis = new Array();
+    <?php foreach($this->jenis as $jenis): ?>
+        <?php if(in_array($jenis['jenis'], $jenisSimbol)) :?>
+            optionsUnsurArr.push('<?php echo $jenis['jenis']; ?>');
+            optionsJenis.push({
+                '<?php echo $jenis['jenis']; ?>': <?php echo json_encode($this->simTaktis->getAll('jenis', $jenis['jenis'], false)); ?>
+            });
+        <?php endif;?>
+    <?php endforeach; ?>
+
+    var optionsUnsur = optionsUnsurArr;
+    var globali = 0;
+
+    function tambah_row(id, unsur, jenis, jumlah, keterangan) {
+        //validasi inputan jumlah pada row sebelumnya tidak boleh kosong
+        if( globali > 0 ){
+            var prevIndex = globali - 1;
+            var domValue = $('#kekuatan-table').find('input[name="detail['+ prevIndex +'][jumlah]"]');
+            var prevValue = domValue.val();
+
+            if( prevValue == '' ){
+                alert('Jumlah Tidak boleh kosong!');
+                domValue.focus();
+                return false;
+            }
+        }
+    //function tambah_row() {
+        /*
+      <tr>
+          input hidden id[]
+          td select unsur[]
+          td select jenis[]
+          td jumlah[]
+          td button hapus_row(this)
+      </tr>
+      */
+        var $tr = $('<tr/>');
+
+        var $hidden = $('<input type="hidden" name="detail['+globali+'][id]" />');
+        if (id) {
+            $hidden.val(id);
+        }
+
+        var $select1 = $('<select name="detail['+globali+'][unsur]" />');
+        // populate options
+        for (var i=0,inum=optionsUnsur.length; i<inum; i++) {
+            var val = optionsUnsur[i];
+            $select1.append('<option value="'+val+'">'+val+'</option>');
+        }
+        if (unsur) {
+            $select1.val(unsur);
+        }
+        $select1.appendTo($tr).wrap('<td>').uniform();
+        // sisipkan $hidden
+        $hidden.insertAfter($select1);
+
+        var $select2 = $('<select name="detail['+globali+'][jenis]" />');
+        // populate options berdasarkan nilai $select1
+        $select1.bind('change', function(e) {
+            // @TODO bug element select theme adminica
+            $select2.empty();
+            for (var i=0,inum=optionsJenis.length; i<inum; i++) {
+                var options = optionsJenis[i][$select1.val()];
+                if (options) {
+                    for (var x=0,xnum=options.length; x<xnum; x++) {
+                        var index = options[x]['id'];
+                        var val = options[x]['nama'];
+                        $select2.append('<option value="'+index+'">'+val+'</option>');
+                    }
+                }
+            }
+
+            if ($.uniform.update) {
+                $.uniform.update($select2);
+            }
+        });
+        $select1.trigger('change');
+        if (jenis) {
+            $select2.val(jenis);
+        }
+        $select2.appendTo($tr).wrap('<td>').uniform();
+
+        var $input = $('<input style="width: 55px;" name="detail['+globali+'][jumlah]" />');
+        if (jumlah) {
+            $input.val(jumlah);
+        }
+        $input.appendTo($tr).wrap('<td>');
+
+        var $textarea = $('<textarea style="width: 120px;" name="detail['+globali+'][keterangan]"></textarea>');
+        if (keterangan) {
+            $textarea.val(keterangan);
+        }
+        $textarea.appendTo($tr).wrap('<td>');
+
+        var $button = $('<button type="button" onclick="hapus_row(this)" />');
+        $button.html('X');
+        $button.appendTo($tr).wrap('<td>');
+
+        $('#kekuatan-table').append($tr);
+        globali++;
+    }
+
+    function hapus_row(el) {
+        $(el).parent().parent().remove();
+    }
+
+    $(function() {
+        <?php if( isset($this->data) && !empty($this->data) ):?>
+            previewMarker('<?php echo $this->data['longitude'];?>', '<?php echo $this->data['latitude'];?>');
+        <?php endif;?>
+
+        $('#button-tambah-row').bind('click', function(e) {
+            tambah_row();
+        });
+        // populate saved data
+        <?php $hasData = $this->modelDetail->all();?>
+        <?php if(!empty($hasData)) : foreach ($hasData as $e) : ?>
+            tambah_row(<?php
+				echo json_encode($e->id).',';
+				echo json_encode($e->jenis).',';
+				echo json_encode($e->taktis_id).',';
+				echo json_encode($e->jumlah);
+                ?>);
+        <?php endforeach; endif;?>
+    });
+
+    //validasi ketika submit
+    $('#form-kekuatan').bind('submit', function(){
+
+        //validasi textbox sederhana dgn menggunakan flag array
+        var valids = []; //array untuk flag
+        $('#form-kekuatan input[type="text"]').each(function(){
+            var value = $(this).val();
+            if(value == ''){
+                valids.push(0); //jika kosong
+            } else {
+                valids.push(1); //jika isi
+            }
+        });
+        //kemudian cek flag array valids,
+        // jika terdapat nilai flag 0 dlm array berarti masih ada yg kosong
+        if( in_array(0, valids) ){
+            alert('Semua teks field harus diisi!');
+            return false;
+        } else {
+            return true
+        }
+    });
+
+    //conversi DMS ke DD
+    $(function(){
+        var convertDms = function (pid, idlonlat) {
+            var $ipt = $('#'+idlonlat),
+                deg = parseInt($('#conv-'+pid+'-deg').val(), 10),
+                min = parseInt($('#conv-'+pid+'-min').val(), 10),
+                sec = parseInt($('#conv-'+pid+'-sec').val(), 10),
+                dir = $('#conv-'+pid+'-dir').val(),
+                result;
+
+            if (!isNaN(deg) && !isNaN(min) && !isNaN(sec)) {
+                result = deg + (min*60 + sec)/3600;
+                if (dir == 'S' || dir == 'T') {
+                    result = -1 * result;
+                }
+                $ipt.val(result);
+                $ipt.trigger('change');
+            }
+            $ipt.focus();
+        };
+        $('#conv-lon-conv').bind('click', function(e) {
+            convertDms('lon', 'longitude');
+        });
+        $('#conv-lat-conv').bind('click', function(e) {
+            convertDms('lat', 'latitude');
+        });
+    });
+
+</script>
+

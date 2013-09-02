@@ -1,0 +1,144 @@
+<?php if($this->identity->role_id == 9): ?>
+<?php $this->headStyle()->captureStart(); ?>
+#jenis-pohon {
+<!--float: left;-->
+width: 22%;
+}
+
+#jenis-pohon li {
+border: none;
+padding: 0;
+}
+
+#jenis-pohon li a {
+color: black;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+<?php endif ?>
+<div class="box grid_16 round_all">
+	<h2 class="box_head grad_colour">
+        <span>Ubah Telegram</span>
+        <a class="float-right kembali" href="<?php echo $this->url(array('action'=>'index','id'=>null)); ?>">Kembali</a>
+    </h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    <?php if($this->identity->role_id == 9): ?>
+        <?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+        <?php $this->inlineScript()->appendFile($this->jsUrl('jstree/jquery.jstree.js')); ?>
+        //$('.tidak_aktif').attr("readonly","true");
+        var tree = '<div id="jenis-pohon" class="tree"></div>';
+        $(tree).insertAfter('#id_header_telegram');
+    <?php endif ?>
+
+    $('#btn_tujuan').toggle(
+        function(){
+            if ($("#list_tujuan div.pilih").length > 0){
+                $(this).next().children('#list_tujuan div.pilih').show();
+            }
+            else
+            {
+                var ieu = $(this);
+                var arrval = $(this).next().children('input:hidden').val();
+
+                $.get('<?php echo $this->url(array('controller'=>'telegram','action'=>'list.to.html')); ?>',
+                    { arrval:arrval },
+                    function(data, status, xhr){
+                        ieu.next().append('<div class="pilih">'+data+'</div>');
+                    },'html');
+            }
+        },function(){
+            $(this).next().children('.pilih').hide();
+        }
+    )
+
+    $('#btn_tembusan').toggle(
+        function(){
+            if ($("#list_tembusan div.pilih").length > 0){
+                $(this).next().children('#list_tembusan div.pilih').show();
+            }
+            else
+            {
+                var ieu = $(this);
+                var arrval = $(this).next().children('input:hidden').val();
+
+                $.get('<?php echo $this->url(array('controller'=>'telegram','action'=>'list.to.html')); ?>',
+                    { arrval:arrval },
+                    function(data, status, xhr){
+                        ieu.next().append('<div class="pilih">'+data+'</div>');
+                    },'html');
+            }
+        },function(){
+            $(this).next().children('.pilih').hide();
+        }
+    )
+
+
+    $('#datehide').hide();
+    $('#terjadwal').click(function(){
+        $('#datehide').toggle();
+    });
+
+    $('.tgl').datetimepicker({
+        changeYear: true,
+        changeMonth: true
+    });
+
+	$('.tidak_aktif').attr("readonly","true");
+
+    <?php if($this->identity->role_id == 9): ?>
+    $(function(){
+        var data = <?php echo json_encode($this->folder->toJson()); ?>;
+        var testLink = '<ul>';
+        $.each(data, function(i, item) {
+            var self = this;
+            //console.log(self);
+            testLink += '<li id="root'+i+'"><a href="#" id="'+self.id+'">'+self.data+'</a>';
+            if (typeof(self.children) === 'object') {
+                testLink += '<ul>';
+                $.each(self.children, function(i, item) {
+                    var me = this;
+                    testLink += '<li><a href="#" id="'+this.id+'">'+this.data+'</a>';
+                    if(typeof(me.children) === 'object'){
+                        testLink += '<ul>';
+                        $.each(me.children,function(j, subitem){
+                            testLink += '<li><a href="#" id="'+this.id+'">'+this.data+'</a></li>';
+                        });
+                        testLink += '</ul>';
+                    }
+                    testLink += '</li>';
+                });
+                testLink += '</ul>';
+            }
+            testLink += '</li>';
+        });
+        testLink += '</ul>';
+
+
+        // inisiasi tree
+        gpohon = $('#jenis-pohon')
+            .jstree({
+                'plugins': ['themes', 'html_data', 'ui'],
+                'html_data': {
+                    'data': testLink
+                },
+                'ui': {
+                    'select_limit': 1
+                }
+            })
+            .bind('select_node.jstree', function(e, data) {
+                $('#folder').val(data.args[2].currentTarget.id);
+                //console.log(data.args[2].currentTarget.id);
+            })
+        ;
+    });
+    <?php endif ?>
+</script>

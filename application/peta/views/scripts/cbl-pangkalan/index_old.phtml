@@ -1,0 +1,149 @@
+<!--<div class="flat_area grid_16">-->
+<!--	<h2>Logistik - Pangkalan Pendukung - --><?php //echo $this->cbid->get('no_cb'); ?><!--</h2>-->
+<!--	<div class="map-top-nav">-->
+<!--		<a href="--><?php //echo $this->url(array('controller'=>'cb-logistik', 'action'=>'detail')); ?><!--" class="roundall_grey back_icon float-right">-->
+<!--			<span class="ml22">Kembali</span>-->
+<!--		</a>-->
+<!--	</div>-->
+	<div class="box grid_8 round_all contentmap" >
+		<h2 class="box_head grad_colour titlemap">Pangkalan Pendukung</h2>
+		<div id="map"></div>
+<!--		<div id="wrapper">-->
+<!--			<div id="location" style="float:right"></div>-->
+<!--			<div id="scale" style="float:left"></div>-->
+<!--			<div id="coordclick" style="width:400px;margin:auto">Clicked Coordinate : <input size="40"></div>-->
+<!--		</div>-->
+	</div>
+
+<!--	<div class="flat_area grid_8 ">-->
+<!--			<h2 class="box_head grad_colour titlemap">Pangkalan Pendukung</h2>-->
+<!--			<div id="map"></div>-->
+<!--			<div id="wrapper">-->
+<!--				<div id="location" style="float:right"></div>-->
+<!--				<div id="scale" style="float:left"></div>-->
+<!--				<div id="coordclick" style="width:400px;margin:auto">Clicked Coordinate : <input size="40"></div>-->
+<!--			</div>-->
+<!--	</div>-->
+
+	<div id="view-data"></div>
+
+<!--</div>-->
+
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+
+// global map object
+var map;
+var Lppendukung;
+var ccc = 0;
+// layers dan geourl ada di script.js
+
+
+$(function(){
+	$('.titlemap').toggle(function(){
+		$('.controlmap').hide('slow');
+		$('.contentmap').removeClass('grid_8');
+		$('.contentmap').addClass('grid_16');
+		map.updateSize();
+	},function(){
+		$('.controlmap').show('slow');
+		$('.contentmap').removeClass('grid_16');
+		$('.contentmap').addClass('grid_8');
+		map.updateSize();
+	})
+
+
+	map = standardMap('map', {
+		scaleElement: $('#scale').get(0), 
+		locationElement: $('#location').get(0), 
+		showNavigator: true,
+		coordinateJquery: $('#coordclick')
+	});
+
+	/* == Fitur Klik Dapatkan Informasi */
+	map.events.register('click', map, function(e) {
+		var lonlat = map.getLonLatFromViewPortPx(e.xy);
+		var willan = map.layers[8]; // lihat script.js untuk listnyna
+
+		if (willan.getVisibility()) {
+			$.blockUI({ css: {
+				border: 'none',
+				padding: '15px',
+				backgroundColor: '#000',
+				'-webkit-border-radius': '10px',
+				'-moz-border-radius': '10px',
+				opacity: .5,
+				color: '#fff'
+			}});
+
+			$('#tampung-data').html('<img src="<?php echo $this->imgUrl('loading1.gif'); ?>">');
+
+			$.get('<?php echo $this->siteUrl('cms/pangkalan/viewr/cbid/'.$this->cbid->getId()); ?>', {
+				lon: lonlat.lon,
+				lat: lonlat.lat
+			}, function(data, status, xhr) {
+				$('#view-data').html(data);
+			}, 'html')
+				.error(function() {
+					$('#view-data').html('<h1>bukan Pangkalan</h1>');
+				})
+				.complete(function() { $.unblockUI(); });
+		}
+	});
+	/* == End of Fitur Klik Dapatkan Informasi */
+	
+	/* == Fitur Tampilan Pangkalan Pendukung */
+	Lppendukung = new OpenLayers.Layer.Markers(
+		"Pangkalan Pendukung",
+		{isBaseLayer: false, visibility: true}
+	);
+
+
+	map.addLayers([Lppendukung]);
+
+	var ll, popupContentHTML;
+	var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+		'autoSize': true
+	});
+
+	<?php foreach($this->ppendukung as $key) : ?>
+		ll = new OpenLayers.LonLat(<?php echo $key['x'];?>,<?php echo $key['y'];?>);
+		popupContentHTML = '<p><b><?php echo $key['lanal'];?></b></p><p><?php echo json_encode($key['keterangan']);?></p>';
+		addMarker(Lppendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true);
+	<?php endforeach; ?>
+
+	/* == End of Fitur Tampilan Pangkalan Pendukung */
+
+});
+
+function bersihkan(cek, ket, idmaster)
+{
+		Lppendukung.clearMarkers();
+
+		var ll, laa, popupContentHTML;
+		var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+			'autoSize': true
+		});
+
+		$.getJSON('<?php echo $this->url(array('controller'=>'cbl.pangkalan','action'=>'simpanpp','cbid'=>$this->cbid->getId())); ?>',{
+			cek: cek,
+			idmaster: idmaster,
+			ket: ket
+		}, function(data){
+			data.pp.forEach(function(item){
+				ll = new OpenLayers.LonLat(item.x,item.y);
+				popupContentHTML = '<p><b>'+item.lanal+'</b></p><p>'+item.keterangan+'</p>';
+				addMarker(Lppendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true);
+			});
+
+//			alert(data.dd);
+		});
+
+}
+
+</script>
+
+<!--ll = new OpenLayers.LonLat(--><?php //echo $key['x'];?><!--,--><?php //echo $key['y'];?><!--);-->
+<!--popupContentHTML = '<p><b>--><?php //echo $key['lanal'];?><!--</b></p><p>--><?php //echo $key['keterangan'];?><!--</p>';-->
+<!--addMarker(Lppendukung, ll, AutoSizeFramedCloud, popupContentHTML, true, true);-->

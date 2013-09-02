@@ -1,0 +1,97 @@
+<div class="box grid_14 round_all">
+	<h2 class="box_head grad_colour">
+        <span>Telegram | Preview</span>
+        <a class="float-right kembali" href="<?php echo $this->url(array('action'=>'index', 'id'=>null)); ?>">Kembali</a>
+    </h2>
+
+    <div class="toggle_container">
+		<div class="block grid_15">
+            <div class="printer">
+                <div style="width:100px;">
+                    <label for="printer-type" style="float: left; margin-top: 5px;">Printer : </label>
+                    <select id="printer-type">
+                        <option value="1" <?php echo ($this->printMode == '1') ? 'selected="selected"': '';?>>Dot Matrix 1</option>
+                        <option value="2" <?php echo ($this->printMode == '2') ? 'selected="selected"': '';?>>Dot Matrix 2</option>
+                        <option value="3" <?php echo ($this->printMode == '3') ? 'selected="selected"': '';?>>Common Printer</option>
+                    </select>
+                </div>
+                <a id="print-preview" style="clear: none; margin: 16px 0 5px;" class="skin_colour green send_right on_dark text_only has_text" href="javascript:void(0)">
+                    <img src="<?php echo $this->ImgUrl('/icons/small/white/Printer.png') ?>" alt="">
+                    <span>Print Preview</span>
+                </a>
+            </div>
+            <?php $strstatus = ''?>
+            <?php $identity = Zend_Auth::getInstance()->getStorage()->read(); ?>
+            <?php foreach($this->obj->toViewArray() as $key => $value) : ?>
+                <?php if ($key == 'Isi Berita') : ?>
+                    <div style="font-weight: bold;">
+                        <?php echo $key; ?>:
+                            <span style="display: block; font-weight: normal; background-color: #eeeeee; border: thin #cccccc solid; padding: 10px; width:500px;">
+                                <?php echo $value; ?>
+                            </span>
+                    </div>
+
+                <?php elseif ($key == 'Jadwal'): ?>
+                    <?php  if ($identity->role_id == 9): ?>
+                    <?php if ($value) : ?>
+                        <p style="font-weight: bold;">User Tujuan: <span style="font-weight: normal;"><?php echo $value; ?></span></p>
+                    <?php endif; ?>
+                    <?php endif; ?>
+
+                <?php elseif ($key == 'Tembusan'): ?>
+                    <?php if ($value) : ?>
+                    <label for="tembusan" style="margin-top: 5px;font-weight: bold;">User Tembusan : </label>
+                    <div id="tembusan" style="font-weight: normal;width:88%;margin-bottom: 10px;"><?php echo $value; ?></div>
+                    <?php endif; ?>
+
+                <?php elseif ($key == 'Rahasia'): ?>
+                    <?php
+                        switch($value)
+                        {
+                            case 'RHS':
+                                $strstatus = 'Rahasia';
+                                break;
+                            case 'TBA':
+                                $strstatus = 'Terbuka';
+                                break;
+                            case 'TBT':
+                                $strstatus = 'Terbatas';
+                                break;
+                        }
+                    ?>
+                <?php elseif ($key == 'Segera'): ?>
+                    <?php
+                    switch($value)
+                    {
+                        case 'SGR':
+                            $strstatus = 'Segera';
+                            break;
+                        case 'SGT':
+                            $strstatus = 'Sangat Segera';
+                            break;
+                    }
+                    ?>
+                    <?php if ($strstatus) : ?>
+                        <p style="font-weight: bold;">Status: <span style="color: red"><?php echo $strstatus; ?></span></p>
+                    <?php endif; ?>
+
+				<?php elseif ($key == 'Isdraft'): ?>
+				<?php if ($value) : ?>
+					<a class="send-draft" href="<?php echo $this->url(array('module' => 'peta', 'controller' => 'telegram','action'=>'kirim.draft')); ?>" ><span>Kirim</span></a>
+				<?php endif; ?>
+
+                <?php else: ?>
+                    <p style="font-weight: bold;"><?php echo $key; ?>: <span style="font-weight: normal;"><?php echo $value; ?></span></p>
+
+                <?php endif; ?>
+            <?php endforeach; ?>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    $('#print-preview').click(function(){
+        window.open('<?php echo $this->url(array('module' => 'default', 'controller' => 'print','action'=>'print-telegram')); ?>' + '/print-mode/' + $('#printer-type').val() ,'_blank');
+        return false;
+    });
+</script>

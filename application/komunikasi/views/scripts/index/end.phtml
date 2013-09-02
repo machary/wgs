@@ -1,0 +1,23 @@
+<div class="flat_area grid_16">
+
+    <a class="roundall_grey back_icon float-right" href="<?php echo $this->siteUrl('komunikasi'); ?>">
+        <span class="ml22">Kembali</span>
+    </a>
+
+    <div class="box grid_8 round_all">
+        <h2 class="box_head grad_colour">Masukkan Password Moderator</h2>
+        <div class="toggle_container">
+            <div class="block">
+                <form method="POST" action="<?php echo $this->siteUrl('komunikasi/index/end/meetingid/' . $this->meetingID); ?>">
+                    <label>Password</label>
+                    <input type="text" name="password" class="small required">
+                    <button type="submit">
+                        <img src="<?php echo $this->imgUrl('icons/small/white/Refresh%204.png'); ?>" />
+                        <span>Kirim</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

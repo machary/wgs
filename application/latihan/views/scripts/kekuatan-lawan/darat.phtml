@@ -1,0 +1,57 @@
+<div class="block">
+	<button id="kdarat-musuh-baru" class="tombol">Kekuatan Darat Baru</button>
+	<div id='form-musuh' class="flat grid_16 round_all" >
+
+	</div>
+
+	<table class="display simple-table" id='tabel-kekuatan'>
+		<thead>
+		<tr>
+			<th>Nama Lokasi</th>
+			<th>Negara</th>
+			<th>Koordinat</th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php foreach ($this->items as $item) : ?>
+		<tr class="row-kekuatan" id="<?php echo $item['id']; ?>">
+			<td><?php echo $item['nama']; ?></td>
+			<td><?php echo $item['negara']; ?></td>
+			<td><?php echo $item['longitude'].', '.$item['latitude']; ?></td>
+		</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+</div>
+<script type="text/javascript">
+	$('#kdarat-musuh-baru').toggle(function(){
+		getasformdarat();
+		$('#kdarat-musuh-baru').text('Batal');
+		$('#form-musuh').show();
+		helperLayer.removeMarker(helperMarker);
+		helperLayer.setVisibility(true);
+	},function(){
+		$('#kdarat-musuh-baru').text('Kekuatan Darat Baru');
+		$('#form-musuh').hide();
+		helperLayer.setVisibility(false);
+	})
+
+	$('.row-kekuatan').click(function(){
+
+		var ini = $(this);
+		var parentid = ini.attr('id');
+		$('tr.trplus').remove();
+		$('.rkterpilih').removeClass('rkterpilih');
+		$.get('<?php echo $this->siteUrl('latihan/kekuatan.lawan/simbol.kekuatan.darat/skenario_id/'.$this->skenarioid); ?>',
+			{ parentid:parentid
+			}, function(data, status, xhr) {
+				ini.after('<tr class="trplus"><td colspan="3">'+data+'</td></tr>');
+				ini.addClass('rkterpilih');
+			}, 'html')
+			.error(function() {
+			})
+			.complete(function() {
+			});
+	})
+
+</script>

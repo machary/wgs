@@ -1,0 +1,95 @@
+<?php
+/*
+Contoh source code referensi coding standard file .phtml
+
+File .phtml untuk suatu Action akan diasumsikan dibuat oleh @author Controller tersebut
+Jadi tidak usah menuliskan @author di file .phtml lagi, kecuali beda pembuat
+Untuk file .phtml yang sekedar View dari suatu Action, tidak perlu diberi deskripsi
+*/
+
+/**
+ * Contoh deskripsi file View
+ * View untuk pagination
+ * @author Designer Pagination
+ */
+
+/**
+ * Contoh deklarasi fungsi PHP
+ * @return string
+ */
+function contohFungsiPhp()
+{
+	return "contoh nilai kembalian";
+}
+?>
+
+<!-- Untuk nilai atribut HTML selalu gunakan petik " -->
+<div class="suatu-div">
+	<!-- indentasi gunakan TAB -->
+	<p>lorem ipsum dan seterusnya</p>
+	<!-- syntax tag sesuaikan dengan DOCTYPE yang digunakan -->
+	<br />
+	<!-- dan sebisa mungkin lulus W3C validator -->
+	<?php echo $title;  /* <-- ingat titik koma di akhir */?>
+</div>
+
+<!-- nama tag, atribut, attribute value semua lowercase -->
+<form method="post">
+	<!-- nama class & id biasanya pakai '-' sebagai pemisah kata -->
+	<!-- ini ngefek ke coding standard CSS -->
+	<label for="input-nama-lengkap">Nama Lengkap:</label>
+	<!-- untuk form element name tidak perlu demikian -->
+	<input type="text" name="nama_lengkap" id="input-nama-lengkap" value="" />
+</form>
+
+<?php if ($adaIsi) : ?>
+	<div>Ada isi</div>
+	<?php echo 'contoh menyisipkan PHP'; ?>
+<?php elseif ($tanpaIsi) : ?>
+	<?php while ($isiMasihAda) : ?>
+		<p>Ini contoh loop</p>
+		<?php popIsi(); ?>
+	<?php endwhile; ?>
+<?php else : ?>
+	<p>
+		Perhatikan indentasi blok PHP dan HTML ketika dicampur
+	</p>
+<?php endif; ?>
+
+<?php
+$s = 'Kode PHP multi-baris';
+
+for ($i = 0; $i < 10; $i++) {
+	echo "{$s} - {$i} <br />";
+}
+?>
+
+<!-- contoh meng-echo url pakai helper -->
+<p>
+	<a href="<?php echo $this->url(
+		array(
+			'controller' => 'guestbook',
+			'action'     => 'sign',
+		),
+		'default',
+		true
+	); ?>">Sign Our Guestbook</a>
+</p>
+
+<script type="text/javascript">
+
+// karena kode JavaScript yang disisipkan dalam HTML biasanya tidak rumit,
+// komentar sederhana seperti ini sudah cukup
+function contohFungsiJs(c, d) {
+	var e = c * d;
+	
+	function inner(a, b) {
+		return (e * a) + b;
+	}
+
+	return inner(0, 1);
+}
+// coding standard lengkap untuk JavaScript ada di CodingStandard.js
+
+</script>
+<script type="text/javascript" src="CodingStandard.js"></script>

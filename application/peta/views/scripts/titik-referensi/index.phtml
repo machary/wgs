@@ -1,0 +1,62 @@
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Titik Referensi Intelijen</h2>
+    <p>
+        <a href="<?php echo $this->url(array('controller'=>'titik.referensi','action'=>'addintel')); ?>" class="roundall_grey add_icon">
+            <span class="ml22">Titik Baru</span>
+        </a>
+    </p>
+
+    <!-- toggle button -->
+    <a href="#" class="toggle">&nbsp;</a>
+
+    <!-- container -->
+    <div class="toggle_container" style="display: block; ">
+
+        <div class="block">
+            <table id="table_penyalur" class="display">
+                <thead>
+                <tr>
+                    <th>Longitude</th>
+                    <th>Latitude</th>
+                    <th>Keterangan</th>
+                    <th>Aksi</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var oTable = $('#table_penyalur').dataTable( {
+        "bJQueryUI": true,
+        "sScrollX": "",
+        "bSortClasses": false,
+        "aaSorting": [[0,'asc']],
+        "bAutoWidth": true,
+        "bInfo": true,
+        "aoColumns":[
+            null,
+            null,
+            null,
+            {bSortable:false}
+        ],
+        "sScrollY": "100%",
+        "sScrollX": "100%",
+        "bScrollCollapse": true,
+        "sPaginationType": "full_numbers",
+        "bProcessing" : true,
+        "bServerSide" : true,
+        "sAjaxSource" : baseUrl + '/peta/titik.referensi/dataapi',
+        "fnServerData" : function(sSource, aoData, fnCallback)
+        {
+            jQuery.getJSON(sSource, aoData, function(json) {
+                fnCallback(json)
+            });
+
+            $('.custom-rows').parent().css('vertical-align','middle');
+        }
+    })//.makeEditable()
+</script>

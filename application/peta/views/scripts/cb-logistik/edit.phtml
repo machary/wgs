@@ -1,0 +1,25 @@
+<div class="map-top-nav">
+    <a href="<?php echo $this->url(array('action'=>'index')); ?>" class="roundall_grey back_icon float-right">
+        <span class="ml22">Kembali</span>
+    </a>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Ubah CB Logistik</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>
+
+<div class="flat_area grid_16">
+	<p><a href="<?php echo $this->url(array('action'=>'index', 'id'=>null)); ?>">Kembali</a></p>
+</div>
+
+<script type="text/javascript">
+	$('.tgl').datepicker();
+</script>

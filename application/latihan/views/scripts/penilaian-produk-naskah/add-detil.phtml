@@ -1,0 +1,18 @@
+<div class="flat_area grid_16">
+	<a href="<?php echo $this->url(array('action'=>'list')); ?>" class="roundall_grey back_icon float-right">
+		<span class="ml22">Kembali</span>
+	</a>
+</div>
+
+<div class="box grid_8 round_all">
+	<h2 class="box_head grad_colour">Tambah Detil Penilaian Produk Naskah</h2>
+	<div class="toggle_container">
+		<div class="block">
+			<?php 
+			$this->form->setAction($this->url());
+            $this->form->getElement('team_id')->setValue($this->teamId);
+			echo $this->form;
+			?>
+		</div>
+	</div>
+</div>

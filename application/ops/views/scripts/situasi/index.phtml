@@ -1,0 +1,100 @@
+<style type="text/css">
+    .olControlOverviewMap {
+        left: 0px;
+        right: auto;
+        bottom: 0px;
+    }
+
+    .olControlNavToolbar {
+        left: 0px;
+        right: auto;
+        top: 60px;
+    }
+
+    .olControlZoomPanel{
+        left: 5px;
+        right: auto;
+        top: 5px;
+    }
+
+    table.sendiri {
+	    border: 1px solid blue;
+    }
+
+    table.sendiri td,
+    table.sendiri th {
+	    padding: 5px;
+    }
+
+    table.sendiri th {
+	    background-color: blue;
+	    border: 1px solid blue;
+	    color: white;
+    }
+
+    table.sendiri td {
+	    border-left: 1px solid blue;
+	    border-right: 1px solid blue;
+    }
+</style>
+<?php
+	$this->inlineScript()->appendFile($this->jsUrl('script.js'));
+    $this->inlineScript()->appendFile( $this->jsUrl( 'view/situasi-gis.js' ) );
+?>
+
+<script type="text/javascript">
+    <?php $this->inlineScript()->captureStart(); ?>
+    //    Openlayer start here
+    var proxyUrl = "<?php echo $this->baseUrl('peta/proxy/?url='); ?>";
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>
+
+<div class="flat_area grid_16">
+
+    <!-- box header label -->
+    <h2>Peta Situasi</h2>
+
+    <div class="map-top-nav">
+        <a href="<?php echo $this->url(array('action'=>'editpergerakan')); ?>" class="roundall_grey mr3 add_icon float-left">
+            <span class="ml22">Atur Pergerakan</span>
+        </a>
+
+        <a href="<?php echo $this->url(array('action'=>'adddarat')); ?>" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Situasi Darat</span>
+        </a>
+        <a href="<?php echo $this->url(array('action'=>'addlaut')); ?>" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Situasi Laut</span>
+        </a>
+        <a href="<?php echo $this->url(array('action'=>'addudara')); ?>" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Situasi Udara</span>
+        </a>
+<!--        <a href="<?php /*echo $this->url(array('action'=>'cog')); */?>" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">COG</span>
+        </a>-->
+        <a href="<?php echo $this->url(array('action'=>'edit')); ?>" class="roundall_grey add_icon mr3 float-left">
+            <span class="ml22">Edit Data Situasi</span>
+        </a>
+    </div>
+
+    <!-- container -->
+    <div class="toggle_container mt3">
+        <div id="map-wrapper" class="block">
+            <div class="map-data">
+                <div class="box no-margin">
+                    <h2 class="box_head grad_colour">Data Daerah Peta Yang Di Klik</h2>
+                    <a href="#" class="grabber">&nbsp;</a>
+                    <a href="#" class="toggle">&nbsp;</a>
+                    <div id="tampung-data" class="toggle_container">
+
+                    </div>
+                </div>
+            </div>
+            <div id="map"></div>
+            <div id="wrapper">
+                <div id="location" style="float:right"></div>
+                <div id="scale" style="float:left"></div>
+                <div id="coordclick" style="width:400px;margin:auto">Clicked Coordinate : <input size="40"></div>
+            </div>
+        </div>
+    </div>
+</div>

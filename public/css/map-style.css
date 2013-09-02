@@ -1,0 +1,52 @@
+#map-wrapper{
+    height:736px;
+    border:1px solid #bebebe;
+    margin-bottom: 3px !important;
+    max-width: 100%;
+    clear:both;
+    overflow: hidden;
+	background: #fff;
+}
+
+#map{
+    height: 694px;
+    width: 100%;
+    float:left;
+    position: relative;
+    top:42px;
+}
+
+.map-data{
+    width:100% !important;
+    position: absolute;
+    z-index: 999;
+}
+
+#wrapper {
+    width:99.9%;
+    border: 1px solid #bebebe;
+    background-color: #5e5e5e;
+    color:#ececec;
+    padding:5px 0;
+    bottom:-170px;
+    position: absolute;
+
+}
+
+.block{
+    overflow-x: auto !important;
+    position: relative !important;
+}
+
+.sidemap-item{
+   width:80px;
+   height:80px;
+   border: 1px solid #bebebe;
+   float:left;
+}
+
+.map-top-nav{
+    height: 35px;
+    line-height: 35px;
+    margin-bottom: 5px;
+}

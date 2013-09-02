@@ -1,0 +1,64 @@
+<?php
+	$inlineMenu = array(
+		array( "onclick" => "sheetInstance.controlFactory.addRow(); return false;", "title" => "Insert Row After Selected", "alt" => "Insert Row After Selected", "img" => "sheet_row_add.png"),
+		array( "onclick" => "sheetInstance.controlFactory.addRow(null, true); return false;", "title" => "Insert Row Before Selected", "alt" => "Insert Row Before Selected", "img" => "sheet_row_add.png"),
+		array( "onclick" => "sheetInstance.controlFactory.addRow(null, null, ':last'); return false;", "title" => "Add Row At End", "alt" => "Add Row", "img" => "sheet_row_add.png"),
+		array( "onclick" => "sheetInstance.controlFactory.addRowMulti(); return false;", "title" => "Add Multi-Rows", "alt" => "Add Multi-Rows", "img" => "sheet_row_add_multi.png"),
+		array( "onclick" => "sheetInstance.deleteRow(); return false;", "title" => "Delete Row", "alt" => "Delete Row", "img" => "sheet_row_delete.png"),
+		array( "onclick" => "sheetInstance.controlFactory.addColumn(); return false;", "title" => "Insert Column After Selected", "alt" => "Insert Column After Selected", "img" => "sheet_col_add.png"),
+		array( "onclick" => "sheetInstance.controlFactory.addColumn(null, true); return false;", "title" => "Insert Column Before Selected", "alt" => "Insert Column Before Selected", "img" => "sheet_col_add.png"),
+		array( "onclick" => "sheetInstance.controlFactory.addColumn(null, null, ':last'); return false;", "title" => "Add Column At End", "alt" => "Add Column At End", "img" => "sheet_col_add.png"),
+		array( "onclick" => "sheetInstance.controlFactory.addColumnMulti(); return false;", "title" => "Insert Multi-Columns", "alt" => "Add Multi-Columns", "img" => "sheet_col_add_multi.png"),
+		array( "onclick" => "sheetInstance.deleteColumn(); return false;", "title" => "Delete Column", "alt" => "Delete Column", "img" => "sheet_col_delete.png"),
+		array( "onclick" => "sheetInstance.getTdRange(null, sheetInstance.obj.formula().val()); return false;", "title" => "Get Cell Range", "alt" => "Get Cell Range", "img" => "sheet_get_range.png"),
+		array( "onclick" => "sheetInstance.merge(); return false;", "title" => "Merge Cell", "alt" => "merge", "img" => "merge.png"),
+		array( "onclick" => "sheetInstance.unmerge(); return false;", "title" => "Un-merge Cell", "alt" => "un-merge", "img" => "un_merge.png"),
+		array( "onclick" => "sheetInstance.wrap(); return false;", "title" => "Wrap Text", "alt" => "wrap", "img" => "wrap.png"),
+		array( "onclick" => "sheetInstance.unwrap(); return false;", "title" => "Un-wrap Text", "alt" => "un-wrap", "img" => "unwrap.png"),
+		array( "onclick" => "sheetInstance.deleteSheet(); return false;", "title" => "Delete Current Sheet", "alt" => "Delete Current Sheet", "img" => "table_delete.png"),
+		array( "onclick" => "sheetInstance.calc(sheetInstance.i); return false;", "title" => "Refresh Calculations", "alt" => "Refresh Calculations", "img" => "arrow_refresh.png"),
+		array( "onclick" => "sheetInstance.cellFind(); return false;", "title" => "Find", "alt" => "Find", "img" => "find.png"),
+		array( "onclick" => "sheetInstance.cellStyleToggle('styleBold'); return false;", "title" => "Bold", "alt" => "Bold", "img" => "text_bold.png"),
+		array( "onclick" => "sheetInstance.cellStyleToggle('styleItalics'); return false;", "title" => "Italic", "alt" => "Italic", "img" => "text_italic.png"),
+		array( "onclick" => "sheetInstance.cellStyleToggle('styleUnderline', 'styleLineThrough'); return false;", "title" => "Underline", "alt" => "Underline", "img" => "text_underline.png"),
+		array( "onclick" => "sheetInstance.cellStyleToggle('styleLineThrough', 'styleUnderline'); return false;", "title" => "Strikethrough", "alt" => "Strikethrough", "img" => "text_strikethrough.png"),
+		array( "onclick" => "sheetInstance.cellStyleToggle('styleLeft', 'styleCenter styleRight'); return false;", "title" => "Align Left", "alt" => "Align Left", "img" => "text_align_left.png"),
+		array( "onclick" => "sheetInstance.cellStyleToggle('styleCenter', 'styleLeft styleRight'); return false;", "title" => "Align Center", "alt" => "Align Center", "img" => "text_align_center.png"),
+		array( "onclick" => "sheetInstance.cellStyleToggle('styleRight', 'styleLeft styleCenter'); return false;", "title" => "Align Right", "alt" => "Align Right", "img" => "text_align_right.png"),
+		array( "onclick" => "sheetInstance.fillUpOrDown(); return false;", "title" => "Fill Down", "alt" => "Fill Down", "img" => "arrow_down.png"),
+		array( "onclick" => "sheetInstance.fillUpOrDown(true); return false;", "title" => "Fill Up", "alt" => "Fill Up", "img" => "arrow_up.png"),
+		array( "onclick" => "sheetInstance.obj.formula().val('=HYPERLINK(\'' + prompt('Enter Web Address', 'http://www.visop-dev.com/') + '\')').keydown(); return false;", "title" => "HyperLink", "alt" => "Web Link", "img" => "page_link.png"),
+		array( "onclick" => "sheetInstance.toggleFullScreen(); $('#lockedMenu').toggle(); return false;", "title" => "Toggle Full Screen", "alt" => "Web Link", "img" => "arrow_out.png"),
+	);
+?>
+
+		<span id="inlineMenu" style="display: none;">
+			<span id="inlineMenuWrap" class="ui-corner-all">
+				<?php $i = 0;?>
+				<?php foreach($inlineMenu as $menu): ?>
+					<a href="javascript:void(0)" class="tipsytooltip" onclick="<?php echo $menu['onclick'];?>" title="<?php echo $menu['title'];?>">
+						<img alt="<?php echo $menu['alt'];?>" src="<?php echo $this->imgUrl('sheet/' . $menu['img']);?>"/></a>
+
+						<?php if($i == 25): ?>
+							<span class="colorPickers">
+								<input title="Foreground color" class="colorPickerFont" style="background: url(<?php echo $this->imgUrl('sheet/palette.png');?>) ! important; width: 16px; height: 16px;"/>
+								<input title="Background Color" class="colorPickerCell" style="background: url(<?php echo $this->imgUrl('sheet/palette_bg.png');?>) ! important; width: 16px; height: 16px;"/>
+							</span>
+						<?php endif; ?>
+				<?php $i++; ?>
+				<?php endforeach; ?>
+
+				<a class="tipsytooltip" style="margin-left: 20px;" href="javascript:void(0)" onclick="sheetInstance.s.fnSave(); return false;" title="Save Sheets">
+					<img alt="Save Sheet" src="<?php echo $this->imgUrl('sheet/disk.png');?>"/></a>
+				<!--<a href="#" onclick="insertAt('jSheetControls_formula', '~np~text~'+'/np~');return false;" title="Non-parsed"><img alt="Non-parsed" src="images/noparse.png"/></a>-->
+			</span>
+		</span>
+
+        <script type="text/javascript">
+        $(window).load(function() {
+            $('span.colorPickers').find('div').addClass('tipsytooltip');
+
+            $('.tipsytooltip').tipsy({gravity: 's'});
+            $('input.tipsytooltip').tipsy({gravity: 's'});
+        });
+        </script>

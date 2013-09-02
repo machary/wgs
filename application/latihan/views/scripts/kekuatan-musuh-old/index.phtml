@@ -1,0 +1,136 @@
+<div class="flat_area grid_16">
+	<h2>Komposisi Kekuatan Musuh - <?php echo $this->skenario->get('nomor'); ?></h2>
+	<div class="map-top-nav">
+		<a href="<?php echo $this->url(array('action'=>'darat')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Darat</span>
+		</a>
+		
+		<a href="<?php echo $this->url(array('action'=>'laut')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Laut</span>
+		</a>
+		
+		<a href="<?php echo $this->url(array('action'=>'udara')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Udara</span>
+		</a>
+		
+		<a href="<?php echo $this->url(array('action'=>'pergerakan.add')); ?>" class="roundall_grey add_icon mr3 float-left">
+			<span class="ml22">Pergerakan</span>
+		</a>
+		
+		<a href="<?php echo $this->url(array('controller'=>'skenario','action'=>'detail','skenario_id'=>$this->skenario->getId())); ?>" class="roundall_grey back_icon float-right">
+			<span class="ml22">Kembali</span>
+		</a>
+	</div>
+	
+	<div id="map-wrapper" class="block">
+		<div class="map-data">
+			<div class="box no-margin">
+				<h2 class="box_head grad_colour">Data Daerah Peta Yang Di Klik</h2>
+				<a href="#" class="grabber">&nbsp;</a>
+				<a href="#" class="toggle">&nbsp;</a>
+				<div class="toggle_container">
+					<ul class="block content_accordion">
+						<li>
+
+							<a href="#" class="handle">&nbsp;</a>
+							<h3 class="bar">Bathimetry</h3>
+							<div class="content">
+								<p><div id="tampung-data"></div></p>
+							</div>
+						</li>
+						<li>
+							<a href="#" class="handle">&nbsp;</a>
+							<h3 class="bar">Accordion 2</h3>
+							<div class="content">
+								<p><div id="info-cc"></div></p>
+
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="map"></div>
+		<div id="wrapper">
+			<div id="location" style="float:right">location</div>
+			<div id="scale" style="float:left"></div>
+			<div id="coordclick" style="width:350px;margin:auto">Koordinat: <input size="50"></div>
+		</div>
+	</div>
+</div>
+
+<?php $this->headStyle()->captureStart(); ?>
+table.musuh {
+	border: 1px solid red;
+}
+
+table.musuh td,
+table.musuh th {
+	padding: 5px;
+}
+
+table.musuh th {
+	background-color: red;
+	border: 1px solid red;
+	color: white;
+}
+
+table.musuh td {
+	border-left: 1px solid red;
+	border-right: 1px solid red;
+}
+<?php $this->headStyle()->captureEnd(); ?>
+
+<?php $this->inlineScript()->appendFile($this->jsUrl('script.js')); ?>
+<script>
+// global map object
+var map;
+
+// return HTML content for popup
+function buildPopupContent(judul, kekuatan) {
+	// kekuatan is an array
+	var html = '<table class="popup musuh">'+
+		'<tr>'+
+			'<th colspan="2">'+judul+'</th>'+
+		'</tr>';
+	if (kekuatan) for (var i=0; i<kekuatan.length; i++) {
+		html += '<tr>'+
+			'<td>'+kekuatan[i].replace(/\|/, '</td><td>')+'</td>'+
+		'</tr>';
+	}
+	html += '</table>';
+	
+	return html;
+}
+
+$(function(){
+	$('#tampung-data').css('border', '1px solid blue');
+	
+	map = standardMap('map', {
+		scaleElement: $('#scale').get(0), 
+		locationElement: $('#location').get(0), 
+		showNavigator: true,
+		coordinateJquery: $('#coordclick')
+	});
+	
+	/* == Fitur Tampilan Kekuatan Musuh */
+	var layerKekuatanLaut = new OpenLayers.Layer.Markers(
+		"Kekuatan Laut", 
+		{isBaseLayer: false, visibility: false}
+	);
+	map.addLayer(layerKekuatanLaut);
+	map.redrawSwitcherTree();
+	
+	var ll, popupContentHTML;
+	var AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+		'autoSize': true
+	});
+	<?php foreach ($this->modelLaut->allWithKekuatan() as $r) : ?>
+	ll = new OpenLayers.LonLat(<?php echo $r['longitude'].', '.$r['latitude']; ?>);
+	popupContentHTML = buildPopupContent('<?php echo $r['nama'].' - '.$r['negara']; ?>', <?php echo json_encode($r['kekuatan']); ?>);
+	addMarker(layerKekuatanLaut, ll, AutoSizeFramedCloud, popupContentHTML, false, true);
+	<?php endforeach; ?>
+	// @TODO kekuatan darat dan udara
+	/* == End of Fitur Tampilan Kekuatan Musuh */
+});
+</script>
